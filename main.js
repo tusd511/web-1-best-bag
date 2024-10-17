@@ -33,4 +33,4 @@ function hienThiSanPham(sanPhams) {
     }
 }
 
-$.ready((h) => layDsTui());
+$.when($.ready).then((h) => layDsTui());
