@@ -60,24 +60,31 @@ function bamLo() {
 }
 function hienThiSanPham(sanPhams, params) {
   // TODO: hien thi danh sach san Pham sau khi load
-  let body = document.querySelector("body"); // thay thanh container
   let textParams = JSON.stringify(params, null, 4);
   let paramE = document.createElement("p");
   paramE.innerText = textParams;
-  body.appendChild(paramE);
+  document.querySelector("body").prepend(paramE);
+  let container = document.querySelector(".bar-container"); // thay thanh container
   for (let s of sanPhams) {
     let item = document.createElement("div");
+    item.className = "bar";
     let id = document.createElement("h4");
     id.innerText = s["web-scraper-order"];
     item.appendChild(id);
     let name = document.createElement("h1");
     name.innerText = s["name"];
     item.appendChild(name);
-    let price = document.createElement("h3");
+    let price = document.createElement("p");
+    price.style = "text-decoration: line-through; color: gray;";
     price.innerText = s["price"];
     item.appendChild(price);
+    let sale = document.createElement("h3");
+    sale.style = "color: red";
+    sale.innerText = s["price-sale-n"];
+    item.appendChild(sale);
     let img = document.createElement("img");
     img.src = `./images/${s["image-file"]}`;
+    img.className = "bar-img";
     item.appendChild(img);
     let btn = document.createElement("button");
     btn.addEventListener("click", () =>
@@ -85,7 +92,7 @@ function hienThiSanPham(sanPhams, params) {
     );
     btn.innerText = "Xem chi tiet";
     item.appendChild(btn);
-    body.appendChild(item);
+    container.appendChild(item);
   }
 }
 

@@ -1,0 +1,22 @@
+.bar-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 4px 8px;
+    margin: 0 22px;
+    padding: 12px 10px;
+}
+
+.bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bar-img {
+    position: absolute;
+    z-index: -1;
+    max-width: 300px;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+}
