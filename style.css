@@ -20,3 +20,104 @@
     width: auto;
     height: auto;
 }
+
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.main-account-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-account-header h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.main-account-header p {
+    margin: 5px 0 0;
+    color: #777;
+}
+
+.main-account-body {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.main-account-body-col {
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.main-account-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 0 10px;
+}
+
+button:hover {
+    background-color: darkgreen;
+}
+
+#save-info-user, #save-password {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#save-info-user:hover, #save-password:hover {
+    background-color: darkgreen;
+}
