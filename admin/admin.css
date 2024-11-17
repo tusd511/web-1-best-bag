@@ -1,0 +1,803 @@
+/*admin dashboard*/
+.topbar {
+  position:sticky;
+  top: 0;
+  z-index:1020;
+  background-color: #343a40;
+  padding:.5rem 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.topbar-toggler{
+  border:1px solid #fff;
+  background-color:#343A40;
+  padding:5px 10px;
+  margin:10px;
+  border-radius: 5px;;
+}
+
+.topbar-content{
+  list-style: none;
+}
+
+.topbar-dropmenu{
+  padding:5px;
+  border:1px solid #f1f1f1;
+  background-color:#fff;
+  border-radius: 5px;
+  margin:10px;
+}
+
+.topbar-dropitem{
+  
+  text-decoration: none;
+}
+
+.topbar-link{
+  color:#fff;
+  text-decoration: none;
+}
+/*---------------------------------------------------------------*/
+/* Ẩn phần tử mặc định */
+.topbar-collapse,
+.topbar-dropmenu {
+    display: none;
+}
+
+/* Hiển thị phần tử khi có class .show */
+.topbar-collapse.show,
+.topbar-dropmenu.show {
+    display: block;
+}
+
+/*---------------------------------------------------------------*/
+
+.bar-container {
+  color: #000;
+  padding: 5px;
+  width: 100%;
+}
+
+.avatar-img {
+  width: 30px;
+  border-radius: 15px;
+  border: 1px solid #fff;
+}
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+.d-flex {
+  display: -webkit-box !important;
+  display: -ms-flexbox !important;
+  display: flex !important;
+}
+.sideMenu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  width: 80px;
+  transition: all ease 0.3s;
+  background-color: #303232 !important;
+  overflow: hidden;
+}
+
+.menu-list {
+  display: flex; /* Sử dụng flexbox để sắp xếp các mục trong menu */
+  flex-direction: column; /* Đặt hướng của các mục trong menu là dọc */
+  padding-left: 0; /* Loại bỏ padding bên trái mặc định */
+  margin-bottom: 0; /* Loại bỏ margin dưới mặc định */
+  list-style: none; /* Loại bỏ dấu chấm của danh sách (bullet points) */
+}
+
+.menu-link{
+  display: block;
+  
+}
+
+.menu-item a{
+  text-decoration: none;
+}
+
+dl, ol, ul {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+  unicode-bidi: isolate;
+}
+
+
+.sidebar .menu-link {
+  max-height: 60px;
+  min-height: 60px;
+  transition: all 0.3s ease-in;
+  overflow: hidden;
+  position: relative;
+}
+
+.sidebar .menu-link:hover {
+  background-color: #505050;
+}
+
+.sidebar .isActive {
+  border-left: 3px solid var(--mattRed);
+  background-color: #505050;
+}
+
+.isActive i, span {
+  color: #fff !important;
+}
+
+.sidebar .menu-link i, span {
+  min-height: 60px;
+  color: var(--mattGray);
+  font-size: 1.2rem;
+  transition: all 0.3s ease-in;
+  padding: 8px;
+}
+
+.menu-link:hover i, span {
+  color: #fff;
+}
+
+.sidebar .menu-link i {
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
+  line-height: 40px;
+  padding: 0;
+  position: absolute;
+  margin: 0 20px;
+}
+
+.sidebar .menu-link span {
+  min-width: 180px;
+  display: block;
+  justify-content: flex-start;
+  transition: all 0.3s;
+  margin-left: 80px;
+}
+
+.content {
+  width: 100%;
+  margin-left: 80px;
+  margin-top: 10px;
+  transition: all ease 0.3s;
+}
+
+
+
+
+/*
+a {
+  color: #007bff;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-text-decoration-skip: objects;
+}
+*/
+/*thống kê*/
+.content {
+  width: 100%;
+  margin-left: 80px;
+  margin-top: 10px;
+  transition: all ease 0.3s;
+}
+.container2 {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.header-product {
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+.card{
+  background-color: #303337;
+  border: solid 1px var(--mattGray);
+  border-radius: 5px;
+}
+
+/* CSS cho card-container */ 
+.card-container { 
+  box-sizing: border-box; padding: 15px; 
+} 
+/* Định dạng theo độ rộng màn hình */ 
+@media (min-width: 576px) { 
+  .card-container { 
+    width: 50%; /* 50% cho col-sm-6 */ 
+  } 
+}
+@media (min-width: 992px) { 
+  .card-container { 
+    width: 33.3333%; /* 33.33% cho col-lg-4 */ 
+  } 
+}
+
+.card-box {
+  position: relative;
+  color: #fff;
+  padding: 20px 10px 40px;
+  margin: 20px 0px;
+  border-radius: 10px;
+  height: 90%;
+}
+
+.card-box:hover {
+  text-decoration: none;
+  color: #f1f1f1;
+}
+
+.card-box:hover .icon i{
+  transition: 1s;
+  font-size: 90px;
+}
+
+.card-box .inner {
+  padding: 5px 10px 0 10px;
+}
+
+.inner h3, p {
+  cursor: default;
+  color: #fff;
+  font-size: 15px;
+}
+
+.card-box h3 {
+  font-size: 27px;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  padding: 0;
+  text-align: left;
+}
+
+.card-box p {
+  font-size: 15px;
+}
+
+.card-box .icon {
+  position: absolute;
+  top: auto;
+  bottom: 5px;
+  right: 5px;
+  z-index: 0;
+  font-size: 72px;
+}
+
+.card-box i {
+  color: rgba(0, 0, 0, 0.199);
+}
+
+.card-box .card-box-footer {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  text-align: center;
+  padding: 3px 0;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-decoration: none;
+}
+
+.card-box:hover .card-box-footer {
+  background: rgba(0, 0, 0, 0.3)
+}
+
+.card-box-footer i {
+  color: #fff;
+}
+
+.bg-mattRed {
+  background-color: #d9534f !important;
+}
+.bg-green {
+  background-color: #00a65a !important;
+}
+.bg-orange {
+  background-color: #f39c12 !important;
+}
+.bg-blue {
+  background-color: #00c0ef !important;
+}
+.bg-maroon {
+  background-color: #85144b !important;
+}
+.bg-red {
+  background-color: #FF4136 !important;
+}
+
+
+
+
+
+
+/* RANK OF PRODUCT */
+#quanlythongke {
+  animation: fadeIn linear 0.3s;
+}
+
+.rank-of-product {
+  margin-top: 20px;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--blackLight);
+}
+
+.rank-of-product h3{
+  padding: 0;
+  color: #fff;
+}
+
+#top-selling{
+  width:100%;
+  border-collapse: collapse;
+  background-color:#212529;
+}
+
+th, td{
+  border:1px solid #343a40;
+  color:#fff;
+  padding:5px 5px;
+}
+
+#top-selling tr:hover {
+  background-color:var(--blackLight);
+}
+
+
+
+
+/**/
+
+/**/
+
+/*QUAN LY SAN PHAM*/
+
+.header-product {
+  display: flex;
+  justify-content: center;
+  color: #fff;
+}
+
+.header-new-product {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+
+#addproduct-button{
+  margin: 10px;
+  padding: 12px 12px;
+  color:#fff;
+  background-color:#28A745;
+  font-size: 16px;
+  border:1px solid #fff;
+  border-radius: 5px;
+}
+
+#addproduct-button:hover{
+  opacity:0.7;
+}
+
+.updateproduct-button{
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+  font-weight:400;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  margin-left: 50px;
+}
+
+.updateproduct-button:hover{
+  opacity:0.7;
+}
+
+.deleteproduct-button{
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+  font-weight:400;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+  margin-right: 50px;
+}
+
+.deleteproduct-button:hover{
+  opacity:0.7;
+}
+
+.wrap-cart {
+  transition: .3s ease-in;
+  display:inline-block;
+  padding:0px 15px;
+  margin:0px 0px 24px;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  margin:  auto;
+  background-color: var(--blackLight);
+  border: 1px solid #858585;
+  position:relative;
+  display:flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-clip:border-box;
+  border-radius: .25rem;
+}
+
+.inner-img{
+  opacity:0.8;
+}
+
+.card-body{
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  justify-content: space-between;
+  height:100%;
+}
+
+.card-title {
+  color: #fff;
+  margin: 0px 0px 12px;
+}
+
+.card-text{
+  color:#fff;
+  margin: 0px 0px 80px;
+}
+
+
+@media (min-width: 576px) { 
+  .wrap-cart { 
+    width: 33%; /* 50% cho col-sm-6 */ 
+  } 
+}
+@media (min-width: 992px) { 
+  .wrap-cart { 
+    width: 24.5%; /* 33.33% cho col-lg-4 */ 
+  } 
+}
+/*
+.hidden {
+  opacity: 0;
+}*/
+
+.card-text {
+  font-size: 0.7rem;
+  color: #fff;
+  margin-bottom: 80px;
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.cart-price{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  line-height: 1.5 rem;
+  padding-bottom: 20px 20px;
+  position: absolute;
+  bottom: 30px;
+  width: 100%;
+  left:0;
+}
+
+.card-old-price {
+  color: var(--text-color);
+  text-decoration: line-through;
+  font-size: 1rem;
+}
+
+.card-current-price {
+  color: rgb(212, 0, 0);
+  font-size:1.6rem;
+}
+
+.button-group{
+  display:flex;
+  left:0;
+  width:100%;
+  justify-content: center;
+  position: absolute;
+  bottom: 5px;
+}
+
+.button-group button {
+  display: block;
+  margin: 0 10px;
+}
+
+/*xử lý phân trang sản phẩm*/
+#pagination-menu{
+  display: flex;
+  justify-content: center;
+  padding:15px;
+  margin: 15px;
+}
+
+.pagination-menu-item{
+  display:inline-block;
+  list-style: none;
+  padding: 10px;
+}
+
+.pagination-menu-item button{
+  background-color:#343a40;
+  border:solid 1px #fff;
+  border-radius:5px;
+  padding: 12px 15px;
+  color: #fff;
+
+}
+.pagination-menu-item button:hover{
+  background: var(--mattRed);
+}
+.pagination-user-menu button .isActive{
+  background: var(--mattRed);
+}
+.pagination-menu-item button i{
+  color: #fff;
+}
+
+
+
+/*-------------------------------------------------------*/
+/*QUAN LY PHAN TRANG TAI KHOAN*/
+.pagination-user {
+  display: flex;
+  justify-content: center;
+  padding:15px;
+  margin: 15px;
+}
+
+.pagination-user-item{
+  display:inline-block;
+  list-style: none;
+  padding: 10px;
+}
+
+/*.btn-page {
+  background-color: transparent;
+  color: var(--mattGray);
+  border: 1px solid #ccc;
+}
+
+.pagination-button {
+  color: var(--mattGray);
+}
+
+/*.product-list {
+  animation: fadeIn 0.5s linear;
+}
+
+.btn-page:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.btn-page:hover {
+  background-color: var(--mattRed);
+  color: #fff;
+}*/
+
+
+
+.selected-page {
+  background-color: var(--mattRed);
+  color: #fff;
+}
+
+/*.modal-body label {
+  color: red;
+}*/
+
+
+.pagination-user-item button{
+  background-color:#343a40;
+  border:solid 1px #fff;
+  border-radius:5px;
+  padding: 12px 15px;
+  color: #fff;
+
+}
+.pagination-user-item button:hover{
+  background: var(--mattRed);
+}
+.pagination-user-item button .isActive{
+  background: var(--mattRed);
+}
+.pagination-user-item button i{
+  color: #fff;
+}
+
+/*-------------------------------------------------------*/
+/*QUAN LY NGUOI DUNG*/
+#quanlynguoidung {
+  animation: fadeIn linear 0.3s;
+  text-align: center;
+}
+
+#quanlynguoidung h1{
+  color:#fff;
+}
+
+.kichhoat i {
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #fff;
+  transition: all .5s ease-in;
+}
+.color-green {
+  color: #00a65a !important;
+}
+
+table{
+  animation: fadeIn linear 0.2s;
+  width:100%;
+  border-collapse:collapse;
+}
+
+tr{
+  transition: all .5s ease-in
+}
+
+/*-------------------------------------------------------*/
+/*QUAN LY DON HANG*/
+#quanlydonhang{
+  animation: fadeIn linear 0.3s;
+  text-align: center;
+  display:block;
+  justify-content:center;
+}
+
+#quanlydonhang h1{
+  color:#fff;
+}
+
+#order-list{
+  width:100%;
+  border-collapse:collapse;
+  background-color: #212529;
+  margin: 15px;
+}
+
+#order-list th,td{
+  padding: 15px ;
+}
+
+#order-list tr:hover{
+  background-color:var(--blackLight);
+}
+
+
+/*-------------------------------------------------------*/
+.Dark {
+  --blackLight: #303337;
+  --blackDark: #212121;
+  --mattGray: #878d8d;
+  --mattRed: #ec6271;
+}
+
+body {
+  background-color: var(--blackDark);
+}
+
+body {
+  display: block;
+  margin: 8px;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+}
+
+:root {
+  --blackLight: #303337;
+  --blackDark: #212121;
+  --mattGray: #878d8d;
+  --mattRed: #ec6271;
+}
+:root {
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -ms-overflow-style: scrollbar;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  font-family: "Signika", sans-serif;
+  color: #000;
+}
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to{
+    opacity: 1;
+  }
+}
+
+@font-face {
+  src: url('../font/Signika/static/Signika-Regular.ttf');
+  font-family: "Signika";
+}
