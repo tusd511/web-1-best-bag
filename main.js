@@ -44,13 +44,10 @@ function caiParamUrlVaReload({ page, sort, min, max }) {
 
 function tinhSanPhamHienThi() {
   let { page, sort, min, max } = layParamUrl();
-  let thuTu = null;
-  if (sort === "asc") thuTu = 1;
-  else if (sort === "desc") thuTu = -1;
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaThapNhat(min, sanPhamsDaLoc);
   sanPhamsDaLoc = locGiaCaoNhat(max, sanPhamsDaLoc);
-  sapXepSanPhamTheoGia(thuTu, sanPhamsDaLoc);
+  sanPhamsDaLoc = sapXepSanPhamTheoGia(sort, sanPhamsDaLoc);
   let soLuongSanPham = sanPhamsDaLoc.length;
   let soPageToiDa = Math.max(1, Math.floor(soLuongSanPham / soSanPhamMoiTrang));
   let chiSoBatDau = 0;
@@ -77,8 +74,8 @@ function tinhSanPhamHienThi() {
     sort,
     min,
     max,
-    thuTu,
     soLuongSanPham,
+    tongSoSanPham: g_sanPham.length,
     chiSoBatDau,
     soSanPhamMoiTrang,
   });
