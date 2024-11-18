@@ -1,5 +1,9 @@
 {
-    "typeAcquisition": {
-        "include": ["jquery", "jquery-csv"]
-    }
+  "compilerOptions": {
+    "target": "ES2023"
+  }
+  // khong dc xai thu vien
+  // "typeAcquisition": {
+  //     "include": ["jquery", "jquery-csv"]
+  // }
 }

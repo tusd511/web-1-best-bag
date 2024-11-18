@@ -83,9 +83,10 @@ function tinhSanPhamHienThi() {
     soSanPhamMoiTrang,
   });
 }
+
 function hienTrangChiTiet(id) {
+  let sanPham = timSanPham(id);
   // TODO: mo trang chi tiet san pham
-  let sanPham = g_dsTui.find((sanPham) => sanPham["web-scraper-order"] === id);
   console.info(id, sanPham);
 }
 function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
@@ -104,16 +105,20 @@ function hienThiGrid(sanPhamsHienThi) {
     item.className = "grid";
     let id = document.createElement("h4");
     id.innerText = sanPham["web-scraper-order"];
+    id.innerText = sanPham["web-scraper-order"];
     item.appendChild(id);
     let name = document.createElement("h1");
+    name.innerText = sanPham["name"];
     name.innerText = sanPham["name"];
     item.appendChild(name);
     let price = document.createElement("p");
     price.style = "text-decoration: line-through; color: gray;";
     price.innerText = sanPham["price"];
+    price.innerText = sanPham["price"];
     item.appendChild(price);
     let sale = document.createElement("h3");
     sale.style = "color: red";
+    sale.innerText = sanPham["price-sale-n"];
     sale.innerText = sanPham["price-sale-n"];
     item.appendChild(sale);
     let img = document.createElement("img");
@@ -122,7 +127,7 @@ function hienThiGrid(sanPhamsHienThi) {
     item.appendChild(img);
     let btn = document.createElement("button");
     btn.addEventListener("click", () =>
-      hienTrangChiTiet(s["web-scraper-order"])
+      hienTrangChiTiet(sanPham["web-scraper-order"])
     );
     btn.innerText = "Xem chi tiet";
     item.appendChild(btn);
