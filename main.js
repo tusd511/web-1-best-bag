@@ -28,26 +28,30 @@ function layParamUrl() {
     sort: params.get("sort"),
     min: parseInt(params.get("min"), 10),
     max: parseInt(params.get("max"), 10),
+    search: params.get("search"),
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload({ page, sort, min, max }) {
+function caiParamUrlVaReload({ page, sort, min, max, qname: search }) {
   const url = new URL(document.location.toString());
   const params = url.searchParams;
   if (page) params.set("page", page);
   if (sort) params.set("sort", sort);
   if (min) params.set("min", min);
   if (max) params.set("max", max);
+  if (search) params.set("search", search);
   window.location = url.toString();
 }
 
 function tinhSanPhamHienThi() {
-  let { page, sort, min, max } = layParamUrl();
+  let { page, sort, min, max, search } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaThapNhat(min, sanPhamsDaLoc);
   sanPhamsDaLoc = locGiaCaoNhat(max, sanPhamsDaLoc);
-  sanPhamsDaLoc = sapXepSanPhamTheoGia(sort, sanPhamsDaLoc);
+  if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
+  if (!sort) sort = "best";
+  sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
   const soLuongSanPham = sanPhamsDaLoc.length;
   const soPageToiDa = Math.max(
     1,
@@ -216,13 +220,16 @@ function hienThiPagination(pageHienTai, pageToiDa) {
   wrapper.appendChild(container);
 }
 
-function sapXepSanPhamTheoGia(thuTu, sanPhamsDaLoc) {
-  // thap den cao
+function sapXepSanPham(thuTu, sanPhamsDaLoc) {
+  // gia thap den cao
   if (thuTu === "asc")
     return sanPhamsDaLoc.toSorted((a, b) => a["price-n"] - b["price-n"]);
-  // cao den thap
-  else if (thuTu === "desc")
+  // gia cao den thap
+  if (thuTu === "desc")
     return sanPhamsDaLoc.toSorted((a, b) => b["price-n"] - a["price-n"]);
+  // best match tim kiem
+  if (thuTu === "best")
+    return sanPhamsDaLoc.toSorted((a, b) => a.matchScore - b.matchScore);
   return sanPhamsDaLoc;
 }
 
@@ -236,6 +243,49 @@ function locGiaThapNhat(min, sanPhamsDaLoc) {
   if (min != null && !isNaN(min))
     return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] >= min);
   return sanPhamsDaLoc;
+}
+
+function timTheoTen(name, sanPhamsDaLoc) {
+  const sanitizedInput = name.normalize().toLowerCase();
+  const keywords = sanitizedInput.split(/\s+/);
+  const matchScores = sanPhamsDaLoc.map((sanPham) => {
+    if (name === sanPham["web-scraper-order"]) return 9999;
+    const sanitizedName = sanPham["name"].normalize().toLowerCase();
+    if (sanitizedInput === sanitizedName) return 1000;
+    const nameWords = sanitizedName.split(/\s+/);
+    return keywords.reduce(
+      (keywordScore, keyword) =>
+        keywordScore +
+          nameWords.reduce(
+            (namewordScore, nameword) =>
+              namewordScore +
+              (keyword === nameword
+                ? Math.max(100, 25 * keyword.length)
+                : nameword.startsWith(keyword)
+                ? Math.max(50, 10 * keyword.length)
+                : nameword.includes(keyword)
+                ? Math.max(
+                    10,
+                    3 * keyword.length * (nameword.split(keyword).length - 1)
+                  )
+                : 0),
+            0
+          ) || -2 * keyword.length,
+      0
+    );
+  });
+  console.table(
+    matchScores
+      .map((matchScore, i) => {
+        return { name: sanPhamsDaLoc[i]["name"], score: matchScore };
+      })
+      .sort((a, b) => a.score - b.score)
+  );
+  return matchScores
+    .map((matchScore, i) => {
+      return { ...sanPhamsDaLoc[i], score: matchScore };
+    })
+    .filter((sanPham) => sanPham.matchScore > 0);
 }
 
 function luuSanPhamLocalStorage() {
