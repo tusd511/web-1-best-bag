@@ -8,7 +8,7 @@ function taiSanPham() {
     return;
   }
   // chua co san pham trong local storage (lan dau mo web)
-  fetch("./lynvn.json")
+  fetch("./san-pham.json")
     .then((res) => res.text())
     .then((text) => {
       g_sanPham = JSON.parse(text);
