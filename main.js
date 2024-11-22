@@ -150,10 +150,15 @@ function hienThiPagination(pageHienTai, pageToiDa) {
     const li = document.createElement("li");
     const button = document.createElement("button");
     button.textContent = text;
-    if (goToPage === pageHienTai) button.classList.add("active");
-    button.addEventListener("click", () =>
-      caiParamUrlVaReload({ page: goToPage })
-    );
+    if (goToPage === pageHienTai) {
+      button.classList.add("active");
+      button.style.setProperty("cursor", "default");
+      button.style.setProperty("pointer-events", "none");
+    } else {
+      button.addEventListener("click", () =>
+        caiParamUrlVaReload({ page: goToPage })
+      );
+    }
     li.appendChild(button);
     container.appendChild(li);
   }
