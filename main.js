@@ -22,7 +22,7 @@ function taiSanPham() {
 // min: gia thap nhat khi loc san pham
 // max: gia cao nhat
 function layParamUrl() {
-  let params = new URL(document.location.toString()).searchParams;
+  const params = new URL(document.location.toString()).searchParams;
   return {
     page: parseInt(params.get("page"), 10),
     sort: params.get("sort"),
@@ -33,8 +33,8 @@ function layParamUrl() {
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
 function caiParamUrlVaReload({ page, sort, min, max }) {
-  let url = new URL(document.location.toString());
-  let params = url.searchParams;
+  const url = new URL(document.location.toString());
+  const params = url.searchParams;
   if (page) params.set("page", page);
   if (sort) params.set("sort", sort);
   if (min) params.set("min", min);
@@ -48,8 +48,11 @@ function tinhSanPhamHienThi() {
   sanPhamsDaLoc = locGiaThapNhat(min, sanPhamsDaLoc);
   sanPhamsDaLoc = locGiaCaoNhat(max, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPhamTheoGia(sort, sanPhamsDaLoc);
-  let soLuongSanPham = sanPhamsDaLoc.length;
-  let soPageToiDa = Math.max(1, Math.floor(soLuongSanPham / soSanPhamMoiTrang));
+  const soLuongSanPham = sanPhamsDaLoc.length;
+  const soPageToiDa = Math.max(
+    1,
+    Math.floor(soLuongSanPham / soSanPhamMoiTrang)
+  );
   let chiSoBatDau = 0;
   let chiSoPage = 0;
   if (page < 1 || isNaN(page) || page == null) {
@@ -63,7 +66,7 @@ function tinhSanPhamHienThi() {
   }
 
   // mang sau khi chia phan trang
-  let sanPhamsHienThi = sanPhamsDaLoc.slice(
+  const sanPhamsHienThi = sanPhamsDaLoc.slice(
     chiSoBatDau,
     chiSoBatDau + soSanPhamMoiTrang
   );
@@ -82,7 +85,7 @@ function tinhSanPhamHienThi() {
 }
 
 function hienTrangChiTiet(id) {
-  let sanPham = timSanPham(id);
+  const sanPham = timSanPham(id);
   // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
 }
@@ -96,33 +99,36 @@ function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
 }
 
 function hienThiGrid(sanPhamsHienThi) {
-  let container = document.querySelector(".grid-container"); // thay thanh container
-  for (let sanPham of sanPhamsHienThi) {
-    let item = document.createElement("div");
-    item.className = "grid";
-    let id = document.createElement("h4");
+  const wrapper = document.querySelector(".product-list");
+  wrapper.innerHTML = "";
+  const container = document.createElement("div");
+  container.classList.add("grid-container");
+  for (const sanPham of sanPhamsHienThi) {
+    const item = document.createElement("div");
+    item.classList.add("grid");
+    const id = document.createElement("h4");
     id.innerText = sanPham["web-scraper-order"];
     id.innerText = sanPham["web-scraper-order"];
     item.appendChild(id);
-    let name = document.createElement("h1");
+    const name = document.createElement("h1");
     name.innerText = sanPham["name"];
     name.innerText = sanPham["name"];
     item.appendChild(name);
-    let price = document.createElement("p");
+    const price = document.createElement("p");
     price.style = "text-decoration: line-through; color: gray;";
     price.innerText = sanPham["price"];
     price.innerText = sanPham["price"];
     item.appendChild(price);
-    let sale = document.createElement("h3");
+    const sale = document.createElement("h3");
     sale.style = "color: red";
     sale.innerText = sanPham["price-sale-n"];
     sale.innerText = sanPham["price-sale-n"];
     item.appendChild(sale);
-    let img = document.createElement("img");
+    const img = document.createElement("img");
     img.src = `./images/${sanPham["image-file"]}`;
     img.className = "grid-img";
     item.appendChild(img);
-    let btn = document.createElement("button");
+    const btn = document.createElement("button");
     btn.addEventListener("click", () =>
       hienTrangChiTiet(sanPham["web-scraper-order"])
     );
@@ -130,11 +136,35 @@ function hienThiGrid(sanPhamsHienThi) {
     item.appendChild(btn);
     container.appendChild(item);
   }
+  wrapper.appendChild(container);
 }
 
 function hienThiPagination(pageHienTai, pageToiDa) {
-  const paginationContainer = document.querySelector(".pagination");
-  paginationContainer.innerHTML = "";
+  const wrapper = document.querySelector(".pagination");
+  wrapper.innerHTML = "";
+  const container = document.createElement("ul");
+  container.classList.add("pagination-list");
+
+  // ham them nhanh 1 nut
+  function appendButton(text, goToPage) {
+    const li = document.createElement("li");
+    const button = document.createElement("button");
+    button.textContent = text;
+    if (goToPage === pageHienTai) button.classList.add("active");
+    button.addEventListener("click", () =>
+      caiParamUrlVaReload({ page: goToPage })
+    );
+    li.appendChild(button);
+    container.appendChild(li);
+  }
+  // ham them nhanh dau 3 cham (e.g. 1 ... 5 6 7)
+  function addEllipsis() {
+    const li = document.createElement("li");
+    const ellipsis = document.createElement("span");
+    ellipsis.textContent = "...";
+    li.appendChild(ellipsis);
+    container.appendChild(li);
+  }
 
   const soNutPagination = 5;
   let startPage = Math.max(1, pageHienTai - Math.floor(soNutPagination / 2));
@@ -151,65 +181,34 @@ function hienThiPagination(pageHienTai, pageToiDa) {
 
   // Thêm nút trang trước
   if (pageHienTai > 1) {
-    const prevButton = document.createElement("button");
-    prevButton.textContent = "Previous";
-    prevButton.addEventListener("click", () => {
-      caiParamUrlVaReload({ page: pageHienTai - 1 });
-    });
-    paginationContainer.appendChild(prevButton);
+    appendButton("Previous", pageHienTai - 1);
   }
 
   // them nut trang dau tien
   if (startPage > 1) {
-    const firstPageButton = document.createElement("button");
-    firstPageButton.textContent = 1;
-    firstPageButton.addEventListener("click", () => {
-      caiParamUrlVaReload({ page: 1 });
-    });
-    paginationContainer.appendChild(firstPageButton);
-
+    appendButton(1, 1);
     if (startPage > 2) {
-      const ellipsis1 = document.createElement("span");
-      ellipsis1.textContent = "...";
-      paginationContainer.appendChild(ellipsis1);
+      addEllipsis();
     }
   }
 
   // Thêm cac nút số trang
   for (let i = startPage; i <= endPage; i++) {
-    const pageButton = document.createElement("button");
-    pageButton.textContent = i;
-    if (i === pageHienTai) pageButton.classList.add("active");
-    pageButton.addEventListener("click", () => {
-      caiParamUrlVaReload({ page: i });
-    });
-    paginationContainer.appendChild(pageButton);
+    appendButton(i, i);
   }
   // them nut trang cuoi cung
   if (endPage < pageToiDa) {
     if (endPage < pageToiDa - 1) {
-      const ellipsis2 = document.createElement("span");
-      ellipsis2.textContent = "...";
-      paginationContainer.appendChild(ellipsis2);
+      addEllipsis();
     }
-
-    const lastPageButton = document.createElement("button");
-    lastPageButton.textContent = pageToiDa;
-    lastPageButton.addEventListener("click", () => {
-      caiParamUrlVaReload({ page: pageToiDa });
-    });
-    paginationContainer.appendChild(lastPageButton);
+    appendButton(pageToiDa, pageToiDa);
   }
 
   // Thêm nút trang tiếp theo
   if (pageHienTai < pageToiDa) {
-    const nextButton = document.createElement("button");
-    nextButton.textContent = "Next";
-    nextButton.addEventListener("click", () => {
-      caiParamUrlVaReload({ page: pageHienTai + 1 });
-    });
-    paginationContainer.appendChild(nextButton);
+    appendButton("Next", pageHienTai + 1);
   }
+  wrapper.appendChild(container);
 }
 
 function sapXepSanPhamTheoGia(thuTu, sanPhamsDaLoc) {
@@ -239,7 +238,7 @@ function luuSanPhamLocalStorage() {
 }
 
 function taiSanPhamLocalStorage() {
-  let stringSanPhams = localStorage.getItem("sanPham");
+  const stringSanPhams = localStorage.getItem("sanPham");
   if (stringSanPhams == null) return false;
   g_sanPham = JSON.parse(localStorage.getItem("sanPham"));
   return true;

@@ -126,24 +126,28 @@ button:hover {
   height: auto;
 }
 
-.pagination {
+ul.pagination-list {
+  list-style-type: none;
+}
+
+.pagination-list {
   display: flex;
   justify-content: center;
   margin-top: 20px;
 }
 
-.pagination button {
+.pagination-list button {
   padding: 10px 20px;
   border: none;
   background-color: #000000;
   cursor: pointer;
 }
 
-.pagination button:hover {
+.pagination-list button:hover {
   outline: red solid 3px;
 }
 
-.pagination button.active {
+.pagination-list button.active {
   background-color: #2bff00;
 }
 
