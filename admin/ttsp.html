@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="ttsp.css" />
+    <title>Form in4 sản phẩm</title>
+  </head>
+  <body>
+    <div class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Thông tin sản phẩm</h2>
+        <form>
+          <label for="tenmon"> Tên sản phẩm: </label>
+          <input
+            type="TEXT"
+            id="tenmon"
+            name="tenmon"
+            size="variant"
+            maxlength="long"
+            value=""
+            placeholder="Name"
+          />
+          <label for="motamon"> Mô tả sản phẩm: </label>
+          <textarea
+            type="TEXT"
+            id="motamon"
+            name="string"
+            size="variant"
+            maxlength="long"
+            value=""
+            placeholder="Mô tả"
+          ></textarea>
+          <label for="giagoc"> Giá gốc: </label>
+          <input
+            type="number"
+            id="giagoc"
+            name="giagoc"
+            size="variant"
+            maxlength="long"
+            value=""
+            placeholder="000"
+          />
+          <label for="giagiam"> Giá giảm </label>
+          <input
+            type="number"
+            id="giagiam"
+            name="giagiam"
+            size="variant"
+            maxlength="long"
+            value=""
+            placeholder="000"
+          />
+          <label for="anh"> Chọn ảnh </label>
+          <input type="file" id="anh" name="anh" />
+          <br />
+          <button class="close">Đóng</button>
+          <button type="submit">Lưu thay đổi</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
