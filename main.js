@@ -22,6 +22,18 @@ function taiSanPham() {
   taiDuLieu(sanPhamKey, sanPhamFile).then((data) => {
     g_sanPham = data;
     tinhSanPhamHienThi();
+    // tai khung search
+    const searchBox = document.getElementById("search-box");
+    searchBox.addEventListener("keypress", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        const search = searchBox.value;
+        if (search || layParamUrl().search) caiParamUrlVaReload({ search });
+        else alert("Khung search trong");
+      }
+    });
+    search = layParamUrl().search.trim().replace(/\s+/g, " ");
+    if (search != null) searchBox.value = search;
   });
 }
 function taiNguoiDung() {
@@ -56,11 +68,11 @@ function layParamUrl() {
 function caiParamUrlVaReload({ page, sort, min, max, search }) {
   const url = new URL(document.location.toString());
   const params = url.searchParams;
-  if (page) params.set("page", page);
-  if (sort) params.set("sort", sort);
-  if (min) params.set("min", min);
-  if (max) params.set("max", max);
-  if (search) params.set("search", search);
+  if (page !== undefined) params.set("page", page);
+  if (sort !== undefined) params.set("sort", sort);
+  if (min !== undefined) params.set("min", min);
+  if (max !== undefined) params.set("max", max);
+  if (search !== undefined) params.set("search", search);
   window.location = url.toString();
 }
 
@@ -71,10 +83,7 @@ function tinhSanPhamHienThi() {
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
   const soLuongSanPham = sanPhamsDaLoc.length;
-  const soPageToiDa = Math.max(
-    1,
-    Math.floor(soLuongSanPham / soSanPhamMoiTrang)
-  );
+  const soPageToiDa = Math.ceil(soLuongSanPham / soSanPhamMoiTrang);
   let chiSoBatDau = 0;
   let chiSoPage = 0;
   if (page < 1 || isNaN(page) || page == null) {
@@ -84,7 +93,7 @@ function tinhSanPhamHienThi() {
   chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
   // phan trang bam vuot gioi han so trang
   if (chiSoBatDau > soLuongSanPham) {
-    return;
+    caiParamUrlVaReload({ page: soPageToiDa });
   }
 
   // mang sau khi chia phan trang
@@ -125,49 +134,68 @@ function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
   // TODO: hien thi danh sach san Pham sau khi load
   // lay page va soPageToiDa de xu ly hien thi phan trang
   // code hien tai chi la demo de hien thi kiem tra, can phai sua lai theo cach minh lam
-  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham);
+  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, ".product-list");
   hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
 }
 
 function renderItemSanPham(sanPham) {
   const item = document.createElement("div");
   item.classList.add("grid");
+
   const id = document.createElement("h4");
   id.innerText = sanPham["web-scraper-order"];
-  id.innerText = sanPham["web-scraper-order"];
   item.appendChild(id);
+
   const name = document.createElement("h1");
   name.innerText = sanPham["name"];
-  name.innerText = sanPham["name"];
   item.appendChild(name);
+
+  if (sanPham.matchScore) {
+    const matchScore = document.createElement("p");
+    matchScore.style.setProperty("color", "green");
+
+    const matchScore1 = document.createElement("small");
+    matchScore1.textContent = `Match score: ${sanPham.matchScore}`;
+    matchScore.appendChild(matchScore1);
+
+    item.appendChild(matchScore);
+  }
+
   const price = document.createElement("p");
-  price.style = "text-decoration: line-through; color: gray;";
-  price.innerText = sanPham["price"];
+  price.style.setProperty("text-decoration", "line-through");
+  price.style.setProperty("color", "gray");
   price.innerText = sanPham["price"];
   item.appendChild(price);
+
   const sale = document.createElement("h3");
-  sale.style = "color: red";
-  sale.innerText = sanPham["price-sale-n"];
+  sale.style.setProperty("color", "red");
   sale.innerText = sanPham["price-sale-n"];
   item.appendChild(sale);
+
   const img = document.createElement("img");
   img.src = `./images/${sanPham["image-file"]}`;
   img.className = "grid-img";
   item.appendChild(img);
+
   const btn = document.createElement("button");
   btn.addEventListener("click", () =>
     hienTrangChiTiet(sanPham["web-scraper-order"])
   );
-  btn.innerText = "Xem chi tiet";
+  btn.textContent = "Xem chi tiet";
   item.appendChild(btn);
+
   return item;
 }
 
-function hienThiDanhSach(duLieusHienThi, hamRenderItem) {
-  const wrapper = document.querySelector(".product-list");
+function hienThiDanhSach(duLieusHienThi, hamRenderItem, wrapperSelector) {
+  const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("grid-container");
+  if (duLieusHienThi.length === 0)
+    container.appendChild(
+      document.createTextNode("Khong co san pham dap ung tieu chi")
+    );
   for (const item of duLieusHienThi) {
     container.appendChild(hamRenderItem(item));
   }
@@ -175,6 +203,7 @@ function hienThiDanhSach(duLieusHienThi, hamRenderItem) {
 }
 
 function hienThiPagination(pageHienTai, pageToiDa) {
+  if (pageToiDa === 0) return;
   const wrapper = document.querySelector(".pagination");
   wrapper.innerHTML = "";
   const container = document.createElement("ul");
@@ -206,7 +235,7 @@ function hienThiPagination(pageHienTai, pageToiDa) {
     container.appendChild(li);
   }
 
-  const soNutPagination = 5;
+  const soNutPagination = Math.min(pageToiDa, 5); // Ensure no more than total pages
   let startPage = Math.max(1, pageHienTai - Math.floor(soNutPagination / 2));
   let endPage = Math.min(pageToiDa, startPage + soNutPagination - 1);
 
@@ -259,8 +288,8 @@ function sapXepSanPham(thuTu, sanPhamsDaLoc) {
   if (thuTu === "desc")
     return sanPhamsDaLoc.toSorted((a, b) => b["price-n"] - a["price-n"]);
   // best match tim kiem
-  if (sanPhamsDaLoc[0].matchScore != null || thuTu === "best")
-    return sanPhamsDaLoc.toSorted((a, b) => a.matchScore - b.matchScore);
+  if (sanPhamsDaLoc[0]?.matchScore != null || thuTu === "best")
+    return sanPhamsDaLoc.toSorted((a, b) => b.matchScore - a.matchScore);
   return sanPhamsDaLoc;
 }
 
@@ -279,44 +308,46 @@ function locGiaSanPham(min, max, sanPhamsDaLoc) {
 }
 
 function timTheoTen(name, sanPhamsDaLoc) {
-  const sanitizedInput = name.normalize().toLowerCase();
+  const sanitize = (string) =>
+    transliterate(string).trim().replace(/\s+/g, " ").normalize().toLowerCase();
+  const sanitizedInput = sanitize(name);
   const keywords = sanitizedInput.split(/\s+/);
   const matchScores = sanPhamsDaLoc.map((sanPham) => {
     if (name === sanPham["web-scraper-order"]) return 9999;
-    const sanitizedName = sanPham["name"].normalize().toLowerCase();
+    const sanitizedName = sanitize(sanPham["name"]);
     if (sanitizedInput === sanitizedName) return 1000;
     const nameWords = sanitizedName.split(/\s+/);
     return keywords.reduce(
       (keywordScore, keyword) =>
         keywordScore +
-          nameWords.reduce(
-            (namewordScore, nameword) =>
-              namewordScore +
-              (keyword === nameword
-                ? Math.max(100, 25 * keyword.length)
-                : nameword.startsWith(keyword)
-                ? Math.max(50, 10 * keyword.length)
-                : nameword.includes(keyword)
-                ? Math.max(
-                    10,
-                    3 * keyword.length * (nameword.split(keyword).length - 1)
-                  )
-                : 0),
-            0
-          ) || -2 * keyword.length,
+        nameWords.reduce(
+          (namewordScore, nameword) =>
+            namewordScore +
+            (keyword === nameword
+              ? Math.max(100, 25 * keyword.length)
+              : nameword.startsWith(keyword)
+              ? Math.max(50, 10 * keyword.length)
+              : nameword.includes(keyword)
+              ? Math.max(
+                  10,
+                  3 * keyword.length * (nameword.split(keyword).length - 1)
+                )
+              : 0),
+          0
+        ),
       0
     );
   });
   console.table(
     matchScores
       .map((matchScore, i) => {
-        return { name: sanPhamsDaLoc[i]["name"], score: matchScore };
+        return { name: sanPhamsDaLoc[i]["name"], matchScore };
       })
       .sort((a, b) => a.score - b.score)
   );
   return matchScores
     .map((matchScore, i) => {
-      return { ...sanPhamsDaLoc[i], score: matchScore };
+      return { ...sanPhamsDaLoc[i], matchScore };
     })
     .filter((sanPham) => sanPham.matchScore > 0);
 }
@@ -443,7 +474,7 @@ function createPaginationDebugTable(data) {
 
 // goi khi trang web load thanh cong
 window.addEventListener("load", () => {
-  taiSanPham();
-  taiNguoiDung();
-  taiHoaDon();
+  if (document.querySelector(".product-list")) taiSanPham();
+  if (document.querySelector(".user-list")) taiNguoiDung();
+  if (document.querySelector(".receipt-list")) taiHoaDon();
 });
