@@ -14,9 +14,29 @@
     <title>Web 1 Best Bag</title>
   </head>
   <body>
-    <div id="search-container"><textarea id="search-box"></textarea></div>
-    <div class="debug-table"></div>
-    <div class="product-list"></div>
-    <div class="pagination"></div>
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+      "
+    >
+      <div
+        id="search-container"
+        style="display: flex; justify-content: center; width: 100%"
+      >
+        <textarea
+          id="search-box"
+          cols="50"
+          rows="3"
+          placeholder="nhap vao roi bam enter tim kiem san pham..."
+        ></textarea>
+      </div>
+      <div class="debug-table"></div>
+      <div class="product-list"></div>
+      <div class="pagination"></div>
+    </div>
   </body>
 </html>

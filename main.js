@@ -28,7 +28,8 @@ function taiSanPham() {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         const search = searchBox.value;
-        if (search || layParamUrl().search) caiParamUrlVaReload({ search });
+        if (search || layParamUrl().search)
+          caiParamUrlVaReload({ search }, true);
         else alert("Khung search trong");
       }
     });
@@ -65,14 +66,18 @@ function layParamUrl() {
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload({ page, sort, min, max, search }) {
+function caiParamUrlVaReload({ page, sort, min, max, search }, resetParam) {
   const url = new URL(document.location.toString());
+  if (resetParam) url.search = "";
   const params = url.searchParams;
-  if (page !== undefined) params.set("page", page);
-  if (sort !== undefined) params.set("sort", sort);
-  if (min !== undefined) params.set("min", min);
-  if (max !== undefined) params.set("max", max);
-  if (search !== undefined) params.set("search", search);
+  const setParam = (param, name) => {
+    if (param !== undefined) params.set(name, param);
+  };
+  setParam(page, "page");
+  setParam(sort, "sort");
+  setParam(min, "min");
+  setParam(max, "max");
+  setParam(search, "search");
   window.location = url.toString();
 }
 
@@ -93,7 +98,7 @@ function tinhSanPhamHienThi() {
   chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
   // phan trang bam vuot gioi han so trang
   if (chiSoBatDau > soLuongSanPham) {
-    caiParamUrlVaReload({ page: soPageToiDa });
+    caiParamUrlVaReload({ page: soPageToiDa }, false);
   }
 
   // mang sau khi chia phan trang
@@ -224,7 +229,7 @@ function hienThiPagination(pageHienTai, pageToiDa) {
       button.style.setProperty("pointer-events", "none");
     } else {
       button.addEventListener("click", () =>
-        caiParamUrlVaReload({ page: goToPage })
+        caiParamUrlVaReload({ page: goToPage }, false)
       );
     }
     li.appendChild(button);
