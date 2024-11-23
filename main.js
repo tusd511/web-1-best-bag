@@ -1,20 +1,40 @@
-var g_sanPham;
+var g_sanPham, g_nguoiDung, g_hoaDon;
+const sanPhamKey = "sanPham";
+const nguoiDungKey = "nguoiDung";
+const hoaDonKey = "hoaDon";
+const sanPhamFile = "san-pham.json";
+const nguoiDungFile = "nguoi-dung.json";
+const hoaDonFile = "hoa-don.json";
+const theLoaiFile = "the-loai.json";
 var soSanPhamMoiTrang = 10;
 
-function taiSanPham() {
-  // san pham da co trong local storage
-  if (taiSanPhamLocalStorage()) {
-    tinhSanPhamHienThi();
-    return;
+async function taiDuLieu(datakey, datafile) {
+  // du lieu key nay da co trong local storage
+  const data = taiDuLieuLocalStorage(datakey);
+  if (data) {
+    return JSON.parse(data);
   }
-  // chua co san pham trong local storage (lan dau mo web)
-  fetch("./san-pham.json")
-    .then((res) => res.text())
-    .then((text) => {
-      g_sanPham = JSON.parse(text);
-      luuSanPhamLocalStorage();
-      tinhSanPhamHienThi();
-    });
+  // chua co du lieu key nay trong local storage (lan dau mo web)
+  const response = await fetch(datafile);
+  return await response.json();
+}
+function taiSanPham() {
+  taiDuLieu(sanPhamKey, sanPhamFile).then((data) => {
+    g_sanPham = data;
+    tinhSanPhamHienThi();
+  });
+}
+function taiNguoiDung() {
+  taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
+    g_nguoiDung = data;
+    tinhNguoiDungHienThi();
+  });
+}
+function taiHoaDon() {
+  taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
+    g_hoaDon = data;
+    tinhHoaDonHienThi();
+  });
 }
 
 // page: trang dang hien thi trong phan trang (set cai nay de di chuyen phan trang)
@@ -33,7 +53,7 @@ function layParamUrl() {
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload({ page, sort, min, max, qname: search }) {
+function caiParamUrlVaReload({ page, sort, min, max, search }) {
   const url = new URL(document.location.toString());
   const params = url.searchParams;
   if (page) params.set("page", page);
@@ -47,10 +67,8 @@ function caiParamUrlVaReload({ page, sort, min, max, qname: search }) {
 function tinhSanPhamHienThi() {
   let { page, sort, min, max, search } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
-  sanPhamsDaLoc = locGiaThapNhat(min, sanPhamsDaLoc);
-  sanPhamsDaLoc = locGiaCaoNhat(max, sanPhamsDaLoc);
+  sanPhamsDaLoc = locGiaSanPham(min, max, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
-  if (!sort) sort = "best";
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
   const soLuongSanPham = sanPhamsDaLoc.length;
   const soPageToiDa = Math.max(
@@ -88,7 +106,16 @@ function tinhSanPhamHienThi() {
   });
 }
 
+function tinhNguoiDungHienThi() {
+  alert("chua cai dat tinh nguoi dung hien thi");
+}
+
+function tinhHoaDonHienThi() {
+  alert("chua cai dat tinh hoa don hien thi");
+}
+
 function hienTrangChiTiet(id) {
+  alert("Chua cai dat chuc nang hien trang chi tier");
   const sanPham = timSanPham(id);
   // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
@@ -98,47 +125,51 @@ function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
   // TODO: hien thi danh sach san Pham sau khi load
   // lay page va soPageToiDa de xu ly hien thi phan trang
   // code hien tai chi la demo de hien thi kiem tra, can phai sua lai theo cach minh lam
-  hienThiGrid(sanPhamsHienThi);
+  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham);
   hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
 }
 
-function hienThiGrid(sanPhamsHienThi) {
+function renderItemSanPham(sanPham) {
+  const item = document.createElement("div");
+  item.classList.add("grid");
+  const id = document.createElement("h4");
+  id.innerText = sanPham["web-scraper-order"];
+  id.innerText = sanPham["web-scraper-order"];
+  item.appendChild(id);
+  const name = document.createElement("h1");
+  name.innerText = sanPham["name"];
+  name.innerText = sanPham["name"];
+  item.appendChild(name);
+  const price = document.createElement("p");
+  price.style = "text-decoration: line-through; color: gray;";
+  price.innerText = sanPham["price"];
+  price.innerText = sanPham["price"];
+  item.appendChild(price);
+  const sale = document.createElement("h3");
+  sale.style = "color: red";
+  sale.innerText = sanPham["price-sale-n"];
+  sale.innerText = sanPham["price-sale-n"];
+  item.appendChild(sale);
+  const img = document.createElement("img");
+  img.src = `./images/${sanPham["image-file"]}`;
+  img.className = "grid-img";
+  item.appendChild(img);
+  const btn = document.createElement("button");
+  btn.addEventListener("click", () =>
+    hienTrangChiTiet(sanPham["web-scraper-order"])
+  );
+  btn.innerText = "Xem chi tiet";
+  item.appendChild(btn);
+  return item;
+}
+
+function hienThiDanhSach(duLieusHienThi, hamRenderItem) {
   const wrapper = document.querySelector(".product-list");
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("grid-container");
-  for (const sanPham of sanPhamsHienThi) {
-    const item = document.createElement("div");
-    item.classList.add("grid");
-    const id = document.createElement("h4");
-    id.innerText = sanPham["web-scraper-order"];
-    id.innerText = sanPham["web-scraper-order"];
-    item.appendChild(id);
-    const name = document.createElement("h1");
-    name.innerText = sanPham["name"];
-    name.innerText = sanPham["name"];
-    item.appendChild(name);
-    const price = document.createElement("p");
-    price.style = "text-decoration: line-through; color: gray;";
-    price.innerText = sanPham["price"];
-    price.innerText = sanPham["price"];
-    item.appendChild(price);
-    const sale = document.createElement("h3");
-    sale.style = "color: red";
-    sale.innerText = sanPham["price-sale-n"];
-    sale.innerText = sanPham["price-sale-n"];
-    item.appendChild(sale);
-    const img = document.createElement("img");
-    img.src = `./images/${sanPham["image-file"]}`;
-    img.className = "grid-img";
-    item.appendChild(img);
-    const btn = document.createElement("button");
-    btn.addEventListener("click", () =>
-      hienTrangChiTiet(sanPham["web-scraper-order"])
-    );
-    btn.innerText = "Xem chi tiet";
-    item.appendChild(btn);
-    container.appendChild(item);
+  for (const item of duLieusHienThi) {
+    container.appendChild(hamRenderItem(item));
   }
   wrapper.appendChild(container);
 }
@@ -228,21 +259,23 @@ function sapXepSanPham(thuTu, sanPhamsDaLoc) {
   if (thuTu === "desc")
     return sanPhamsDaLoc.toSorted((a, b) => b["price-n"] - a["price-n"]);
   // best match tim kiem
-  if (thuTu === "best")
+  if (sanPhamsDaLoc[0].matchScore != null || thuTu === "best")
     return sanPhamsDaLoc.toSorted((a, b) => a.matchScore - b.matchScore);
   return sanPhamsDaLoc;
 }
 
-function locGiaCaoNhat(max, sanPhamsDaLoc) {
-  if (max != null && !isNaN(max))
-    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] <= max);
-  return sanPhamsDaLoc;
-}
-
-function locGiaThapNhat(min, sanPhamsDaLoc) {
-  if (min != null && !isNaN(min))
-    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] >= min);
-  return sanPhamsDaLoc;
+function locGiaSanPham(min, max, sanPhamsDaLoc) {
+  function locGiaCaoNhat(max, sanPhamsDaLoc) {
+    if (max != null && !isNaN(max))
+      return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] <= max);
+    return sanPhamsDaLoc;
+  }
+  function locGiaThapNhat(min, sanPhamsDaLoc) {
+    if (min != null && !isNaN(min))
+      return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] >= min);
+    return sanPhamsDaLoc;
+  }
+  return locGiaThapNhat(min, locGiaCaoNhat(max, sanPhamsDaLoc));
 }
 
 function timTheoTen(name, sanPhamsDaLoc) {
@@ -289,19 +322,52 @@ function timTheoTen(name, sanPhamsDaLoc) {
 }
 
 function luuSanPhamLocalStorage() {
-  localStorage.setItem("sanPham", JSON.stringify(g_sanPham));
+  luuDuLieuLocalStorage(sanPhamKey, g_sanPham);
+}
+function luuNguoiDungLocalStorage() {
+  luuDuLieuLocalStorage(nguoiDungKey, g_nguoiDung);
+}
+function luuHoaDonLocalStorage() {
+  luuDuLieuLocalStorage(hoaDonKey, g_hoaDon);
+}
+function luuDuLieuLocalStorage(datakey, g_duLieu) {
+  localStorage.setItem(datakey, JSON.stringify(g_duLieu));
 }
 
 function taiSanPhamLocalStorage() {
-  const stringSanPhams = localStorage.getItem("sanPham");
+  const stringSanPhams = taiDuLieuLocalStorage(sanPham);
   if (stringSanPhams == null) return false;
-  g_sanPham = JSON.parse(localStorage.getItem("sanPham"));
+  g_sanPham = JSON.parse(stringSanPhams);
   return true;
 }
-
+function taiNguoiDungLocalStorage() {
+  const stringNguoiDungs = taiDuLieuLocalStorage(nguoiDungKey);
+  if (stringNguoiDungs == null) return false;
+  g_nguoiDung = JSON.parse(stringNguoiDungs);
+  return true;
+}
+function taiHoaDonLocalStorage() {
+  const stringHoaDons = taiDuLieuLocalStorage(hoaDonKey);
+  if (stringHoaDons == null) return false;
+  g_hoaDon = JSON.parse(stringHoaDons);
+  return true;
+}
+function taiDuLieuLocalStorage(datakey) {
+  return localStorage.getItem(datakey);
+}
 // xoa local storage de load lai danh sach san pham ban dau tu file data
 function xoaSanPhamLocalStorage() {
-  localStorage.removeItem("sanPham");
+  xoaDuLieuLocalStorage(sanPham);
+}
+function xoaNguoiDungLocalStorage() {
+  xoaDuLieuLocalStorage(nguoiDungKey);
+}
+function xoaHoaDonLocalStorage() {
+  xoaDuLieuLocalStorage(hoaDonKey);
+}
+
+function xoaDuLieuLocalStorage(datakey) {
+  localStorage.removeItem(datakey);
 }
 
 // them san pham, co the nhap id hoac khong
@@ -347,6 +413,9 @@ function xoaSanPham(id) {
 }
 
 function createPaginationDebugTable(data) {
+  // Append the table to the DOM (replace '.debug-table' with your actual container ID)
+  const container = document.querySelector(".debug-table");
+  if (!container) return;
   if (!Array.isArray(data)) data = [data];
   const table = document.createElement("table");
   const headerRow = document.createElement("tr");
@@ -368,9 +437,7 @@ function createPaginationDebugTable(data) {
     }
     table.appendChild(row);
   }
-
   // Append the table to the DOM (replace '.debug-table' with your actual container ID)
-  const container = document.querySelector(".debug-table");
   container.appendChild(table);
 }
 
