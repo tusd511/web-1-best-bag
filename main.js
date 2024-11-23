@@ -161,6 +161,10 @@ function renderItemSanPham(sanPham) {
     item.appendChild(matchScore);
   }
 
+  const spacer = document.createElement("div");
+  spacer.classList.add("grid-spacer");
+  item.appendChild(spacer);
+
   const price = document.createElement("p");
   price.style.setProperty("text-decoration", "line-through");
   price.style.setProperty("color", "gray");
@@ -174,7 +178,7 @@ function renderItemSanPham(sanPham) {
 
   const img = document.createElement("img");
   img.src = `./images/${sanPham["image-file"]}`;
-  img.className = "grid-img";
+  img.classList.add("grid-img");
   item.appendChild(img);
 
   const btn = document.createElement("button");
