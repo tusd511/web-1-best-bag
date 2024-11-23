@@ -1,6 +1,9 @@
 # Web 1 Best Bag
 
 - do an web 1 k24
+- # Simple workflow for deploying static content to GitHub Pages
+    - name: Deploy static content to Pages
+        - https://bhbghghbgb.github.io/web-1-best-bag/
 
 ### test data summary
 
