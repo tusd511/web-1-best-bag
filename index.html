@@ -34,7 +34,12 @@
       >
         <form id="productForm" style="border: 1px solid green">
           <label for="search">Name:</label>
-          <textarea id="search" name="search" cols="50" rows="3"></textarea>
+          <input
+            type="text"
+            id="search"
+            name="search"
+            placeholder="Product Name"
+          />
 
           <label for="priceRange">Price Range:</label>
           <input
@@ -55,7 +60,7 @@
 
           <label for="sortBy">Sort By:</label>
           <select id="sortBy" name="sort">
-            <option value="">Select</option>
+            <option value selected>(Chua chon)</option>
             <option value="asc">Price Ascending</option>
             <option value="desc">Price Descending</option>
             <option value="best">Best Match</option>

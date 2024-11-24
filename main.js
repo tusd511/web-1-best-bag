@@ -40,7 +40,7 @@ function taiHoaDon() {
 
 function taoBoLocSanPham() {
   // cac param muon giu lai khi sua bo loc
-  const { search, min, max, sort, category } = layParamUrl();
+  const { search, min, max, sort, categories } = layParamUrl();
   // Dynamically add categories to the form
   g_theLoaiSanPham.forEach((category) => {
     const checkbox = document.createElement("input");
@@ -77,12 +77,12 @@ function taoBoLocSanPham() {
   });
   // hien lai data tu param vao form
   document.getElementById("search").value = search;
-  document.getElementById("minPrice").value = min;
-  document.getElementById("maxPrice").value = max;
-  if (category?.length > 0)
+  if (Number.isFinite(min)) document.getElementById("minPrice").value = min;
+  if (Number.isFinite(max)) document.getElementById("maxPrice").value = max;
+  if (categories?.length > 0)
     [
       ...document.querySelectorAll('#categories input[type="checkbox"]'),
-    ].forEach((cb) => (cb.checked = category.includes(cb.value)));
+    ].forEach((cb) => (cb.checked = categories.includes(cb.value)));
   document.getElementById("sortBy").value = sort;
   // su kien submit
   document.getElementById("productForm").addEventListener("submit", (e) => {
@@ -91,7 +91,7 @@ function taoBoLocSanPham() {
     new FormData(e.target).forEach((value, key) => {
       formObject[key] = value;
     });
-    formObject.category = [
+    formObject.categories = [
       ...document.querySelectorAll(
         '#categories input[type="checkbox"]:checked'
       ),
@@ -108,17 +108,17 @@ function layParamUrl() {
   const params = new URL(document.location.toString()).searchParams;
   return {
     page: parseInt(params.get("page"), 10),
-    sort: params.get("sort"),
+    sort: params.get("sort") || "",
     min: parseInt(params.get("min"), 10),
     max: parseInt(params.get("max"), 10),
-    search: params.get("search"),
-    category: params.getAll("category"),
+    search: params.get("search") || "",
+    categories: params.getAll("categories[]") || [],
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
 function caiParamUrlVaReload(
-  { page, sort, min, max, search, category },
+  { page, sort, min, max, search, categories },
   resetParam
 ) {
   const url = new URL(document.location.toString());
@@ -136,15 +136,15 @@ function caiParamUrlVaReload(
   setParam(min, "min");
   setParam(max, "max");
   setParam(search, "search");
-  setParamArray(category, "category");
+  setParamArray(categories, "categories[]");
   window.location = url.toString();
 }
 
 function tinhSanPhamHienThi() {
-  let { page, sort, min, max, search, category } = layParamUrl();
+  let { page, sort, min, max, search, categories } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaSanPham(min, max, sanPhamsDaLoc);
-  sanPhamsDaLoc = locTheLoaiSanPham(category, sanPhamsDaLoc);
+  sanPhamsDaLoc = locTheLoaiSanPham(categories, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
   const soLuongSanPham = sanPhamsDaLoc.length;
@@ -174,7 +174,7 @@ function tinhSanPhamHienThi() {
     min,
     max,
     search,
-    category,
+    categories,
     soLuongSanPham,
     tongSoSanPham: g_sanPham.length,
     chiSoBatDau,
