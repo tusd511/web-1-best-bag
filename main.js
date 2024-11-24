@@ -3,11 +3,11 @@ const sanPhamKey = "sanPham";
 const nguoiDungKey = "nguoiDung";
 const hoaDonKey = "hoaDon";
 const theLoaiSanPhamKey = "theLoaiSanPham";
-const sanPhamFile = "san-pham.json";
-const nguoiDungFile = "nguoi-dung.json";
-const hoaDonFile = "hoa-don.json";
-const theLoaiSanPhamFile = "the-loai.json";
-var soSanPhamMoiTrang = 10;
+var sanPhamFile = "/san-pham.json";
+var nguoiDungFile = "/nguoi-dung.json";
+var hoaDonFile = "/hoa-don.json";
+var theLoaiSanPhamFile = "/the-loai.json";
+var soSanPhamMoiTrang = 12;
 
 async function taiDuLieu(datakey, datafile) {
   // du lieu key nay da co trong local storage
@@ -113,12 +113,14 @@ function layParamUrl() {
     max: parseInt(params.get("max"), 10),
     search: params.get("search") || "",
     categories: params.getAll("categories[]") || [],
+    tab: params.get("tab"),
+    disabled: params.get("disabled"),
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
 function caiParamUrlVaReload(
-  { page, sort, min, max, search, categories },
+  { page, sort, min, max, search, categories, tab, disabled },
   resetParam
 ) {
   const url = new URL(document.location.toString());
@@ -137,6 +139,8 @@ function caiParamUrlVaReload(
   setParam(max, "max");
   setParam(search, "search");
   setParamArray(categories, "categories[]");
+  setParam(tab, "tab");
+  setParam(disabled, "disabled");
   window.location = url.toString();
 }
 
@@ -277,9 +281,13 @@ function hienThiDanhSach(duLieusHienThi, hamRenderItem, wrapperSelector) {
   wrapper.appendChild(container);
 }
 
-function hienThiPagination(pageHienTai, pageToiDa) {
+function hienThiPagination(
+  pageHienTai,
+  pageToiDa,
+  wrapperSelector = ".pagination"
+) {
   if (pageToiDa === 0) return;
-  const wrapper = document.querySelector(".pagination");
+  const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("ul");
   container.classList.add("pagination-list");

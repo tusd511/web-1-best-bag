@@ -1,288 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Web 1 Best Bag</title>
-    <link rel="shortcut icon" type="image/png" sizes="512x512" href="../img/favicon.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/style.css">
-    <link rel="stylesheet" href="./admin.css">
-    
-    
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      sizes="512x512"
+      href="../img/favicon.png"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="./admin.css" />
   </head>
-  <body class = "Dark">
+  <body class="Dark">
     <!--TOPBAR-->
-    <div class = "topbar">
-        <div class="bar-container">
-            <button class="topbar-toggler" type="button">
-                <i class="fas fa-bars" style="color:#fff"></i>
-            </button>
-            <div class="topbar-collapse" id="topbarContent">
-                <ul class="topbar-content">
-                    <li class="topbar-item">
-                        <a class="topbar-link" href="#" id="topbarDropdown" role="button" >
-                        <img src="" alt="avatar" class="avatar-img">
-                        Xin chào Admin
-                    </a>
-                    <div class="topbar-dropmenu" aria-labelledby="topbarDropdown">
-                        <a class="topbar-dropitem" href="/login.html">Đăng xuất</a>
-                    </div>
-                    </li>
-                </ul>
-            </div>
+    <div class="topbar">
+      <div class="bar-container">
+        <button class="topbar-toggler" type="button">
+          <i class="fas fa-bars" style="color: #fff"></i>
+        </button>
+        <div class="topbar-collapse" id="topbarContent">
+          <ul class="topbar-content">
+            <li class="topbar-item">
+              <a class="topbar-link" href="#" id="topbarDropdown" role="button">
+                <img src="" alt="avatar" class="avatar-img" />
+                Xin chào Admin
+              </a>
+              <div class="topbar-dropmenu" aria-labelledby="topbarDropdown">
+                <a class="topbar-dropitem" href="/login.html">Đăng xuất</a>
+              </div>
+            </li>
+          </ul>
         </div>
+      </div>
     </div>
-    
+
     <!--END-TOPBAR-->
-    
-    
+
     <div class="wrapper d-flex">
-        <!--SIDEBAR-->
-        <div class="sideMenu" onmouseover="PhongSide();" onmouseout="ThuSide();" style="width: 80px;">
-            <div class="sidebar">
-                <div style="height: 30vh">
+      <!--SIDEBAR-->
+      <div
+        class="sideMenu"
+        onmouseover="PhongSide();"
+        onmouseout="ThuSide();"
+        style="width: 80px"
+      >
+        <div class="sidebar">
+          <div style="height: 30vh"></div>
+          <ul class="menu-list">
+            <li class="menu-item">
+              <a
+                href="#"
+                onclick="hienthongke(); return false"
+                class="menu-link sidebar-link isAcitve"
+              >
+                <i class="side-icon fas fa-chart-line"></i>
+                <span class="text">Thống kê</span>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="#"
+                onclick="hiensanpham(); return false"
+                class="menu-link sidebar-link"
+              >
+                <i class="side-icon fas fa-cubes"></i>
+                <span class="text">Sản phẩm</span>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="#"
+                onclick="hiennguoidung(); return false"
+                class="menu-link sidebar-link"
+              >
+                <i class="side-icon fas fa-users"></i>
+                <span class="text">Người dùng</span>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a
+                href="#"
+                onclick="hiendonhang(); return false"
+                class="menu-link sidebar-link"
+              >
+                <i class="side-icon fas fa-file-invoice"></i>
+                <span class="text">Đơn hàng</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!--END-SIDEBAR-->
+      <!--CONTENT-WEB-->
+      <div class="content">
+        <main>
+          <!-- THONG KE -->
+          <div class="container2">
+            <div id="quanlythongke" style="margin-top: 16px; display: block">
+              <div class="header-product">
+                <h1 style="color: #fff">THỐNG KÊ</h1>
+              </div>
+              <!-- CARDS -->
+              <div class="board">
+                <div class="card-container">
+                  <div class="card-box bg-mattRed">
+                    <div class="inner">
+                      <h3>23</h3>
+                      <p>Mặt hàng</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <a href="javascript:hiensanpham();" class="card-box-footer">
+                      Chi tiết &nbsp;
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                  </div>
                 </div>
-                <ul class="menu-list">
-                    <li class="menu-item">
-                        <a href="javascript:hienthongke();" class="menu-link sidebar-link isAcitve">
-                            <i class="side-icon fas fa-chart-line"></i>
-                            <span class="text">Thống kê</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" onclick="hiensanpham(); return false" class="menu-link sidebar-link">
-                            <i class="side-icon fas fa-cubes"></i>
-                            <span class="text">Sản phẩm</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" onclick="hiennguoidung(); return false" class="menu-link sidebar-link">
-                            <i class="side-icon fas fa-users"></i>
-                            <span class="text">Người dùng</span>
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" onclick="hiendonhang(); return false" class="menu-link sidebar-link">
-                            <i class="side-icon fas fa-file-invoice"></i>
-                            <span class="text">Đơn hàng</span>
-                        </a>
-                    </li>
-                </ul>
+
+                <div class="card-container">
+                  <div class="card-box bg-green">
+                    <div class="inner">
+                      <h3>146</h3>
+                      <p>Đơn hàng đã giao</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <a href="javascript:hiendonhang();" class="card-box-footer">
+                      Chi tiết &nbsp;
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-container">
+                  <div class="card-box bg-orange">
+                    <div class="inner">
+                      <h3>86</h3>
+                      <p>Tài khoản đang hoạt động</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-user-friends"></i>
+                    </div>
+                    <a
+                      href="javascript:hiennguoidung();"
+                      class="card-box-footer"
+                    >
+                      Chi tiết &nbsp;
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-container">
+                  <div class="card-box bg-blue">
+                    <div class="inner">
+                      <h3>1,436</h3>
+                      <p>Lượt truy cập trong tháng</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-eye"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-container">
+                  <div class="card-box bg-maroon">
+                    <div class="inner">
+                      <h3>679</h3>
+                      <p>Lượt nhấn vào quảng cáo</p>
+                    </div>
+                    <div class="icon">
+                      <i class="fas fa-ad"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-container">
+                  <div class="card-box bg-red">
+                    <div class="inner">
+                      <h3>68,738,000 VNĐ</h3>
+                      <p>Doanh thu tháng</p>
+                    </div>
+                    <div class="icon">
+                      <i class="far fa-money-bill-alt"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- END CARDS -->
+              <div class="rank-of-product">
+                <span>
+                  <h3>TOP BÁN CHẠY</h3>
+                  Trong 146 đơn, 328 sản phẩm </span
+                ><br />
+                <table id="top-selling">
+                  <thead>
+                    <tr>
+                      <th style="padding: 15px">#</th>
+                      <th style="padding: 15px">Tên</th>
+                      <th style="padding: 15px">Đã bán</th>
+                      <th style="padding: 15px">Lợi nhuận</th>
+                    </tr>
+                  </thead>
+                  <tbody id="product-table">
+                    <!--Tạo bởi js-->
+                  </tbody>
+                </table>
+              </div>
             </div>
-        </div>
-        <!--END-SIDEBAR-->
-        <!--CONTENT-WEB-->
-        <div class="content">
-            <main>
-                <!-- THONG KE -->
-                <div class="container2">
-                    <div id="quanlythongke" style="margin-top: 16px; display: block;">
-                        <div class="header-product">
-                            <h1 style="color:#fff">THỐNG KÊ</h1>
-                        </div>
-                        <!-- CARDS -->
-                        <div class="board">
-                            <div class="card-container">
-                                <div class="card-box bg-mattRed">
-                                    <div class="inner">
-                                        <h3>23</h3>
-                                        <p>Mặt hàng</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-shopping-bag"></i>
-                                    </div>
-                                    <a href="javascript:hiensanpham();" class="card-box-footer">
-                                        Chi tiết &nbsp;
-                                        <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+          </div>
+          <!-- END THONG KE -->
 
-                            <div class="card-container">
-                                <div class="card-box bg-green">
-                                    <div class="inner">
-                                        <h3>146</h3>
-                                        <p>Đơn hàng đã giao</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-clipboard-check"></i>
-                                    </div>
-                                    <a href="javascript:hiendonhang();" class="card-box-footer">
-                                        Chi tiết &nbsp;
-                                        <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+          <!-- QUAN LY SAN PHAM -->
+          <div class="container2">
+            <div id="quanlysanpham" style="margin-top: 16px; display: block">
+              <div class="header-product">
+                <h1 style="color: #fff">Quản lý sản phẩm</h1>
+              </div>
+              <div class="header-new-product">
+                <button
+                  type="button"
+                  onclick="chinhSua('','','','');"
+                  id="addproduct-button"
+                >
+                  Thêm món mới
+                </button>
+              </div>
 
-                            <div class="card-container">
-                                <div class="card-box bg-orange">
-                                    <div class="inner">
-                                        <h3>86</h3>
-                                        <p>Tài khoản đang hoạt động</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-user-friends"></i>
-                                    </div>
-                                    <a href="javascript:hiennguoidung();" class="card-box-footer">
-                                        Chi tiết &nbsp;
-                                        <i class="fa fa-arrow-circle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+              <div class="product-list"></div>
+              <div class="pagination"></div>
+            </div>
+          </div>
+          <!-- END QUAN LY SAN PHAM -->
+          <!-- QUAN LY NGUOI DUNG -->
+          <div class="container-fluid">
+            <div id="quanlynguoidung" style="margin-top: 16px; display: block">
+              <div class="row header-product">
+                <h1>Quản lý tài khoản</h1>
+              </div>
+              <div class="pagination2"></div>
+              <div class="account-list"></div>
+            </div>
+          </div>
+          <!-- END QUAN LY NGUOI DUNG -->
 
-                            <div class="card-container">
-                                <div class="card-box bg-blue">
-                                    <div class="inner">
-                                        <h3>1,436</h3>
-                                        <p>Lượt truy cập trong tháng</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                </div>
-                            </div>
+          <!-- QUAN LY DON HANG -->
+          <div class="container-fluid">
+            <div id="quanlydonhang" style="margin-top: 16px; display: block">
+              <div class="row header-product">
+                <h1>Quản lý đơn hàng</h1>
+              </div>
+              <div class="order-líst"></div>
+              <div class="pagination3"></div>
+            </div>
+          </div>
+          <!-- END QUAN LY DON HANG -->
+        </main>
+      </div>
 
-                            <div class="card-container">
-                                <div class="card-box bg-maroon">
-                                    <div class="inner">
-                                        <h3>679</h3>
-                                        <p>Lượt nhấn vào quảng cáo</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="fas fa-ad"></i>
-                                    </div>
-                                </div>
-                            </div>
+      <!--END-CONTENT-WEB-->
+    </div>
 
-                            <div class="card-container">
-                                <div class="card-box bg-red">
-                                    <div class="inner">
-                                        <h3>68,738,000 VNĐ</h3>
-                                        <p>Doanh thu tháng</p>
-                                    </div>
-                                    <div class="icon">
-                                        <i class="far fa-money-bill-alt"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END CARDS -->
-                        <div class="rank-of-product">
-                            <span>
-                                <h3>TOP BÁN CHẠY</h3>
-                                Trong 146 đơn, 328 sản phẩm
-                            </span><br>
-                            <table id="top-selling">
-                                <thead>
-                                    <tr>
-                                        <th style="padding:15px">#</th>
-                                        <th style="padding:15px">Tên</th>
-                                        <th style="padding:15px">Đã bán</th>
-                                        <th style="padding:15px">Lợi nhuận</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="product-table">
-                                    <!--Tạo bởi js-->
-                                </tbody>
-                            </table>    
-                        </div>
-                    </div>
-                </div>
-                <!-- END THONG KE -->
-
-                <!-- QUAN LY SAN PHAM -->
-                <div class="container2">
-                    <div id="quanlysanpham" style="margin-top: 16px; display: block;">
-                        <div class="header-product">
-                            <h1 style="color:#fff">Quản lý sản phẩm</h1>
-                        </div>
-                        <div class="header-new-product">
-                            <button type="button" onclick="chinhSua('','','','');" id="addproduct-button"> Thêm món mới </button>
-                        </div>
-                        <div id="product-list">
-                            <!--Thông tin từ js-->
-                        </div>
-                        <!-- PAGE BREAK -->
-                        <ul id="pagination-menu">
-                            <!--Tạo bởi js-->
-                        </ul>
-                        <!-- END PAGE BREAK -->
-
-                        <div class="product-list"></div>
-                        <div class="pagination"></div>
-
-                    </div>
-                </div>
-                <!-- END QUAN LY SAN PHAM -->
-                <!-- QUAN LY NGUOI DUNG -->
-                <div class="container-fluid">
-                    <div id="quanlynguoidung" style="margin-top: 16px; display: block;">
-                        <div class="row header-product">
-                            <h1>Quản lý tài khoản</b></h1>
-                        </div>
-
-                        <!-- PAGE BREAK -->
-                        <ul id="pagination-user">
-                            <!--Tạo bởi js-->
-                        </ul>
-                        <!-- END PAGE BREAK -->
-                        <table id="account-list">
-                            <thead>
-                                <tr>
-                                    <th style="padding:15px">#</th>
-                                    <th>Email</th>
-                                    <th>Mật khẩu</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Kích hoạt/Khóa</th>
-                                </tr>
-                            </thead>
-                            <tbody id="account-table">
-
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-                
-                <!-- END QUAN LY NGUOI DUNG -->
-
-                <!-- QUAN LY DON HANG -->
-                <div class="container-fluid">
-                    <div id="quanlydonhang" style="margin-top: 16px; display: block;">
-                        <div class="row header-product">
-                            <h1>Quản lý đơn hàng</h1>
-                        </div>
-                        <table id="order-list">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Email khách hàng</th>
-                                    <th scope="col">Chi tiết</th>
-                                    <th scope="col">Ngày đặt</th>
-                                    <th scope="col">Tổng tiền</th>
-                                    <th scope="col">Xác nhận</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordertable">
-                                <!--Thông tin từ js-->
-                            </tbody>
-                        </table>
-
-                        
-                    </div>
-                </div>
-                <!-- END QUAN LY DON HANG -->
-            </main>
-        </div>
-
-            
-        <!--END-CONTENT-WEB-->
-    </div>      
-        
     <script src="../main.js"></script>
-    <script src="./admin.js" ></script>
-    
-     
+    <script src="./admin.js"></script>
   </body>
 </html>
