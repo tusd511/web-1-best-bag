@@ -6,6 +6,7 @@
     <title>Admin Web 1 Best Bag</title>
     <link rel="shortcut icon" type="image/png" sizes="512x512" href="../img/favicon.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
     <link rel="stylesheet" href="./admin.css">
     
     
@@ -25,7 +26,7 @@
                         Xin chào Admin
                     </a>
                     <div class="topbar-dropmenu" aria-labelledby="topbarDropdown">
-                        <a class="topbar-dropitem" href="./admin-login.html">Đăng xuất</a>
+                        <a class="topbar-dropitem" href="/login.html">Đăng xuất</a>
                     </div>
                     </li>
                 </ul>
@@ -44,13 +45,13 @@
                 </div>
                 <ul class="menu-list">
                     <li class="menu-item">
-                        <a href="javascript:hienthongke();" class="menu-link sidebar-link">
+                        <a href="javascript:hienthongke();" class="menu-link sidebar-link isAcitve">
                             <i class="side-icon fas fa-chart-line"></i>
                             <span class="text">Thống kê</span>
                         </a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" onclick="hiensanpham(); return false" class="menu-link sidebar-link isActive">
+                        <a href="#" onclick="hiensanpham(); return false" class="menu-link sidebar-link">
                             <i class="side-icon fas fa-cubes"></i>
                             <span class="text">Sản phẩm</span>
                         </a>
@@ -207,6 +208,10 @@
                             <!--Tạo bởi js-->
                         </ul>
                         <!-- END PAGE BREAK -->
+
+                        <div class="product-list"></div>
+                        <div class="pagination"></div>
+
                     </div>
                 </div>
                 <!-- END QUAN LY SAN PHAM -->
@@ -275,7 +280,9 @@
         <!--END-CONTENT-WEB-->
     </div>      
         
+    <script src="../main.js"></script>
     <script src="./admin.js" ></script>
+    
      
   </body>
 </html>

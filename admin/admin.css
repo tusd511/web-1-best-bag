@@ -1,56 +1,55 @@
 /*admin dashboard*/
 .topbar {
-  position:sticky;
+  position: sticky;
   top: 0;
-  z-index:1020;
+  z-index: 1020;
   background-color: #343a40;
-  padding:.5rem 1rem;
+  padding: 0.5rem 1rem;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
 }
 
-.topbar-toggler{
-  border:1px solid #fff;
-  background-color:#343A40;
-  padding:5px 10px;
-  margin:10px;
-  border-radius: 5px;;
+.topbar-toggler {
+  border: 1px solid #fff;
+  background-color: #343a40;
+  padding: 5px 10px;
+  margin: 10px;
+  border-radius: 5px;
 }
 
-.topbar-content{
+.topbar-content {
   list-style: none;
 }
 
-.topbar-dropmenu{
-  padding:5px;
-  border:1px solid #f1f1f1;
-  background-color:#fff;
+.topbar-dropmenu {
+  padding: 5px;
+  border: 1px solid #f1f1f1;
+  background-color: #fff;
   border-radius: 5px;
-  margin:10px;
+  margin: 10px;
 }
 
-.topbar-dropitem{
-  
+.topbar-dropitem {
   text-decoration: none;
 }
 
-.topbar-link{
-  color:#fff;
+.topbar-link {
+  color: #fff;
   text-decoration: none;
 }
 /*---------------------------------------------------------------*/
 /* Ẩn phần tử mặc định */
 .topbar-collapse,
 .topbar-dropmenu {
-    display: none;
+  display: none;
 }
 
 /* Hiển thị phần tử khi có class .show */
 .topbar-collapse.show,
 .topbar-dropmenu.show {
-    display: block;
+  display: block;
 }
 
 /*---------------------------------------------------------------*/
@@ -95,16 +94,17 @@ img {
   list-style: none; /* Loại bỏ dấu chấm của danh sách (bullet points) */
 }
 
-.menu-link{
+.menu-link {
   display: block;
-  
 }
 
-.menu-item a{
+.menu-item a {
   text-decoration: none;
 }
 
-dl, ol, ul {
+dl,
+ol,
+ul {
   margin-top: 0;
   margin-bottom: 1rem;
 }
@@ -113,7 +113,6 @@ li {
   text-align: -webkit-match-parent;
   unicode-bidi: isolate;
 }
-
 
 .sidebar .menu-link {
   max-height: 60px;
@@ -132,11 +131,13 @@ li {
   background-color: #505050;
 }
 
-.isActive i, span {
+.isActive i,
+span {
   color: #fff !important;
 }
 
-.sidebar .menu-link i, span {
+.sidebar .menu-link i,
+span {
   min-height: 60px;
   color: var(--mattGray);
   font-size: 1.2rem;
@@ -144,7 +145,8 @@ li {
   padding: 8px;
 }
 
-.menu-link:hover i, span {
+.menu-link:hover i,
+span {
   color: #fff;
 }
 
@@ -172,9 +174,6 @@ li {
   margin-top: 10px;
   transition: all ease 0.3s;
 }
-
-
-
 
 /*
 a {
@@ -210,26 +209,27 @@ a {
   margin-right: -15px;
   margin-left: -15px;
 }
-.card{
+.card {
   background-color: #303337;
   border: solid 1px var(--mattGray);
   border-radius: 5px;
 }
 
-/* CSS cho card-container */ 
-.card-container { 
-  box-sizing: border-box; padding: 15px; 
-} 
-/* Định dạng theo độ rộng màn hình */ 
-@media (min-width: 576px) { 
-  .card-container { 
-    width: 50%; /* 50% cho col-sm-6 */ 
-  } 
+/* CSS cho card-container */
+.card-container {
+  box-sizing: border-box;
+  padding: 15px;
 }
-@media (min-width: 992px) { 
-  .card-container { 
-    width: 33.3333%; /* 33.33% cho col-lg-4 */ 
-  } 
+/* Định dạng theo độ rộng màn hình */
+@media (min-width: 576px) {
+  .card-container {
+    width: 50%; /* 50% cho col-sm-6 */
+  }
+}
+@media (min-width: 992px) {
+  .card-container {
+    width: 33.3333%; /* 33.33% cho col-lg-4 */
+  }
 }
 
 .card-box {
@@ -246,7 +246,7 @@ a {
   color: #f1f1f1;
 }
 
-.card-box:hover .icon i{
+.card-box:hover .icon i {
   transition: 1s;
   font-size: 90px;
 }
@@ -255,7 +255,8 @@ a {
   padding: 5px 10px 0 10px;
 }
 
-.inner h3, p {
+.inner h3,
+p {
   cursor: default;
   color: #fff;
   font-size: 15px;
@@ -299,7 +300,7 @@ a {
 }
 
 .card-box:hover .card-box-footer {
-  background: rgba(0, 0, 0, 0.3)
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .card-box-footer i {
@@ -322,13 +323,8 @@ a {
   background-color: #85144b !important;
 }
 .bg-red {
-  background-color: #FF4136 !important;
+  background-color: #ff4136 !important;
 }
-
-
-
-
-
 
 /* RANK OF PRODUCT */
 #quanlythongke {
@@ -342,29 +338,27 @@ a {
   background-color: var(--blackLight);
 }
 
-.rank-of-product h3{
+.rank-of-product h3 {
   padding: 0;
   color: #fff;
 }
 
-#top-selling{
-  width:100%;
+#top-selling {
+  width: 100%;
   border-collapse: collapse;
-  background-color:#212529;
+  background-color: #212529;
 }
 
-th, td{
-  border:1px solid #343a40;
-  color:#fff;
-  padding:5px 5px;
+th,
+td {
+  border: 1px solid #343a40;
+  color: #fff;
+  padding: 5px 5px;
 }
 
 #top-selling tr:hover {
-  background-color:var(--blackLight);
+  background-color: var(--blackLight);
 }
-
-
-
 
 /**/
 
@@ -384,91 +378,97 @@ th, td{
   margin-bottom: 10px;
 }
 
-
-#addproduct-button{
+#addproduct-button {
   margin: 10px;
   padding: 12px 12px;
-  color:#fff;
-  background-color:#28A745;
+  color: #fff;
+  background-color: #28a745;
   font-size: 16px;
-  border:1px solid #fff;
+  border: 1px solid #fff;
   border-radius: 5px;
 }
 
-#addproduct-button:hover{
-  opacity:0.7;
+#addproduct-button:hover {
+  opacity: 0.7;
 }
 
-.updateproduct-button{
+.updateproduct-button {
   color: #fff;
   background-color: #28a745;
   border-color: #28a745;
-  font-weight:400;
+  font-weight: 400;
   text-align: center;
   vertical-align: middle;
   border: 1px solid transparent;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   margin-left: 50px;
 }
 
-.updateproduct-button:hover{
-  opacity:0.7;
+.updateproduct-button:hover {
+  opacity: 0.7;
 }
 
-.deleteproduct-button{
+.deleteproduct-button {
   color: #fff;
   background-color: #dc3545;
   border-color: #dc3545;
-  font-weight:400;
+  font-weight: 400;
   text-align: center;
   vertical-align: middle;
   border: 1px solid transparent;
-  padding: .375rem .75rem;
+  padding: 0.375rem 0.75rem;
   font-size: 1rem;
   line-height: 1.5;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   margin-right: 50px;
 }
 
-.deleteproduct-button:hover{
-  opacity:0.7;
+.deleteproduct-button:hover {
+  opacity: 0.7;
 }
 
 .wrap-cart {
-  transition: .3s ease-in;
-  display:inline-block;
-  padding:0px 15px;
-  margin:0px 0px 24px;
+  transition: 0.3s ease-in;
+  display: inline-block;
+  padding: 0px 15px;
+  margin: 0px 0px 24px;
 }
 
 .card {
   width: 100%;
   height: 100%;
-  margin:  auto;
+  margin: auto;
   background-color: var(--blackLight);
   border: 1px solid #858585;
-  position:relative;
-  display:flex;
+  position: relative;
+  display: flex;
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
-  background-clip:border-box;
-  border-radius: .25rem;
+  background-clip: border-box;
+  border-radius: 0.25rem;
 }
 
-.inner-img{
-  opacity:0.8;
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 4px 8px;
+  margin: 0 22px;
+  padding: 12px 10px;
 }
 
-.card-body{
-  padding:20px;
-  display:flex;
-  flex-direction:column;
+.card-img-top {
+  width: 100%;
+}
+.card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  height:100%;
+  height: 100%;
 }
 
 .card-title {
@@ -476,22 +476,11 @@ th, td{
   margin: 0px 0px 12px;
 }
 
-.card-text{
-  color:#fff;
+.card-text {
+  color: #fff;
   margin: 0px 0px 80px;
 }
 
-
-@media (min-width: 576px) { 
-  .wrap-cart { 
-    width: 33%; /* 50% cho col-sm-6 */ 
-  } 
-}
-@media (min-width: 992px) { 
-  .wrap-cart { 
-    width: 24.5%; /* 33.33% cho col-lg-4 */ 
-  } 
-}
 /*
 .hidden {
   opacity: 0;
@@ -505,7 +494,7 @@ th, td{
   flex-wrap: nowrap;
 }
 
-.cart-price{
+.cart-price {
   display: flex;
   text-align: center;
   justify-content: center;
@@ -514,7 +503,7 @@ th, td{
   position: absolute;
   bottom: 30px;
   width: 100%;
-  left:0;
+  left: 0;
 }
 
 .card-old-price {
@@ -525,13 +514,13 @@ th, td{
 
 .card-current-price {
   color: rgb(212, 0, 0);
-  font-size:1.6rem;
+  font-size: 1.6rem;
 }
 
-.button-group{
-  display:flex;
-  left:0;
-  width:100%;
+.button-group {
+  display: flex;
+  left: 0;
+  width: 100%;
   justify-content: center;
   position: absolute;
   bottom: 5px;
@@ -543,53 +532,58 @@ th, td{
 }
 
 /*xử lý phân trang sản phẩm*/
-#pagination-menu{
+#pagination-menu {
   display: flex;
   justify-content: center;
-  padding:15px;
+  padding: 15px;
   margin: 15px;
 }
 
-.pagination-menu-item{
-  display:inline-block;
+.pagination-menu-item {
+  display: inline-block;
   list-style: none;
   padding: 10px;
 }
 
-.pagination-menu-item button{
-  background-color:#343a40;
-  border:solid 1px #fff;
-  border-radius:5px;
+.pagination-menu-item button {
+  background-color: #343a40;
+  border: solid 1px #fff;
+  border-radius: 5px;
   padding: 12px 15px;
   color: #fff;
-
 }
-.pagination-menu-item button:hover{
+.pagination-menu-item button:hover {
   background: var(--mattRed);
 }
-.pagination-user-menu button .isActive{
+.pagination-user-menu button .isActive {
   background: var(--mattRed);
 }
-.pagination-menu-item button i{
+.pagination-menu-item button i {
   color: #fff;
 }
-
-
 
 /*-------------------------------------------------------*/
 /*QUAN LY PHAN TRANG TAI KHOAN*/
 .pagination-user {
   display: flex;
   justify-content: center;
-  padding:15px;
+  padding: 15px;
   margin: 15px;
 }
 
-.pagination-user-item{
-  display:inline-block;
+.pagination-user-item {
+  display: inline-block;
   list-style: none;
   padding: 10px;
 }
+
+/*#product-list{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 4px 8px;
+  margin: 0 22px;
+  padding: 12px 10px;
+}*/
 
 /*.btn-page {
   background-color: transparent;
@@ -615,8 +609,6 @@ th, td{
   color: #fff;
 }*/
 
-
-
 .selected-page {
   background-color: var(--mattRed);
   color: #fff;
@@ -626,22 +618,20 @@ th, td{
   color: red;
 }*/
 
-
-.pagination-user-item button{
-  background-color:#343a40;
-  border:solid 1px #fff;
-  border-radius:5px;
+.pagination-user-item button {
+  background-color: #343a40;
+  border: solid 1px #fff;
+  border-radius: 5px;
   padding: 12px 15px;
   color: #fff;
-
 }
-.pagination-user-item button:hover{
+.pagination-user-item button:hover {
   background: var(--mattRed);
 }
-.pagination-user-item button .isActive{
+.pagination-user-item button .isActive {
   background: var(--mattRed);
 }
-.pagination-user-item button i{
+.pagination-user-item button i {
   color: #fff;
 }
 
@@ -652,58 +642,58 @@ th, td{
   text-align: center;
 }
 
-#quanlynguoidung h1{
-  color:#fff;
+#quanlynguoidung h1 {
+  color: #fff;
 }
 
 .kichhoat i {
   font-size: 1.2rem;
   cursor: pointer;
   color: #fff;
-  transition: all .5s ease-in;
+  transition: all 0.5s ease-in;
 }
 .color-green {
   color: #00a65a !important;
 }
 
-table{
+table {
   animation: fadeIn linear 0.2s;
-  width:100%;
-  border-collapse:collapse;
+  width: 100%;
+  border-collapse: collapse;
 }
 
-tr{
-  transition: all .5s ease-in
+tr {
+  transition: all 0.5s ease-in;
 }
 
 /*-------------------------------------------------------*/
 /*QUAN LY DON HANG*/
-#quanlydonhang{
+#quanlydonhang {
   animation: fadeIn linear 0.3s;
   text-align: center;
-  display:block;
-  justify-content:center;
+  display: block;
+  justify-content: center;
 }
 
-#quanlydonhang h1{
-  color:#fff;
+#quanlydonhang h1 {
+  color: #fff;
 }
 
-#order-list{
-  width:100%;
-  border-collapse:collapse;
+#order-list {
+  width: 100%;
+  border-collapse: collapse;
   background-color: #212529;
   margin: 15px;
 }
 
-#order-list th,td{
-  padding: 15px ;
+#order-list th,
+td {
+  padding: 15px;
 }
 
-#order-list tr:hover{
-  background-color:var(--blackLight);
+#order-list tr:hover {
+  background-color: var(--blackLight);
 }
-
 
 /*-------------------------------------------------------*/
 .Dark {
@@ -724,7 +714,9 @@ body {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
@@ -765,8 +757,11 @@ body {
   --breakpoint-md: 768px;
   --breakpoint-lg: 992px;
   --breakpoint-xl: 1200px;
-  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 html {
   font-family: sans-serif;
@@ -784,7 +779,9 @@ html {
   font-family: "Signika", sans-serif;
   color: #000;
 }
-*, ::after, ::before {
+*,
+::after,
+::before {
   box-sizing: border-box;
 }
 
@@ -792,12 +789,12 @@ html {
   from {
     opacity: 0;
   }
-  to{
+  to {
     opacity: 1;
   }
 }
 
 @font-face {
-  src: url('../font/Signika/static/Signika-Regular.ttf');
+  src: url("../font/Signika/static/Signika-Regular.ttf");
   font-family: "Signika";
 }
