@@ -1,11 +1,12 @@
-var g_sanPham, g_nguoiDung, g_hoaDon;
+var g_sanPham, g_nguoiDung, g_hoaDon, g_theLoaiSanPham;
 const sanPhamKey = "sanPham";
 const nguoiDungKey = "nguoiDung";
 const hoaDonKey = "hoaDon";
+const theLoaiSanPhamKey = "theLoaiSanPham";
 const sanPhamFile = "san-pham.json";
 const nguoiDungFile = "nguoi-dung.json";
 const hoaDonFile = "hoa-don.json";
-const theLoaiFile = "the-loai.json";
+const theLoaiSanPhamFile = "the-loai.json";
 var soSanPhamMoiTrang = 10;
 
 async function taiDuLieu(datakey, datafile) {
@@ -18,24 +19,11 @@ async function taiDuLieu(datakey, datafile) {
   const response = await fetch(datafile);
   return await response.json();
 }
-function taiSanPham() {
-  taiDuLieu(sanPhamKey, sanPhamFile).then((data) => {
-    g_sanPham = data;
-    tinhSanPhamHienThi();
-    // tai khung search
-    const searchBox = document.getElementById("search-box");
-    searchBox.addEventListener("keypress", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        const search = searchBox.value;
-        if (search || layParamUrl().search)
-          caiParamUrlVaReload({ search }, true);
-        else alert("Khung search trong");
-      }
-    });
-    search = layParamUrl().search.trim().replace(/\s+/g, " ");
-    if (search != null) searchBox.value = search;
-  });
+async function taiSanPham() {
+  g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
+  g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile);
+  taoBoLocSanPham();
+  tinhSanPhamHienThi();
 }
 function taiNguoiDung() {
   taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
@@ -47,6 +35,68 @@ function taiHoaDon() {
   taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
     g_hoaDon = data;
     tinhHoaDonHienThi();
+  });
+}
+
+function taoBoLocSanPham() {
+  // cac param muon giu lai khi sua bo loc
+  const { search, min, max, sort, category } = layParamUrl();
+  // Dynamically add categories to the form
+  g_theLoaiSanPham.forEach((category) => {
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.value = category;
+    checkbox.checked = true;
+    checkbox.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+      // Function to toggle category checkboxes
+      document
+        .querySelectorAll('#categories input[type="checkbox"]:checked')
+        .forEach((cb) => {
+          cb.checked = false;
+        });
+      e.target.checked = true;
+    });
+    checkbox.addEventListener("change", (e) => {
+      const cbs = [
+        ...document.querySelectorAll('#categories input[type="checkbox"]'),
+      ];
+      if (cbs.every((cb) => !cb.checked)) {
+        cbs.forEach((cb) => (cb.checked = true));
+        e.target.checked = false;
+      }
+    });
+    const label = document.createElement("label");
+    label.textContent = category;
+
+    const div = document.createElement("div");
+    div.appendChild(checkbox);
+    div.appendChild(label);
+
+    document.getElementById("categories").appendChild(div);
+  });
+  // hien lai data tu param vao form
+  document.getElementById("search").value = search;
+  document.getElementById("minPrice").value = min;
+  document.getElementById("maxPrice").value = max;
+  if (category?.length > 0)
+    [
+      ...document.querySelectorAll('#categories input[type="checkbox"]'),
+    ].forEach((cb) => (cb.checked = category.includes(cb.value)));
+  document.getElementById("sortBy").value = sort;
+  // su kien submit
+  document.getElementById("productForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formObject = {};
+    new FormData(e.target).forEach((value, key) => {
+      formObject[key] = value;
+    });
+    formObject.category = [
+      ...document.querySelectorAll(
+        '#categories input[type="checkbox"]:checked'
+      ),
+    ].map((cb) => cb.value);
+    caiParamUrlVaReload(formObject);
   });
 }
 
@@ -62,29 +112,39 @@ function layParamUrl() {
     min: parseInt(params.get("min"), 10),
     max: parseInt(params.get("max"), 10),
     search: params.get("search"),
+    category: params.getAll("category"),
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload({ page, sort, min, max, search }, resetParam) {
+function caiParamUrlVaReload(
+  { page, sort, min, max, search, category },
+  resetParam
+) {
   const url = new URL(document.location.toString());
   if (resetParam) url.search = "";
   const params = url.searchParams;
   const setParam = (param, name) => {
     if (param !== undefined) params.set(name, param);
   };
+  const setParamArray = (ps, name) => {
+    params.delete(name);
+    if (Array.isArray(ps)) ps.forEach((p) => params.append(name, p));
+  };
   setParam(page, "page");
   setParam(sort, "sort");
   setParam(min, "min");
   setParam(max, "max");
   setParam(search, "search");
+  setParamArray(category, "category");
   window.location = url.toString();
 }
 
 function tinhSanPhamHienThi() {
-  let { page, sort, min, max, search } = layParamUrl();
+  let { page, sort, min, max, search, category } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaSanPham(min, max, sanPhamsDaLoc);
+  sanPhamsDaLoc = locTheLoaiSanPham(category, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
   const soLuongSanPham = sanPhamsDaLoc.length;
@@ -113,6 +173,8 @@ function tinhSanPhamHienThi() {
     sort,
     min,
     max,
+    search,
+    category,
     soLuongSanPham,
     tongSoSanPham: g_sanPham.length,
     chiSoBatDau,
@@ -147,14 +209,6 @@ function renderItemSanPham(sanPham) {
   const item = document.createElement("div");
   item.classList.add("grid");
 
-  const id = document.createElement("h4");
-  id.innerText = sanPham["web-scraper-order"];
-  item.appendChild(id);
-
-  const name = document.createElement("h1");
-  name.innerText = sanPham["name"];
-  item.appendChild(name);
-
   if (sanPham.matchScore) {
     const matchScore = document.createElement("p");
     matchScore.style.setProperty("color", "green");
@@ -165,6 +219,14 @@ function renderItemSanPham(sanPham) {
 
     item.appendChild(matchScore);
   }
+
+  const id = document.createElement("h4");
+  id.innerText = sanPham["web-scraper-order"];
+  item.appendChild(id);
+
+  const name = document.createElement("h1");
+  name.innerText = sanPham["name"];
+  item.appendChild(name);
 
   const spacer = document.createElement("div");
   spacer.classList.add("grid-spacer");
@@ -181,10 +243,10 @@ function renderItemSanPham(sanPham) {
   sale.innerText = sanPham["price-sale-n"];
   item.appendChild(sale);
 
-  const img = document.createElement("img");
-  img.src = `./images/${sanPham["image-file"]}`;
-  img.classList.add("grid-img");
-  item.appendChild(img);
+  const category = document.createElement("h4");
+  category.style.setProperty("color", "cyan");
+  category.innerText = `Túi ${sanPham["category"]}`;
+  item.appendChild(category);
 
   const btn = document.createElement("button");
   btn.addEventListener("click", () =>
@@ -193,6 +255,10 @@ function renderItemSanPham(sanPham) {
   btn.textContent = "Xem chi tiet";
   item.appendChild(btn);
 
+  const img = document.createElement("img");
+  img.src = `./images/${sanPham["image-file"]}`;
+  img.classList.add("grid-img");
+  item.appendChild(img);
   return item;
 }
 
@@ -315,7 +381,13 @@ function locGiaSanPham(min, max, sanPhamsDaLoc) {
   }
   return locGiaThapNhat(min, locGiaCaoNhat(max, sanPhamsDaLoc));
 }
-
+function locTheLoaiSanPham(theLoai, sanPhamsDaLoc) {
+  if (Array.isArray(theLoai) && theLoai?.length > 0)
+    return sanPhamsDaLoc.filter((sanPham) =>
+      theLoai.includes(sanPham["category"])
+    );
+  return sanPhamsDaLoc;
+}
 function timTheoTen(name, sanPhamsDaLoc) {
   const sanitize = (string) =>
     transliterate(string).trim().replace(/\s+/g, " ").normalize().toLowerCase();
@@ -453,6 +525,7 @@ function xoaSanPham(id) {
 }
 
 function createPaginationDebugTable(data) {
+  console.table([data]);
   // Append the table to the DOM (replace '.debug-table' with your actual container ID)
   const container = document.querySelector(".debug-table");
   if (!container) return;
@@ -483,7 +556,9 @@ function createPaginationDebugTable(data) {
 
 // goi khi trang web load thanh cong
 window.addEventListener("load", () => {
-  if (document.querySelector(".product-list")) taiSanPham();
+  if (document.querySelector(".product-list")) {
+    taiSanPham();
+  }
   if (document.querySelector(".user-list")) taiNguoiDung();
   if (document.querySelector(".receipt-list")) taiHoaDon();
 });
