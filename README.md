@@ -1,7 +1,7 @@
 # Web 1 Best Bag
 
 - do an web 1 k24
-- # Simple workflow for deploying static content to GitHub Pages
+- ### Simple workflow for deploying static content to GitHub Pages
     - name: Deploy static content to Pages
         - https://bhbghghbgb.github.io/web-1-best-bag/
 
@@ -54,6 +54,17 @@
     4. hàm hiển thị pagination chỉ sử dụng chỉ số hiện tại và tối đa để tạo hiển thị
         1. ![image](https://github.com/user-attachments/assets/1003825d-fc30-4d3f-b192-5e04f3400e2d)
 5. thực hiện tương tự cho sản phẩm, người dùng, hóa đơn
+
+### ghi thêm cách tạo nhánh cho mấy bạn bảo chịu thua
+
+1. ![image](https://github.com/user-attachments/assets/ca9cc847-18b2-49e8-884a-37d46ea62a8e)
+2. ![image](https://github.com/user-attachments/assets/f08eb559-26a4-47f4-b9e2-e59db3e1512a)
+3. ![image](https://github.com/user-attachments/assets/73894cc7-a6ad-44b4-8ccc-252b20400e6f)
+4. ![image](https://github.com/user-attachments/assets/2c2f3a4d-aef8-4fd2-ab0c-c96ebef03e42)
+5. ![image](https://github.com/user-attachments/assets/f826ca95-8260-4a81-9eef-ff53411ef428)
+6. ![image](https://github.com/user-attachments/assets/17a40ffc-bb72-4668-a8af-5d2d30ba2112)
+7. ![image](https://github.com/user-attachments/assets/6fc56db2-4d35-4ff2-ad06-6eba12a357e8)
+
 
 
 
