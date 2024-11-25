@@ -5,7 +5,11 @@
   - name: Deploy static content to Pages
     - https://bhbghghbgb.github.io/web-1-best-bag/
 
-### test data summary
+## test data summary
+
+<details>
+
+<summary>hien noi dung da dc an di</summary>
 
 - thoi gian luu iso string timezone +07:00
 - 750 san pham
@@ -23,7 +27,17 @@
     - toi da 5 so luong san pham moi chi tiet
   - trang thai xu ly: `["dang", "chua", "huy", "roi"]`, `cum_weights=[10, 25, 60, 1000]`
 
-## Flow hiển thị
+</details>
+
+## Nội dung hướng dẫn hiểu code
+
+### Flow hiển thị
+
+<details>
+
+<summary>hien noi dung da dc an di</summary>
+
+- Cac ham chi la viet mau/vi du, co the thay doi
 
 1. Sự kiện load gọi hàm tải dữ liệu
    1. ![image](https://github.com/user-attachments/assets/53c1bd7c-afd2-41c1-a78c-cde115824985)
@@ -55,7 +69,124 @@
       1. ![image](https://github.com/user-attachments/assets/1003825d-fc30-4d3f-b192-5e04f3400e2d)
 5. thực hiện tương tự cho sản phẩm, người dùng, hóa đơn
 
+</details>
+
+### Xử lý tab trong trang admin
+
+<details>
+
+<summary>Hướng Dẫn Tạo Tabs Cho Giao Diện HTML CSS JS Thuần</summary>
+
+#### Hướng Dẫn Tạo Tabs Cho Giao Diện HTML CSS JS Thuần
+
+##### Bước 1: Tạo Nhiều File HTML Cho Mỗi Tab
+
+- Mỗi tab sẽ tương ứng với một file HTML riêng, ví dụ: `thongke.html`, `nguoidung.html`, v.v.
+
+##### Bước 2: Test Và Comment HTML Không Cần Thiết
+
+- Sau khi kiểm tra nội dung của từng file HTML và đảm bảo rằng nó hiển thị đúng, comment phần HTML không cần thiết, chỉ giữ lại nội dung trong `<body>`.
+
+##### Bước 3: Load Nội Dung Các Tab Bằng Fetch
+
+- Sử dụng `fetch` để load nội dung của các file HTML vào một wrapper.
+
+##### Ví dụ:
+
+1. **Tạo file `nguoidung.html` với nội dung mẫu:**
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+     <head>
+       <meta charset="UTF-8" />
+       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+       <link rel="stylesheet" href="/style.css" />
+       <link rel="stylesheet" href="./admin.css" />
+       <link
+         rel="shortcut icon"
+         href="images/icons8-bag-96.png"
+         type="image/png"
+       />
+       <script src="/main.js"></script>
+       <script src="./admin.js"></script>
+       <title>Web 1 Best Bag</title>
+     </head>
+     <body>
+       <h1>Danh Sách Người Dùng</h1>
+       <div class="user-list"></div>
+       <div class="pagination"></div>
+     </body>
+   </html>
+   ```
+
+   - Thuc hien test va kiem tra co hien chinh xac chua
+
+2. **Sửa file `nguoidung.html`:**
+
+   - Xóa các phần không liên quan, giữ lại nội dung chính:
+     ```html
+     <!-- Comment phần không cần thiết -->
+     <!-- ... -->
+     <h1>Danh Sách Người Dùng</h1>
+     <div class="product-list"></div>
+     <div class="pagination"></div>
+     <!-- ... -->
+     ```
+
+3. **Sửa `admin.html`:**
+
+   - Tạo một wrapper để hiển thị nội dung của các tab:
+     ```html
+     <div id="content-wrapper"></div>
+     ```
+
+4. **Sửa `admin.js`:**
+
+   - Kiểm tra tab đang được chọn và dùng `fetch` để load file HTML tương ứng:
+
+     ```javascript
+     const loadTabContent = async (tab) => {
+       const response = await fetch(`${tab}.html`);
+       const data = await response.text();
+       document.getElementById("content-wrapper").innerHTML = data;
+     };
+
+     // Ví dụ khi chọn tab "nguoidung"
+     loadTabContent("nguoidung");
+     ```
+
+     Hoac
+
+     ```javascript
+     const wrapper = document.getElementById("content-wrapper"); // Giả sử wrapper có id là 'content-wrapper'
+
+     function loadTabContent(tabName) {
+       fetch(`${tabName}.html`)
+         .then((response) => response.text())
+         .then((data) => {
+           wrapper.innerHTML = data;
+         });
+     }
+     ```
+
+##### Kết Quả
+
+- **Ưu điểm:** Các tab như `thongke` hay `nguoidung` sẽ được load từ file HTML riêng, giúp quản lý nội dung dễ dàng và tránh việc phải ẩn hiện nhiều phần tử HTML phức tạp.
+
+##### Ghi Chú
+
+- Nhớ comment lại phần HTML không cần thiết, thay vì xóa, để có thể dễ dàng kiểm tra lại khi cần.
+
+</details>
+
+## Nội dung k liên quan code
+
 ### ghi thêm cách tạo nhánh cho mấy bạn bảo chịu thua
+
+<details>
+
+<summary>hien noi dung da dc an di</summary>
 
 1. ![image](https://github.com/user-attachments/assets/ca9cc847-18b2-49e8-884a-37d46ea62a8e)
 2. ![image](https://github.com/user-attachments/assets/f08eb559-26a4-47f4-b9e2-e59db3e1512a)
@@ -64,3 +195,5 @@
 5. ![image](https://github.com/user-attachments/assets/f826ca95-8260-4a81-9eef-ff53411ef428)
 6. ![image](https://github.com/user-attachments/assets/17a40ffc-bb72-4668-a8af-5d2d30ba2112)
 7. ![image](https://github.com/user-attachments/assets/6fc56db2-4d35-4ff2-ad06-6eba12a357e8)
+
+</details>
