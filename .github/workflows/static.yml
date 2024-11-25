@@ -29,6 +29,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
+      - name: Workflow Run Debounce
+        uses: zachary95/github-action-debounce@v0.1.0
+        with:
+          wait: 3600
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
@@ -37,7 +41,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: '.'
+          path: "."
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
