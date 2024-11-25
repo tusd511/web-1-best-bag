@@ -1,13 +1,33 @@
-var g_sanPham, g_nguoiDung, g_hoaDon, g_theLoaiSanPham;
 const sanPhamKey = "sanPham";
 const nguoiDungKey = "nguoiDung";
 const hoaDonKey = "hoaDon";
+const sanPhamIdKey = "web-scraper-order";
+const nguoiDungIdKey = "id";
+const hoaDonIdKey = "id";
+const sanPhamImKey = "sanPhamIm";
+const nguoiDungImKey = "nguoiDungIm";
+const hoaDonImKey = "hoaDonIm";
 const theLoaiSanPhamKey = "theLoaiSanPham";
-var sanPhamFile = "/san-pham.json";
-var nguoiDungFile = "/nguoi-dung.json";
-var hoaDonFile = "/hoa-don.json";
-var theLoaiSanPhamFile = "/the-loai.json";
-var soSanPhamMoiTrang = 12;
+const sanPhamFile = "/san-pham.json";
+const nguoiDungFile = "/nguoi-dung.json";
+const hoaDonFile = "/hoa-don.json";
+const theLoaiSanPhamFile = "/the-loai.json";
+
+// tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
+const dataVersion = 17;
+
+const soSanPhamMoiTrang = 12;
+
+var g_sanPham, g_nguoiDung, g_hoaDon, g_theLoaiSanPham;
+var i_sanPham, i_nguoiDung, i_hoaDon;
+
+// thêm biến phiên bản dữ liệu để ép reset localstorage
+function verifyDataVersion() {
+  if (localStorage.getItem("dataVersion") != dataVersion) {
+    localStorage.clear();
+    localStorage.setItem("dataVersion", dataVersion);
+  }
+}
 
 async function taiDuLieu(datakey, datafile) {
   // du lieu key nay da co trong local storage
@@ -22,18 +42,27 @@ async function taiDuLieu(datakey, datafile) {
 async function taiSanPham() {
   g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
   g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile);
+  i_sanPham =
+    taiDuLieuLocalStorage(sanPhamImKey) ??
+    createIndexMapping(g_sanPham, sanPhamIdKey);
   taoBoLocSanPham();
   tinhSanPhamHienThi();
 }
 function taiNguoiDung() {
   taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
     g_nguoiDung = data;
+    i_nguoiDung =
+      taiDuLieuLocalStorage(nguoiDungImKey) ??
+      createIndexMapping(g_nguoiDung, nguoiDungIdKey);
     tinhNguoiDungHienThi();
   });
 }
 function taiHoaDon() {
   taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
     g_hoaDon = data;
+    i_hoaDon =
+      taiDuLieuLocalStorage(hoaDonImKey) ??
+      createIndexMapping(g_hoaDon, hoaDonIdKey);
     tinhHoaDonHienThi();
   });
 }
@@ -490,48 +519,6 @@ function xoaDuLieuLocalStorage(datakey) {
   localStorage.removeItem(datakey);
 }
 
-// them san pham, co the nhap id hoac khong
-// neu nhap id, kiem tra xem co bi trung id hay ko
-// neu ko nhap id, se duoc random 1 id ngau nhien
-function themSanPham(id, sanPham) {
-  if (id == null) {
-    sanPham["web-scraper-order"] = crypto.randomUUID();
-  } else if (timSanPham(id)) {
-    // TODO: xu ly id bi trung
-    return;
-  } else {
-    sanPham["web-scraper-order"] = id;
-  }
-  g_sanPham.push(sanPham);
-  luuSanPhamLocalStorage();
-}
-
-// sua san pham, phai nhap id de biet san pham can sua
-// san pham nhan vao se thay the san pham da co
-// dung timSanPhamTheoId de lay thong tin san pham cho nguoi dung sua
-function suaSanPham(id, sanPham) {
-  if (id == null) {
-    // TODO: xu ly chua nhap id
-  }
-  xoaSanPham(id);
-  themSanPham(id, sanPham);
-}
-
-function timSanPham(id) {
-  return g_sanPham.find((sanPham) => sanPham["web-scraper-order"] === id);
-}
-function xoaSanPham(id) {
-  if (!timSanPham(id)) {
-    // TODO: xu ly ko tim thay san pham co id nay
-    return;
-  }
-  g_sanPham.splice(
-    g_sanPham.findIndex((sanPham) => sanPham["web-scraper-order"] === id),
-    1
-  );
-  luuSanPhamLocalStorage();
-}
-
 function createPaginationDebugTable(data) {
   console.table([data]);
   // Append the table to the DOM (replace '.debug-table' with your actual container ID)
@@ -562,11 +549,321 @@ function createPaginationDebugTable(data) {
   container.appendChild(table);
 }
 
+// tối ưu tìm thực thể dùng index mapping object
+// Index Mapping Object Creator Template
+function createIndexMapping(entityList, idKey) {
+  const indexMapping = {};
+  entityList.forEach((entity, index) => {
+    indexMapping[entity[idKey]] = index;
+  });
+  return indexMapping;
+}
+
+// CRUD Functions Template
+function createEntity(
+  entityList,
+  entityKey,
+  indexMapping,
+  indexMappingKey,
+  idKey,
+  entity
+) {
+  entityList.push(entity);
+  indexMapping[entity[idKey]] = entityList.length - 1;
+  luuDuLieuLocalStorage(entityKey, entityList);
+  luuDuLieuLocalStorage(indexMappingKey, indexMapping);
+}
+
+function readEntity(entityList, indexMapping, idKey, entityId) {
+  const index = indexMapping[entityId];
+  return index !== undefined ? entityList[index] : null;
+}
+
+function updateEntity(
+  entityList,
+  entityKey,
+  indexMapping,
+  indexMappingKey,
+  idKey,
+  entityId,
+  newEntity
+) {
+  const index = indexMapping[entityId];
+  if (index !== undefined) {
+    entityList[index] = newEntity;
+    luuDuLieuLocalStorage(entityKey, entityList);
+  }
+}
+
+function deleteEntity(
+  entityList,
+  entityKey,
+  indexMapping,
+  indexMappingKey,
+  idKey,
+  entityId
+) {
+  const index = indexMapping[entityId];
+  if (index !== undefined) {
+    entityList.splice(index, 1);
+    delete indexMapping[entityId];
+
+    // Update index mapping
+    for (let i = index; i < entityList.length; i++) {
+      indexMapping[entityList[i][idKey]] = i;
+    }
+    luuDuLieuLocalStorage(entityKey, entityList);
+    luuDuLieuLocalStorage(indexMappingKey, indexMapping);
+  }
+}
+
+// CRUD functions for sanPham
+function createSanPham(entity) {
+  createEntity(
+    g_sanPham,
+    sanPhamKey,
+    i_sanPham,
+    sanPhamImKey,
+    sanPhamIdKey,
+    entity
+  );
+}
+
+function readSanPham(entityId) {
+  return readEntity(g_sanPham, i_sanPham, sanPhamIdKey, entityId);
+}
+
+function updateSanPham(entityId, newEntity) {
+  updateEntity(
+    g_sanPham,
+    sanPhamKey,
+    i_sanPham,
+    sanPhamImKey,
+    sanPhamIdKey,
+    entityId,
+    newEntity
+  );
+}
+
+function deleteSanPham(entityId) {
+  deleteEntity(
+    g_sanPham,
+    sanPhamKey,
+    i_sanPham,
+    sanPhamImKey,
+    sanPhamIdKey,
+    entityId
+  );
+}
+
+// CRUD functions for nguoiDung
+function createNguoiDung(entity) {
+  createEntity(
+    g_nguoiDung,
+    nguoiDungKey,
+    i_nguoiDung,
+    nguoiDungImKey,
+    nguoiDungIdKey,
+    entity
+  );
+}
+
+function readNguoiDung(entityId) {
+  return readEntity(g_nguoiDung, i_nguoiDung, nguoiDungIdKey, entityId);
+}
+
+function updateNguoiDung(entityId, newEntity) {
+  updateEntity(
+    g_nguoiDung,
+    nguoiDungKey,
+    i_nguoiDung,
+    nguoiDungImKey,
+    nguoiDungIdKey,
+    entityId,
+    newEntity
+  );
+}
+
+function deleteNguoiDung(entityId) {
+  deleteEntity(
+    g_nguoiDung,
+    nguoiDungKey,
+    i_nguoiDung,
+    nguoiDungImKey,
+    nguoiDungIdKey,
+    entityId
+  );
+}
+
+// CRUD functions for hoaDon
+function createHoaDon(entity) {
+  createEntity(g_hoaDon, hoaDonKey, i_hoaDon, hoaDonImKey, hoaDonImKey, entity);
+}
+
+function readHoaDon(entityId) {
+  return readEntity(g_hoaDon, i_hoaDon, hoaDonImKey, entityId);
+}
+
+function updateHoaDon(entityId, newEntity) {
+  updateEntity(
+    g_hoaDon,
+    hoaDonKey,
+    i_hoaDon,
+    hoaDonImKey,
+    hoaDonImKey,
+    entityId,
+    newEntity
+  );
+}
+
+function deleteHoaDon(entityId) {
+  deleteEntity(
+    g_hoaDon,
+    hoaDonKey,
+    i_hoaDon,
+    hoaDonImKey,
+    hoaDonImKey,
+    entityId
+  );
+}
+
+// them san pham, co the nhap id hoac khong
+// neu nhap id, kiem tra xem co bi trung id hay ko
+// neu ko nhap id, se duoc random 1 id ngau nhien
+function themSanPham(id, sanPham) {
+  if (id == null) sanPham[sanPhamIdKey] = crypto.randomUUID();
+  else if (timSanPham(id)) {
+    // TODO: xu ly id bi trung
+    alert("themSanPham trung id");
+    return;
+  } else sanPham[sanPhamIdKey] = id;
+  createSanPham(sanPham);
+}
+// tim san pham theo id
+function timSanPham(id) {
+  if (id == null) {
+    alert("timSanPham chua nhap id");
+    return;
+  }
+  return readSanPham(id);
+}
+// sua san pham, phai nhap id de biet san pham can sua
+// san pham nhan vao se thay the san pham da co
+// dung timSanPhamTheoId de lay thong tin san pham cho nguoi dung sua
+function suaSanPham(id, sanPham) {
+  if (!timSanPham(id)) {
+    // TODO: xu ly khong tim thay id
+    alert("suaSanPham khong tim thay id");
+    return;
+  }
+  // force reset id
+  sanPham[sanPhamIdKey] = id;
+  updateSanPham(id, sanPham);
+}
+
+function xoaSanPham(id) {
+  if (!timSanPham(id)) {
+    // TODO: xu ly ko tim thay san pham co id nay
+    alert("xoaSanPham khong tim thay id");
+    return;
+  }
+  deleteSanPham(id);
+}
+
+// them nguoi dung, co the nhap id hoac khong
+// neu nhap id, kiem tra xem co bi trung id hay ko
+// neu ko nhap id, se duoc random 1 id ngau nhien
+function themNguoiDung(id, nguoiDung) {
+  if (id == null) nguoiDung[nguoiDungIdKey] = crypto.randomUUID();
+  else if (timNguoiDung(id)) {
+    // TODO: xu ly id bi trung
+    alert("themNguoiDung trung id");
+    return;
+  } else nguoiDung[nguoiDungIdKey] = id;
+  createNguoiDung(nguoiDung);
+}
+
+// tim nguoi dung theo id
+function timNguoiDung(id) {
+  if (id == null) {
+    alert("timNguoiDung chua nhap id");
+    return;
+  }
+  return readNguoiDung(id);
+}
+
+// sua nguoi dung, phai nhap id de biet nguoi dung can sua
+// nguoi dung nhan vao se thay the nguoi dung da co
+// dung timNguoiDungTheoId de lay thong tin nguoi dung cho nguoi dung sua
+function suaNguoiDung(id, nguoiDung) {
+  if (!timNguoiDung(id)) {
+    // TODO: xu ly khong tim thay id
+    alert("suaNguoiDung khong tim thay id");
+    return;
+  }
+  // force reset id
+  nguoiDung[nguoiDungIdKey] = id;
+  updateNguoiDung(id, nguoiDung);
+}
+
+function xoaNguoiDung(id) {
+  if (!timNguoiDung(id)) {
+    // TODO: xu ly ko tim thay nguoi dung co id nay
+    alert("xoaNguoiDung khong tim thay id");
+    return;
+  }
+  deleteNguoiDung(id);
+}
+
+// them hoa don, co the nhap id hoac khong
+// neu nhap id, kiem tra xem co bi trung id hay ko
+// neu ko nhap id, se duoc random 1 id ngau nhien
+function themHoaDon(id, hoaDon) {
+  if (id == null) hoaDon[hoaDonIdKey] = crypto.randomUUID();
+  else if (timHoaDon(id)) {
+    // TODO: xu ly id bi trung
+    alert("themHoaDon trung id");
+    return;
+  } else hoaDon[hoaDonIdKey] = id;
+  createHoaDon(hoaDon);
+}
+
+// tim hoa don theo id
+function timHoaDon(id) {
+  if (id == null) {
+    alert("timHoaDon chua nhap id");
+    return;
+  }
+  return readHoaDon(id);
+}
+
+// sua hoa don, phai nhap id de biet hoa don can sua
+// hoa don nhan vao se thay the hoa don da co
+// dung timHoaDonTheoId de lay thong tin hoa don cho nguoi dung sua
+function suaHoaDon(id, hoaDon) {
+  if (!timHoaDon(id)) {
+    // TODO: xu ly khong tim thay id
+    alert("suaHoaDon khong tim thay id");
+    return;
+  }
+  // force reset id
+  hoaDon[hoaDonIdKey] = id;
+  updateHoaDon(id, hoaDon);
+}
+
+function xoaHoaDon(id) {
+  if (!timHoaDon(id)) {
+    // TODO: xu ly ko tim thay hoa don co id nay
+    alert("xoaHoaDon khong tim thay id");
+    return;
+  }
+  deleteHoaDon(id);
+}
+
 // goi khi trang web load thanh cong
 window.addEventListener("load", () => {
-  if (document.querySelector(".product-list")) {
-    taiSanPham();
-  }
+  verifyDataVersion();
+  if (document.querySelector(".product-list")) taiSanPham();
   if (document.querySelector(".user-list")) taiNguoiDung();
   if (document.querySelector(".receipt-list")) taiHoaDon();
 });
