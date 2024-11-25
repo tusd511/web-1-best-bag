@@ -50,7 +50,7 @@ def generate_fake_users(n) -> list[dict]:
                 lower_case=True,
             )}",
             "ngay-tao": f.date_time_this_year(before_now=True, tzinfo=tz).isoformat(),
-            "disabled": f.boolean(chance_of_getting_true=10),
+            "disabled": f.boolean(chance_of_getting_true=5),
         }
         for _ in range(n)
     ]
@@ -58,7 +58,7 @@ def generate_fake_users(n) -> list[dict]:
 
 def generate_fake_receipt(n) -> list[dict]:
     n_sp_use = 100
-    n_nd_use = 50
+    n_nd_use = 80
     sp_per_receipt = 5
     sp_n_per_detail = 5
     sps: list[str] = list(
@@ -79,9 +79,11 @@ def generate_fake_receipt(n) -> list[dict]:
                 {"san-pham": sp, "so-luong": r.randint(1, sp_n_per_detail)}
                 for sp in r.sample(sps, k=r.randint(1, sp_per_receipt))
             ],
-            "da-xac-nhan": f.boolean(chance_of_getting_true=98),
+            "xu-ly": x,
         }
-        for _ in range(n)
+        for x in r.choices(
+            ["chua", "dang", "huy", "roi"], cum_weights=[10, 25, 60, 1000], k=n
+        )
     ]
 
 
