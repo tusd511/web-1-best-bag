@@ -8,10 +8,10 @@ const sanPhamImKey = "sanPhamIm";
 const nguoiDungImKey = "nguoiDungIm";
 const hoaDonImKey = "hoaDonIm";
 const theLoaiSanPhamKey = "theLoaiSanPham";
-const sanPhamFile = "/san-pham.json";
-const nguoiDungFile = "/nguoi-dung.json";
-const hoaDonFile = "/hoa-don.json";
-const theLoaiSanPhamFile = "/the-loai.json";
+const sanPhamFile = "san-pham.json";
+const nguoiDungFile = "nguoi-dung.json";
+const hoaDonFile = "hoa-don.json";
+const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
 const dataVersion = 17;
@@ -20,6 +20,15 @@ const soSanPhamMoiTrang = 12;
 
 var g_sanPham, g_nguoiDung, g_hoaDon, g_theLoaiSanPham;
 var i_sanPham, i_nguoiDung, i_hoaDon;
+
+// Get the current script element (the one that included this JS file)
+const mainJsScriptElement = document.currentScript;
+const mainJsScriptPath = mainJsScriptElement.src;
+// Get the directory of the script
+const mainJsScriptDirectory = mainJsScriptPath.substring(
+  0,
+  mainJsScriptPath.lastIndexOf("/")
+);
 
 // thêm biến phiên bản dữ liệu để ép reset localstorage
 function verifyDataVersion() {
@@ -36,7 +45,8 @@ async function taiDuLieu(datakey, datafile) {
     return JSON.parse(data);
   }
   // chua co du lieu key nay trong local storage (lan dau mo web)
-  const response = await fetch(datafile);
+  // thi can phai tai du lieu ban dau tu file
+  const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
   return await response.json();
 }
 async function taiSanPham() {
