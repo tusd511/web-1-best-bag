@@ -286,6 +286,13 @@ function renderItemSanPham(sanPham) {
   sale.innerText = sanPham["price-sale-n"];
   item.appendChild(sale);
 
+  const priceAsText = document.createElement("p");
+  priceAsText.textContent = `${number2TextVietnamese(
+    sanPham["price-sale-n"].toString(),
+    ","
+  )} đồng`;
+  item.appendChild(priceAsText);
+
   const category = document.createElement("h4");
   category.style.setProperty("color", "cyan");
   category.innerText = `Túi ${sanPham["category"]}`;
