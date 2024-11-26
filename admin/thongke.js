@@ -100,53 +100,69 @@ function topKhachChiTieu({ ngay, thang, nam } = {}) {
 }
 
 function thongKeThoiGian() {
-  const result = {};
+  const yearlyResult = {};
 
   // Step 1: Fill daily data
-  hoaDons.forEach((hoaDon) => {
+  g_hoaDon.forEach((hoaDon) => {
     const ngayTao = new Date(hoaDon["ngay-tao"]);
     const year = ngayTao.getFullYear();
     const month = ngayTao.getMonth() + 1; // getMonth() is zero-based
     const day = ngayTao.getDate();
 
-    if (!result[year]) {
-      result[year] = {
-        "chi-tiet": {},
-      };
-    }
-    if (!result[year]["chi-tiet"][month]) {
-      result[year]["chi-tiet"][month] = {
-        "chi-tiet": Array(new Date(year, month, 0).getDate())
+    if (!yearlyResult[year]) {
+      yearlyResult[year] = {
+        "chi-tiet": Array(12)
           .fill()
           .map(() => ({
             "so-don": 0,
-            "so-khach": new Set(),
-            "loai-da-ban": new Set(),
+            "so-khach-set": new Set(),
+            "so-khach": 0,
+            "loai-da-ban-set": new Set(),
+            "loai-da-ban": 0,
             "da-ban": 0,
             "tong-thu": 0,
+            "chi-tiet": [],
           })),
       };
     }
+    if (yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"].length === 0) {
+      yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"] = Array(
+        new Date(year, month, 0).getDate()
+      )
+        .fill()
+        .map(() => ({
+          "so-don": 0,
+          "so-khach-set": new Set(),
+          "so-khach": 0,
+          "loai-da-ban-set": new Set(),
+          "loai-da-ban": 0,
+          "da-ban": 0,
+          "tong-thu": 0,
+        }));
+    }
 
-    const dayData = result[year]["chi-tiet"][month]["chi-tiet"][day - 1];
+    const dayData =
+      yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"][day - 1];
     dayData["so-don"] += 1;
-    dayData["so-khach"].add(hoaDon["nguoi-dung"]);
-
-    hoaDon["chi-tiet"].forEach((item) => {
-      dayData["loai-da-ban"].add(item["san-pham"]);
-      dayData["da-ban"] += item["so-luong"];
-      const product = timSanPham(item["san-pham"]);
-      dayData["tong-thu"] += (product["price-sale-n"] || 0) * item["so-luong"];
+    dayData["so-khach-set"].add(hoaDon["nguoi-dung"]);
+    hoaDon["chi-tiet"].forEach((chiTiet) => {
+      dayData["loai-da-ban-set"].add(chiTiet["san-pham"]);
+      dayData["da-ban"] += chiTiet["so-luong"];
+      const sanPham = timSanPham(chiTiet["san-pham"]);
+      dayData["tong-thu"] +=
+        (sanPham["price-sale-n"] || 0) * chiTiet["so-luong"];
     });
   });
 
   // Step 2: Aggregate monthly data
-  Object.entries(result).forEach(([year, yearData]) => {
-    Object.entries(yearData["chi-tiet"]).forEach(([month, monthDetail]) => {
+  Object.entries(yearlyResult).forEach(([year, yearData]) => {
+    yearData["chi-tiet"].forEach((monthDetail, monthIndex) => {
       const monthData = {
         "so-don": 0,
-        "so-khach": new Set(),
-        "loai-da-ban": new Set(),
+        "so-khach-set": new Set(),
+        "so-khach": 0,
+        "loai-da-ban-set": new Set(),
+        "loai-da-ban": 0,
         "da-ban": 0,
         "tong-thu": 0,
         "chi-tiet": monthDetail["chi-tiet"],
@@ -154,47 +170,103 @@ function thongKeThoiGian() {
 
       monthData["chi-tiet"].forEach((dayData) => {
         monthData["so-don"] += dayData["so-don"];
-        dayData["so-khach"].forEach((khach) =>
-          monthData["so-khach"].add(khach)
+        dayData["so-khach-set"].forEach(
+          monthData["so-khach-set"].add,
+          monthData["so-khach-set"]
         );
-        dayData["loai-da-ban"].forEach((sp) =>
-          monthData["loai-da-ban"].add(sp)
+        dayData["so-khach"] = dayData["so-khach-set"].size;
+        dayData["loai-da-ban-set"].forEach(
+          monthData["loai-da-ban-set"].add,
+          monthData["loai-da-ban-set"]
         );
+        dayData["loai-da-ban"] = dayData["loai-da-ban-set"].size;
         monthData["da-ban"] += dayData["da-ban"];
         monthData["tong-thu"] += dayData["tong-thu"];
       });
 
-      monthData["so-khach"] = monthData["so-khach"].size;
-      monthData["loai-da-ban"] = monthData["loai-da-ban"].size;
-      result[year]["chi-tiet"][month] = monthData;
+      yearlyResult[year]["chi-tiet"][monthIndex] = {
+        ...monthData,
+        "so-khach": monthData["so-khach-set"].size,
+        "loai-da-ban": monthData["loai-da-ban-set"].size,
+      };
     });
   });
 
   // Step 3: Aggregate yearly data
-  Object.entries(result).forEach(([year, yearDetail]) => {
+  Object.entries(yearlyResult).forEach(([year, yearDetail]) => {
     const yearData = {
       "so-don": 0,
-      "so-khach": new Set(),
-      "loai-da-ban": new Set(),
+      "so-khach-set": new Set(),
+      "so-khach": 0,
+      "loai-da-ban-set": new Set(),
+      "loai-da-ban": 0,
       "da-ban": 0,
       "tong-thu": 0,
       "chi-tiet": yearDetail["chi-tiet"],
     };
 
-    Object.values(yearData["chi-tiet"]).forEach((monthData) => {
+    yearData["chi-tiet"].forEach((monthData) => {
       yearData["so-don"] += monthData["so-don"];
-      monthData["so-khach"].forEach((khach) => yearData["so-khach"].add(khach));
-      monthData["loai-da-ban"].forEach((sp) => yearData["loai-da-ban"].add(sp));
+      monthData["so-khach-set"].forEach(
+        yearData["so-khach-set"].add,
+        yearData["so-khach-set"]
+      );
+      monthData["loai-da-ban-set"].forEach(
+        yearData["loai-da-ban-set"].add,
+        yearData["loai-da-ban-set"]
+      );
       yearData["da-ban"] += monthData["da-ban"];
       yearData["tong-thu"] += monthData["tong-thu"];
     });
 
-    yearData["so-khach"] = yearData["so-khach"].size;
-    yearData["loai-da-ban"] = yearData["loai-da-ban"].size;
-    result[year] = yearData;
+    yearlyResult[year] = {
+      ...yearData,
+      "so-khach": yearData["so-khach-set"].size,
+      "loai-da-ban": yearData["loai-da-ban-set"].size,
+    };
   });
-  return result;
+
+  // Step 4: Aggregate all years into the final object
+  const allTimeResult = {
+    "so-don": 0,
+    "so-khach-set": new Set(),
+    "so-khach": 0,
+    "loai-da-ban-set": new Set(),
+    "loai-da-ban": 0,
+    "da-ban": 0,
+    "tong-thu": 0,
+    "chi-tiet": yearlyResult, // Use the result from Steps 1-3
+  };
+
+  Object.values(yearlyResult).forEach((yearData) => {
+    allTimeResult["so-don"] += yearData["so-don"];
+    yearData["so-khach-set"].forEach(
+      allTimeResult["so-khach-set"].add,
+      allTimeResult["so-khach-set"]
+    );
+    yearData["loai-da-ban-set"].forEach(
+      allTimeResult["loai-da-ban-set"].add,
+      allTimeResult["loai-da-ban-set"]
+    );
+    allTimeResult["da-ban"] += yearData["da-ban"];
+    allTimeResult["tong-thu"] += yearData["tong-thu"];
+  });
+
+  allTimeResult["so-khach"] = allTimeResult["so-khach-set"].size;
+  allTimeResult["loai-da-ban"] = allTimeResult["loai-da-ban-set"].size;
+
+  return allTimeResult;
 }
+
+async function thongKeThoiGian2() {
+  return await (await fetch("./tktgv18.json")).json();
+}
+
+// JSON.parse(
+//   JSON.stringify({ dataVersion, ...thongKeThoiGian() }, (key, value) =>
+//     value instanceof Set ? [...value] : value
+//   )
+// );
 
 // taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
 //     g_nguoiDung = data;

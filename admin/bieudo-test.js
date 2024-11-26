@@ -1,22 +1,37 @@
+// https://stackoverflow.com/a/66626916/12495504
+/**
+ * Return list of months
+ * 🌍 localeName   : name of local, f.e. en-GB, default es-MX
+ *  ✅ monthFormat : short, numeric, long (Default)
+ */
+function monthsForLocale(localeName = "en-US", monthFormat = "long") {
+  const format = new Intl.DateTimeFormat(localeName, { month: monthFormat })
+    .format;
+  return [...Array(12).keys()].map((m) =>
+    format(new Date(Date.UTC(2021, (m + 1) % 12)))
+  );
+}
+
 window.addEventListener("load", () => {
-  var options = {
-    chart: {
-      type: "line",
-    },
-    series: [
-      {
-        name: "sales",
-        data: [30, 40, 35, 50, 49, 60, 70, 91, 125],
+  thongKeThoiGian2().then((tktg) => {
+    const year2024 = tktg["chi-tiet"]["2024"];
+    let options = {
+      chart: {
+        type: "bar",
       },
-    ],
-    yaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-    },
-  };
-
-  var chart = new ApexCharts(document.querySelector("#chart"), options);
-
-  chart.render();
+      series: [
+        {
+          name: "profits",
+          data: year2024["chi-tiet"].map((month) => month["tong-thu"]),
+        },
+      ],
+      yaxis: {
+        categories: monthsForLocale("vi-VN", "long"),
+      },
+    };
+    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    chart.render();
+  });
 });
 
 // function generateRandomData(num) {
