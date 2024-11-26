@@ -9,8 +9,34 @@
       href="images/icons8-bag-96.png"
       type="image/png"
     />
-    <script src="https://cdn.jsdelivr.net/npm/transliteration@2.3.5/dist/browser/bundle.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/number-2-text-vietnamese@1.0.5/dist/index.min.js"></script>
+    <script type="module">
+      import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.3.5/+esm";
+      window.transliterate = transliterate;
+    </script>
+    <script type="module">
+      import {
+        InvalidFormatError,
+        InvalidNumberError,
+        NotEnoughUnitError,
+        ReadingConfig,
+        doReadNumber,
+      } from " https://cdn.jsdelivr.net/npm/read-vietnamese-number@2.1.4/+esm";
+      // Config reading options
+      const config = new ReadingConfig();
+      config.unit = ["đồng"];
+      window.number2TextVietnamese = function (number) {
+        try {
+          return doReadNumber(config, number);
+        } catch (err) {
+          // Handle errors
+          if (err instanceof InvalidFormatError)
+            return "Định dạng input không hợp lệ";
+          else if (err instanceof InvalidNumberError) return "Số không hợp lệ";
+          else if (err instanceof NotEnoughUnitError)
+            return "Không đủ đơn vị đọc số";
+        }
+      };
+    </script>
     <script src="main.js"></script>
     <title>Web 1 Best Bag</title>
   </head>

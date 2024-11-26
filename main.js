@@ -287,10 +287,9 @@ function renderItemSanPham(sanPham) {
   item.appendChild(sale);
 
   const priceAsText = document.createElement("p");
-  priceAsText.textContent = `${number2TextVietnamese(
-    sanPham["price-sale-n"].toString(),
-    ","
-  )} đồng`;
+  priceAsText.textContent = number2TextVietnamese(
+    sanPham["price-sale-n"].toString()
+  );
   item.appendChild(priceAsText);
 
   const category = document.createElement("h4");
