@@ -8,28 +8,78 @@ function monthsForLocale(localeName = "en-US", monthFormat = "long") {
   const format = new Intl.DateTimeFormat(localeName, { month: monthFormat })
     .format;
   return [...Array(12).keys()].map((m) =>
-    format(new Date(Date.UTC(2021, (m + 1) % 12)))
+    format(new Date(Date.UTC(2021, m /*+ 1*/ % 12)))
   );
+}
+function formatVND(value) {
+  return value.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 }
 
 window.addEventListener("load", () => {
+  let chart2;
   thongKeThoiGian2().then((tktg) => {
     const year2024 = tktg["chi-tiet"]["2024"];
-    let options = {
+    let yearGraphOptions = {
       chart: {
         type: "bar",
+        events: {
+          dataPointSelection: function (event, chartContext, config) {
+            console.log(event, chartContext, config);
+            const monthIndex = config.dataPointIndex;
+            const days = year2024["chi-tiet"][monthIndex]["chi-tiet"];
+            let monthGraphOptions = {
+              chart: {
+                type: "bar",
+              },
+              plotOptions: { bar: { horizontal: true } },
+              series: [
+                {
+                  name: "profits",
+                  data: days.map((day) => day["tong-thu"]),
+                },
+              ],
+              xaxis: {
+                labels: { formatter: formatVND },
+                categories: Object.keys(days),
+              },
+              dataLabels: {
+                formatter: formatVND,
+              },
+            };
+            if (!chart2) {
+              chart2 = new ApexCharts(
+                document.querySelector("#chart2"),
+                monthGraphOptions
+              );
+              chart2.render();
+              return;
+            }
+            chart2.updateOptions(monthGraphOptions);
+          },
+        },
       },
+      plotOptions: { bar: { horizontal: true } },
       series: [
         {
           name: "profits",
           data: year2024["chi-tiet"].map((month) => month["tong-thu"]),
         },
       ],
-      yaxis: {
+      xaxis: {
+        labels: { formatter: formatVND },
         categories: monthsForLocale("vi-VN", "long"),
       },
+      dataLabels: {
+        formatter: formatVND,
+      },
     };
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
+    let chart = new ApexCharts(
+      document.querySelector("#chart"),
+      yearGraphOptions
+    );
     chart.render();
   });
 });
