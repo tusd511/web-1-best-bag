@@ -477,11 +477,98 @@ function kiemTraTabHienTai() {
 
 function taiSanPham() {} // chay duoc roi nen tam tat di
 window.addEventListener("load", function () {
+
   //taiNguoiDung();
   taiHoaDon();
+
+
+  //taiNguoiDung();
+  //taiHoaDon();
+
 });
 
 function timNguoiDung(id){
   return g_nguoiDung.find((nguoiDung)=> nguoiDung["id"]===id);
+}
+
+
+
+function topSanPhamBanChay(hoaDon){
+  const sanPhamMap = new Map();
+  hoaDon.forEach(hD => {
+    hD["chi-tiet"].forEach( cT =>{
+      const sP = cT["san-pham"];
+      const sL = cT["so-luong"];
+      if(sanPhamMap.has(sP)){
+        sanPhamMap.set(sP, sanPhamMap.get(sP) + sL);
+      } else {
+        sanPhamMap.set(sP, sL);
+      }
+    });
+  });
+  const topBanChay = Array.from(sanPhamMap.entries())
+  .map(([sP,sL])=> ({sP,sL}))
+  .sort((a,b)=> b.sL - a.sL);
+
+  return topBanChay;
+}
+
+const topBanChay = topSanPhamBanChay(hoaDon);
+
+function renderItemTopBanChay(item) {
+  const rowTopBanChay = document.createElement("tr");
+  const tenSanPhamBanChay = document.createElement("td");
+  tenSanPhamBanChay.textContent =  timSanPham(item.sP)["name"];
+  rowTopBanChay.appendChild(tenSanPhamBanChay);
+  const daBan = document.createElement("td");
+  daBan.textContent = item.sL;
+  rowTopBanChay.appendChild(daBan);
+  const loiNhuan = document.createElement("td");
+  loiNhuan.textContent = timSanPham(item.sP)["price-n"]*item.sL;
+  rowTopBanChay.appendChild(loiNhuan);
+  return rowTopBanChay;
+}
+function hienThiTopBanChay(topBanChay, hamRenderItem, wrapperSelector){
+  const wrapper = document.querySelector(wrapperSelector);
+  wrapper.innerHTML = "";
+  const container = document.createElement("div");
+  container.classList.add("container-hoadon");
+  const table = document.createElement("table");
+  table.classList.add("topbanchay-table");
+  const thead = document.createElement("thead");
+  const tr = document.createElement("tr");
+  const th = document.createElement("th");
+  const th2 = document.createElement("th");
+  const th3 = document.createElement("th");
+  th.scope = "col";
+  th2.scope = "col";
+  th3.scope = "col";
+  th4.scope = "col";
+  th.textContent = "Sản Phẩm";
+  th2.textContent = "Đã bán";
+  th3.textContent = "Lợi Nhuận";
+  tr.appendChild(th);
+  tr.appendChild(th2);
+  tr.appendChild(th3);
+  thead.appendChild(tr);
+  table.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  for (const item =0; item < 10;item++) {
+    tbody.appendChild(hamRenderItem(topBanChay[item]));
+  }
+  const khac = document.createElement("tr");
+  const td = document.createElement("td");
+  td.textContent="...";
+  const td2 = document.createElement("td");
+  td2.textContent="...";
+  const td3 = document.createElement("td");
+  td3.textContent="...";
+  khac.appendChild(td);
+  khac.appendChild(td2);
+  khac.appendChild(td3);
+  tbody.appendChild(khac);
+  table.appendChild(tbody);
+  container.appendChild(table);
+  wrapper.appendChild(container);
 }
 
