@@ -176,7 +176,7 @@ function tinhNguoiDungHienThi() {
   }
   const nguoiDungsHienThi = nguoiDungsDaLoc.slice(
     chiSoBatDau,
-    Math.min(chiSoBatDau + soNguoiDungMoiTrang, soLuongNguoiDung.length)
+    Math.min(chiSoBatDau + soNguoiDungMoiTrang, soLuongNguoiDung)
   );
   hienThiNguoiDung(nguoiDungsHienThi, {
     page,
@@ -203,36 +203,33 @@ function hienThiNguoiDung(nguoiDungsHienThi, paramPhanTrang) {
 }
 
 function renderItemNguoiDung(nguoiDung) {
+  const rowNguoiDung = document.createElement("tr");
+  const ngaytao = document.createElement("td");
+  ngaytao.textContent = nguoiDung["ngay-tao"];
+  rowNguoiDung.appendChild(ngaytao);
+  const name = document.createElement("td");
+  name.textContent = nguoiDung["name"];
+  rowNguoiDung.appendChild(name);
+  const email = document.createElement("td");
+  email.textContent = nguoiDung["email"];
+  rowNguoiDung.appendChild(email);
+  const password = document.createElement("td");
+  password.textContent = nguoiDung["password"];
+  rowNguoiDung.appendChild(password);
   const active = document.createElement("i");
-  const tr = document.createElement("tr");
-  if (nguoiDung["disabled"]) {
+  if (!nguoiDung["disabled"]) {
     active.classList.add("fas", "fa-check-circle", "color-green");
   } else {
-    active.classList.add("fas", "fas fa-check-circle");
-    tr.style.backgroundColor = "rgba(255,0,0,0.3)";
-    tr.style.textDecoration = "line-through";
+    active.classList.add("fas", "fa-check-circle");
+    rowNguoiDung.style.backgroundColor = "rgba(255,0,0,0.3)";
+    rowNguoiDung.style.textDecoration = "line-through";
   }
-  active.addEventListener("click", () => kichHoat(i));
-  const th = document.createElement("th");
-  th.textContent = nguoiDung["id"];
-  tr.appendChild(th);
-  const td = document.createElement("td");
-  td.textContent = nguoiDung["name"];
-  tr.appendChild(td);
-  const td2 = document.createElement("td");
-  td2.textContent = nguoiDung["email"];
-  tr.appendChild(td2);
-  const td3 = document.createElement("td");
-  td3.textContent = nguoiDung["password"];
-  tr.appendChild(td3);
-  const td4 = document.createElement("td");
-  td4.textContent = nguoiDung["ngay-tao"];
-  tr.appendChild(td4);
-  const td5 = document.createElement("tr");
-  td5.classList.add("kichhoat");
-  td5.appendChild(active);
-  tr.appendChild(td5);
-  return tr;
+  active.addEventListener("click", () => kichHoat(active));
+  const trangthai = document.createElement("td");
+  trangthai.classList.add("kichhoat");
+  trangthai.appendChild(active);
+  rowNguoiDung.appendChild(trangthai);
+  return rowNguoiDung;
 }
 function hienThiDanhSachNguoiDung(
   duLieusHienThi,
@@ -244,7 +241,7 @@ function hienThiDanhSachNguoiDung(
   const container = document.createElement("div");
   container.classList.add("container-nguoidung");
   const table = document.createElement("table");
-  table.classList.add("product-table");
+  table.classList.add("user-table");
   const thead = document.createElement("thead");
   const tr = document.createElement("tr");
   const th = document.createElement("th");
@@ -252,25 +249,21 @@ function hienThiDanhSachNguoiDung(
   const th3 = document.createElement("th");
   const th4 = document.createElement("th");
   const th5 = document.createElement("th");
-  const th6 = document.createElement("th");
   th.scope = "col";
   th2.scope = "col";
   th3.scope = "col";
   th4.scope = "col";
   th5.scope = "col";
-  th6.scope = "col";
-  th.textContent = "#";
+  th.textContent = "Ngày tạo";
   th2.textContent = "Tên khách hàng";
   th3.textContent = "Email";
   th4.textContent = "Password";
-  th5.textContent = "Ngày tạo";
-  th6.textContent = "Trạng thái";
+  th5.textContent = "Trạng thái"; 
   tr.appendChild(th);
   tr.appendChild(th2);
   tr.appendChild(th3);
   tr.appendChild(th4);
   tr.appendChild(th5);
-  tr.appendChild(th6);
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
@@ -300,8 +293,11 @@ function sapXepNguoiDung(sort, nguoiDungsDaLoc) {
 function locTrangThaiKhoa(disabled, nguoiDungsDaLoc) {
   if (disabled)
     return nguoiDungsDaLoc.filter(
-      (nguoiDung) => nguoiDung["disabled"] == false
-    );
+      (nguoiDung) => nguoiDung["disabled"] === false);
+  if(!disabled)
+    return nguoiDungsDaLoc.filter(
+      (nguoiDung) => nguoiDung["disabled"] === true);
+  
   return nguoiDungsDaLoc;
 }
 
@@ -339,26 +335,25 @@ function tinhHoaDonHienThi() {
 function hienThiHoaDon(hoaDonsHienThi, paramPhanTrang) {
   createPaginationDebugTable(paramPhanTrang);
   hienThiDanhSachHoaDon(hoaDonsHienThi, renderItemHoaDon, ".order-list");
-  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
+  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa,".pagination3");
 }
 
 function renderItemHoaDon(hoaDon) {
-  const tr = document.createElement("tr");
-  const td = document.createElement("td");
-  td.textContent = hoaDon["id"];
-  tr.appendChild(td);
-  const td2 = document.createElement("td");
-  td2.textContent = hoaDon["nguoi-dung"];
-  tr.appendChild(td2);
-  const td3 = document.createElement("td");
-  td3.textContent = hoaDon["ngay-tao"];
-  tr.appendChild(td3);
-  const td4 = document.createElement("td");
-  td4.rowSpan = hoaDon["chi-tiet"].length;
+  const rowHoaDon = document.createElement("tr");
+  const ngayTaoHoaDon = document.createElement("td");
+  ngayTaoHoaDon.textContent = hoaDon["ngay-tao"];
+  rowHoaDon.appendChild(ngayTaoHoaDon);
+  const khachHang = document.createElement("td");
+  //khachHang.textContent = timNguoiDung(hoaDon["nguoi-dung"])["name"]; 
+  khachHang.textContent = hoaDon["nguoi-dung"];
+  rowHoaDon.appendChild(khachHang);
+  const chiTietHoaDon = document.createElement("td");
   const minitable = document.createElement("table");
+  minitable.style.borderCollapse = "collapse";
   for (let i = 0; i < hoaDon["chi-tiet"].length; i++) {
     const trmini = document.createElement("tr");
     const tdmini = document.createElement("td");
+    //tdmini.textContent = timSanPham(hoaDon["chi-tiet"][i]["san-pham"])["name"];
     tdmini.textContent = hoaDon["chi-tiet"][i]["san-pham"];
     trmini.appendChild(tdmini);
     const tdmini2 = document.createElement("td");
@@ -366,15 +361,51 @@ function renderItemHoaDon(hoaDon) {
     trmini.appendChild(tdmini2);
     minitable.appendChild(trmini);
   }
-  td4.appendChild(minitable);
-  tr.appendChild(td4);
-  const td5 = document.createElement("td");
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.checked = hoaDon["da-xac-nhan"];
-  td5.appendChild(checkbox);
-  tr.appendChild(td5);
-  return tr;
+  chiTietHoaDon.appendChild(minitable);
+  rowHoaDon.appendChild(chiTietHoaDon);
+  const xuly = document.createElement("td");
+  const select = document.createElement("select");
+  select.classList.add("select-donhang");
+  const chua = document.createElement("option");
+  chua.value="chua";
+  chua.textContent="Chưa";
+  select.appendChild(chua);
+  const dang = document.createElement("option");
+  dang.value = "dang";
+  dang.textContent="Đang";
+  select.appendChild(dang);
+  const huy = document.createElement("option");
+  huy.value="huy";
+  huy.textContent="Hủy";
+  select.appendChild(huy);
+  const roi = document.createElement("option");
+  roi.value="roi";
+  roi.textContent="Rồi";
+  select.appendChild(roi);
+  select.value = hoaDon["xu-ly"];
+  if(select.value==="roi") select.disabled = true;
+  xuly.classList.add(select.value);
+  select.addEventListener("change", () => {
+    xuly.className="";
+    switch(select.value){
+      case "chua":
+        xuly.classList.add("chua");
+        break;
+      case "dang":
+        xuly.classList.add("dang");
+        break;
+      case "huy":
+        xuly.classList.add("huy");
+        break;
+      case "roi":
+        xuly.classList.add("roi");
+        select.disabled= true;
+        break;
+    }
+  });
+  xuly.appendChild(select);
+  rowHoaDon.appendChild(xuly);
+  return rowHoaDon;
 }
 
 function hienThiDanhSachHoaDon(duLieusHienThi, hamRenderItem, wrapperSelector) {
@@ -390,22 +421,18 @@ function hienThiDanhSachHoaDon(duLieusHienThi, hamRenderItem, wrapperSelector) {
   const th2 = document.createElement("th");
   const th3 = document.createElement("th");
   const th4 = document.createElement("th");
-  const th5 = document.createElement("th");
   th.scope = "col";
   th2.scope = "col";
   th3.scope = "col";
   th4.scope = "col";
-  th5.scope = "col";
-  th.textContent = "#";
+  th.textContent = "Ngày tạo";
   th2.textContent = "Người dùng";
-  th3.textContent = "Ngày tạo";
-  th4.textContent = "Chi tiết";
-  th5.textContent = "Đã xác nhận";
+  th3.textContent = "Chi tiết";
+  th4.textContent = "Đã xác nhận";
   tr.appendChild(th);
   tr.appendChild(th2);
   tr.appendChild(th3);
   tr.appendChild(th4);
-  tr.appendChild(th5);
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
@@ -418,14 +445,43 @@ function hienThiDanhSachHoaDon(duLieusHienThi, hamRenderItem, wrapperSelector) {
   container.appendChild(table);
   wrapper.appendChild(container);
 }
+//sắp xêps hóa đơn theo ngày
+function sapXepHoaDon(sort, hoaDonsDaLoc) {
+  if (sort === "asc")
+    return hoaDonsDaLoc.toSorted(
+      (a, b) => new Date(a["ngay-tao"]) - new Date(b["ngay-tao"])
+    );
+  if (sort === "desc")
+    return hoaDonsDaLoc.toSorted(
+      (a, b) => new Date(b["ngay-tao"]) - new Date(a["ngay-tao"])
+    );
+  return hoaDonsDaLoc;
+}
+//lọc sản phẩm chưa hoặc đã được xử lý
+function locXuLyHoaDon(handle, hoaDonsDaLoc ){
+  if(handle==="chua")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="chua");
+  if(handle==="dang")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="dang");
+  if(handle==="huy")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="huy");
+  if(handle==="roi")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="roi");
+  return hoaDonsDaLoc;
+}
 
 function kiemTraTabHienTai() {
   const params = layParamUrl();
-  return params.tab || "thongke";
+  return params["tab"] || "thongke";
 }
 
 function taiSanPham() {} // chay duoc roi nen tam tat di
 window.addEventListener("load", function () {
-  taiNguoiDung();
+  //taiNguoiDung();
   taiHoaDon();
 });
+
+function timNguoiDung(id){
+  return g_nguoiDung.find((nguoiDung)=> nguoiDung["id"]===id);
+}
+

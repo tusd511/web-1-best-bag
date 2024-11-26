@@ -27,6 +27,7 @@
     - toi da 5 so luong san pham moi chi tiet
   - trang thai xu ly: `["dang", "chua", "huy", "roi"]`, `cum_weights=[10, 25, 60, 1000]`
 
+
 </details>
 
 ## Nội dung hướng dẫn hiểu code
@@ -70,6 +71,7 @@
 5. thực hiện tương tự cho sản phẩm, người dùng, hóa đơn
 
 </details>
+
 
 ### Xử lý tab trong trang admin
 
@@ -188,6 +190,7 @@
 
 <summary>hien noi dung da dc an di</summary>
 
+
 1. ![image](https://github.com/user-attachments/assets/ca9cc847-18b2-49e8-884a-37d46ea62a8e)
 2. ![image](https://github.com/user-attachments/assets/f08eb559-26a4-47f4-b9e2-e59db3e1512a)
 3. ![image](https://github.com/user-attachments/assets/73894cc7-a6ad-44b4-8ccc-252b20400e6f)
@@ -195,5 +198,6 @@
 5. ![image](https://github.com/user-attachments/assets/f826ca95-8260-4a81-9eef-ff53411ef428)
 6. ![image](https://github.com/user-attachments/assets/17a40ffc-bb72-4668-a8af-5d2d30ba2112)
 7. ![image](https://github.com/user-attachments/assets/6fc56db2-4d35-4ff2-ad06-6eba12a357e8)
+
 
 </details>
