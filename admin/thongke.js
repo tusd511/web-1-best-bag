@@ -99,6 +99,103 @@ function topKhachChiTieu({ ngay, thang, nam } = {}) {
   );
 }
 
+function thongKeThoiGian() {
+  const result = {};
+
+  // Step 1: Fill daily data
+  hoaDons.forEach((hoaDon) => {
+    const ngayTao = new Date(hoaDon["ngay-tao"]);
+    const year = ngayTao.getFullYear();
+    const month = ngayTao.getMonth() + 1; // getMonth() is zero-based
+    const day = ngayTao.getDate();
+
+    if (!result[year]) {
+      result[year] = {
+        "chi-tiet": {},
+      };
+    }
+    if (!result[year]["chi-tiet"][month]) {
+      result[year]["chi-tiet"][month] = {
+        "chi-tiet": Array(new Date(year, month, 0).getDate())
+          .fill()
+          .map(() => ({
+            "so-don": 0,
+            "so-khach": new Set(),
+            "loai-da-ban": new Set(),
+            "da-ban": 0,
+            "tong-thu": 0,
+          })),
+      };
+    }
+
+    const dayData = result[year]["chi-tiet"][month]["chi-tiet"][day - 1];
+    dayData["so-don"] += 1;
+    dayData["so-khach"].add(hoaDon["nguoi-dung"]);
+
+    hoaDon["chi-tiet"].forEach((item) => {
+      dayData["loai-da-ban"].add(item["san-pham"]);
+      dayData["da-ban"] += item["so-luong"];
+      const product = timSanPham(item["san-pham"]);
+      dayData["tong-thu"] += (product["price-sale-n"] || 0) * item["so-luong"];
+    });
+  });
+
+  // Step 2: Aggregate monthly data
+  Object.entries(result).forEach(([year, yearData]) => {
+    Object.entries(yearData["chi-tiet"]).forEach(([month, monthDetail]) => {
+      const monthData = {
+        "so-don": 0,
+        "so-khach": new Set(),
+        "loai-da-ban": new Set(),
+        "da-ban": 0,
+        "tong-thu": 0,
+        "chi-tiet": monthDetail["chi-tiet"],
+      };
+
+      monthData["chi-tiet"].forEach((dayData) => {
+        monthData["so-don"] += dayData["so-don"];
+        dayData["so-khach"].forEach((khach) =>
+          monthData["so-khach"].add(khach)
+        );
+        dayData["loai-da-ban"].forEach((sp) =>
+          monthData["loai-da-ban"].add(sp)
+        );
+        monthData["da-ban"] += dayData["da-ban"];
+        monthData["tong-thu"] += dayData["tong-thu"];
+      });
+
+      monthData["so-khach"] = monthData["so-khach"].size;
+      monthData["loai-da-ban"] = monthData["loai-da-ban"].size;
+      result[year]["chi-tiet"][month] = monthData;
+    });
+  });
+
+  // Step 3: Aggregate yearly data
+  Object.entries(result).forEach(([year, yearDetail]) => {
+    const yearData = {
+      "so-don": 0,
+      "so-khach": new Set(),
+      "loai-da-ban": new Set(),
+      "da-ban": 0,
+      "tong-thu": 0,
+      "chi-tiet": yearDetail["chi-tiet"],
+    };
+
+    Object.values(yearData["chi-tiet"]).forEach((monthData) => {
+      yearData["so-don"] += monthData["so-don"];
+      monthData["so-khach"].forEach((khach) => yearData["so-khach"].add(khach));
+      monthData["loai-da-ban"].forEach((sp) => yearData["loai-da-ban"].add(sp));
+      yearData["da-ban"] += monthData["da-ban"];
+      yearData["tong-thu"] += monthData["tong-thu"];
+    });
+
+    yearData["so-khach"] = yearData["so-khach"].size;
+    yearData["loai-da-ban"] = yearData["loai-da-ban"].size;
+    result[year] = yearData;
+  });
+  return result;
+}
+
 // taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
 //     g_nguoiDung = data;
 //     i_nguoiDung =
