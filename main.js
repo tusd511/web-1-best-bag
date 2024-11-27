@@ -49,35 +49,39 @@ async function taiDuLieu(datakey, datafile) {
   const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
   return await response.json();
 }
-async function taiSanPham() {
+async function taiSanPham(sauKhiTai) {
   g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
   g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile);
   i_sanPham =
     taiDuLieuLocalStorage(sanPhamImKey) ??
     createIndexMapping(g_sanPham, sanPhamIdKey);
-  taoBoLocSanPham();
-  tinhSanPhamHienThi();
+  await sauKhiTai();
 }
-function taiNguoiDung() {
+function taiNguoiDung(sauKhiTai) {
   taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
     g_nguoiDung = data;
     i_nguoiDung =
       taiDuLieuLocalStorage(nguoiDungImKey) ??
       createIndexMapping(g_nguoiDung, nguoiDungIdKey);
-    tinhNguoiDungHienThi();
+    sauKhiTai();
   });
 }
-function taiHoaDon() {
+function taiHoaDon(sauKhiTai) {
   taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
     g_hoaDon = data;
     i_hoaDon =
       taiDuLieuLocalStorage(hoaDonImKey) ??
       createIndexMapping(g_hoaDon, hoaDonIdKey);
-    tinhHoaDonHienThi();
+    sauKhiTai();
   });
 }
 
 function taoBoLocSanPham() {
+  const container = document.getElementById("categories");
+  if (!container) {
+    console.info("taoBoLocSanPham khong tim thay wrapper");
+    return;
+  }
   // cac param muon giu lai khi sua bo loc
   const { search, min, max, sort, categories } = layParamUrl();
   // Dynamically add categories to the form
@@ -112,19 +116,30 @@ function taoBoLocSanPham() {
     div.appendChild(checkbox);
     div.appendChild(label);
 
-    document.getElementById("categories").appendChild(div);
+    container.appendChild(div);
   });
   // hien lai data tu param vao form
-  document.getElementById("search").value = search;
-  if (Number.isFinite(min)) document.getElementById("minPrice").value = min;
-  if (Number.isFinite(max)) document.getElementById("maxPrice").value = max;
+  document.getElementById("search")?.setAttribute("value", search);
+  Number.isFinite(min) &&
+    document.getElementById("minPrice")?.setAttribute("value", min);
+  Number.isFinite(max) &&
+    document.getElementById("maxPrice")?.setAttribute("value", max);
+  if (categories?.length > 0) {
+    const checkboxes = document.querySelectorAll(
+      '#categories input[type="checkbox"]'
+    );
+    if (checkboxes.length > 0) {
+      checkboxes.forEach((cb) => (cb.checked = categories.includes(cb.value)));
+    }
+  }
+  document.getElementById("sortBy")?.setAttribute("value", sort);
   if (categories?.length > 0)
     [
       ...document.querySelectorAll('#categories input[type="checkbox"]'),
     ].forEach((cb) => (cb.checked = categories.includes(cb.value)));
-  document.getElementById("sortBy").value = sort;
+
   // su kien submit
-  document.getElementById("productForm").addEventListener("submit", (e) => {
+  document.getElementById("productForm")?.addEventListener("submit", (e) => {
     e.preventDefault();
     const formObject = {};
     new FormData(e.target).forEach((value, key) => {
@@ -183,7 +198,11 @@ function caiParamUrlVaReload(
   window.location = url.toString();
 }
 
-function tinhSanPhamHienThi() {
+function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhSanPhamHienThi khong tim thay wrapper");
+    return;
+  }
   let { page, sort, min, max, search, categories } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaSanPham(min, max, sanPhamsDaLoc);
@@ -209,27 +228,39 @@ function tinhSanPhamHienThi() {
     chiSoBatDau,
     chiSoBatDau + soSanPhamMoiTrang
   );
-  hienThiSanPham(sanPhamsHienThi, {
-    page, // trang phan trang hien tai
-    soPageToiDa, // so trang toi da phan trang
-    chiSoPage,
-    sort,
-    min,
-    max,
-    search,
-    categories,
-    soLuongSanPham,
-    tongSoSanPham: g_sanPham.length,
-    chiSoBatDau,
-    soSanPhamMoiTrang,
-  });
+  hienThiSanPham(
+    sanPhamsHienThi,
+    {
+      page, // trang phan trang hien tai
+      soPageToiDa, // so trang toi da phan trang
+      chiSoPage,
+      sort,
+      min,
+      max,
+      search,
+      categories,
+      soLuongSanPham,
+      tongSoSanPham: g_sanPham.length,
+      chiSoBatDau,
+      soSanPhamMoiTrang,
+    },
+    wrapperSelector
+  );
 }
 
-function tinhNguoiDungHienThi() {
+function tinhNguoiDungHienThi(wrapperSelector = ".account-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhNguoiDungHienThi khong tim thay wrapper");
+    return;
+  }
   alert("chua cai dat tinh nguoi dung hien thi");
 }
 
-function tinhHoaDonHienThi() {
+function tinhHoaDonHienThi(wrapperSelector = ".order-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhHoaDonHienThi khong tim thay wrapper");
+    return;
+  }
   alert("chua cai dat tinh hoa don hien thi");
 }
 
@@ -239,12 +270,12 @@ function hienTrangChiTiet(id) {
   // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
 }
-function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
+function hienThiSanPham(sanPhamsHienThi, paramPhanTrang, wrapperSelector) {
   createPaginationDebugTable(paramPhanTrang);
   // TODO: hien thi danh sach san Pham sau khi load
   // lay page va soPageToiDa de xu ly hien thi phan trang
   // code hien tai chi la demo de hien thi kiem tra, can phai sua lai theo cach minh lam
-  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, ".product-list");
+  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, wrapperSelector);
   hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
 }
 
@@ -876,10 +907,19 @@ function xoaHoaDon(id) {
   deleteHoaDon(id);
 }
 
-// goi khi trang web load thanh cong
-window.addEventListener("load", () => {
+async function taiDuLieuTongMainJs(sauKhiTai) {
   verifyDataVersion();
-  if (document.querySelector(".product-list")) taiSanPham();
-  if (document.querySelector(".user-list")) taiNguoiDung();
-  if (document.querySelector(".receipt-list")) taiHoaDon();
-});
+  await taiSanPham(() => {
+    taoBoLocSanPham();
+    tinhSanPhamHienThi();
+  });
+  taiNguoiDung(() => tinhNguoiDungHienThi());
+  taiHoaDon(() => tinhHoaDonHienThi());
+  sauKhiTai();
+}
+
+if (window.dayLaTrangIndex)
+  // goi khi trang web load thanh cong
+  window.addEventListener("load", () => {
+    taiDuLieuTongMainJs(() => console.info("Tai du lieu tong o mainjs"));
+  });

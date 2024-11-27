@@ -18,7 +18,7 @@ function formatVND(value) {
   });
 }
 
-window.addEventListener("load", () => {
+function hienBieuDo() {
   let chart2;
   thongKeThoiGian2().then((tktg) => {
     const year2024 = tktg["chi-tiet"]["2024"];
@@ -34,14 +34,13 @@ window.addEventListener("load", () => {
               chart: {
                 type: "bar",
               },
-              plotOptions: { bar: { horizontal: true } },
               series: [
                 {
                   name: "profits",
                   data: days.map((day) => day["tong-thu"]),
                 },
               ],
-              xaxis: {
+              yaxis: {
                 labels: { formatter: formatVND },
                 categories: Object.keys(days),
               },
@@ -82,6 +81,10 @@ window.addEventListener("load", () => {
     );
     chart.render();
   });
+}
+
+window.addEventListener("load", () => {
+  taiDuLieuTongMainJs(() => hienBieuDo());
 });
 
 // function generateRandomData(num) {
