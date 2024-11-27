@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="./admin.css" />
+    <link
+      rel="shortcut icon"
+      href="images/icons8-bag-96.png"
+      type="image/png"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    
+    <title>Web 1 Best Bag</title>
+</head>
+<body>
+    <form id="filterHoaDon">
+        <label for="xu-ly">Lọc hóa đơn:</label>
+        <select id="handle" name="handle">
+            <option>Chưa chọn</option>
+            <option value="chua">Chưa xử lý</option>
+            <option value="dang">Đang xử lý</option>
+            <option value="huy">Chờ thanh toán</option>
+            <option value="roi">Đã xử lý</option>
+        </select>
+        <label for="sort">&nbsp; Sắp xếp theo:</label>
+        <select id="sort" name="sort">
+            <option value="">Chưa chọn</option>
+            <option value="asc">Đầu tiên</option>
+            <option value="desc">Gần đây</option>
+        </select> 
+        <button type="submit" id="applyFilter">Áp dụng</button>
+    </form>
+    <div class="order-list"></div>
+    <div class="pagination3"></div>
+</body>
+    <script src="/main.js"></script>
+    <script src="./admin.js"></script>
+</html>

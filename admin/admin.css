@@ -734,6 +734,22 @@ th, td{
   background-color: #212529;
 }
 
+#filterTop{
+  gap:10px;
+  right:20px;
+}
+#filterTop label {
+  color:#fff;
+  font-size: 15px;
+}
+
+.best-seller{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+
+  
+}
 
 /*-------------------------------------------------------*/
 .Dark {

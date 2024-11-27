@@ -152,14 +152,17 @@ function layParamUrl() {
     max: parseInt(params.get("max"), 10),
     search: params.get("search") || "",
     categories: params.getAll("categories[]") || [],
-    tab: params.get("tab"),
-    disabled: params.get("disabled"),
+    tab: params.get("tab") || "thongke",
+    disabled: parseInt(params.get("disabled"),2) || 0,
+    handle: params.get("handle") ,
+    topsp: params.get("topsp")|| "",
+    topnd: params.get("topnd")|| "",
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
 function caiParamUrlVaReload(
-  { page, sort, min, max, search, categories, tab, disabled },
+  { page, sort, min, max, search, categories, tab, disabled, handle, topsp, topnd },
   resetParam
 ) {
   const url = new URL(document.location.toString());
@@ -180,6 +183,9 @@ function caiParamUrlVaReload(
   setParamArray(categories, "categories[]");
   setParam(tab, "tab");
   setParam(disabled, "disabled");
+  setParam(handle, "handle");
+  setParam(topsp, "topsp");
+  setParam(topnd, "topnd");
   window.location = url.toString();
 }
 

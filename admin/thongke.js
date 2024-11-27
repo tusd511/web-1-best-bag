@@ -24,7 +24,7 @@ function thongKeSanPham({ ngay, thang, nam } = {}) {
   });
 }
 
-function topSanPhamDoanhThu({ ngay, thang, nam } = {}) {
+function topSanPhamBanChay({ ngay, thang, nam } = {}) {
   return thongKeSanPham({ ngay, thang, nam }).sort(
     (a, b) => b["so-luong"] - a["so-luong"]
   );
