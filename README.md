@@ -32,6 +32,27 @@
 
 ## Nội dung hướng dẫn hiểu code
 
+### Sự kiện tải dữ liệu, hành động SAU khi đã tải
+
+<details>
+
+<summary>hien noi dung da dc an di</summary>
+
+- Cac ham chi la viet mau/vi du, co the thay doi
+
+1. Cơ bản hàm tải tổng là làm gì
+2. ![image](https://github.com/user-attachments/assets/7d7f3ef5-2fc4-4c0e-953b-a0632a1c2a1b)
+3. ví dụ hàm thong ke thoi gian **CẦN CÓ** hóa đơn đã tải xong
+4. ![image](https://github.com/user-attachments/assets/5b60a5c5-c1fb-457a-97e4-c824c47931f6)
+5. hiện biểu đồ cần kết quả thống kê
+6. ![image](https://github.com/user-attachments/assets/ef048f9a-6788-4821-bc60-a9ff2738a7b4)
+7. gọi theo thứ tự
+8. ![image](https://github.com/user-attachments/assets/35d7c435-0b64-42ab-8f54-8142b8358f57)
+9. bởi vì hàm tải nhận vào hàm các hành động thực hiện **SAU KHI TẢI**
+10. ![image](https://github.com/user-attachments/assets/66faea25-0d8c-419e-98f0-5d900818f8b7)
+
+</details>
+
 ### Flow hiển thị
 
 <details>

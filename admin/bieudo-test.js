@@ -20,6 +20,7 @@ function formatVND(value) {
 
 function hienBieuDo() {
   let chart2;
+  // tktg = thongKeThoiGian();
   thongKeThoiGian2().then((tktg) => {
     const year2024 = tktg["chi-tiet"]["2024"];
     let yearGraphOptions = {
@@ -83,9 +84,9 @@ function hienBieuDo() {
   });
 }
 
-window.addEventListener("load", () => {
-  taiDuLieuTongMainJs(() => hienBieuDo());
-});
+window.addEventListener("load", () =>
+  taiDuLieuTongMainJs(() => taiHoaDon(() => hienBieuDo()))
+);
 
 // function generateRandomData(num) {
 //   return Array.from({ length: num }, () => Math.floor(Math.random() * 100));
