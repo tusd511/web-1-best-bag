@@ -87,7 +87,43 @@ def generate_fake_receipt(n) -> list[dict]:
     ]
 
 
-data_types = {"nguoi-dung": generate_fake_users, "hoa-don": generate_fake_receipt}
+def generate_fake_cart(n) -> list[dict]:
+    n_sp_use = 300
+    sp_per_order = 3
+    sp_n_per_detail = 2
+    sps: list[str] = list(
+        map(
+            lambda sp: sp["web-scraper-order"],
+            r.sample(read_from_json("san-pham.json"), n_sp_use),
+        )
+    )
+    return [
+        {
+            "nguoi-dung": x,
+            "chi-tiet": [
+                {"san-pham": sp, "so-luong": r.randint(1, sp_n_per_detail)}
+                for sp in r.sample(sps, k=r.randint(1, sp_per_order))
+            ],
+        }
+        for x in map(
+            lambda nd: nd["id"],
+            r.sample(
+                list(
+                    filter(
+                        lambda x: not x["disabled"], read_from_json("nguoi-dung.json")
+                    )
+                ),
+                n,
+            ),
+        )
+    ]
+
+
+data_types = {
+    "nguoi-dung": generate_fake_users,
+    "hoa-don": generate_fake_receipt,
+    "gio-hang": generate_fake_cart,
+}
 
 if __name__ == "__main__":
     p = P(description="Generate fake data")

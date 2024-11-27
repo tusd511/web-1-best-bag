@@ -1,0 +1,65 @@
+[
+  {
+    "nguoi-dung": "8ebb4e78-9895-469c-aa7c-35d0c2732d18",
+    "chi-tiet": [{ "san-pham": "1728630142-342", "so-luong": 2 }]
+  },
+  {
+    "nguoi-dung": "178fdf28-4ff2-4c2a-97f1-5a052c99baac",
+    "chi-tiet": [{ "san-pham": "1728630145-382", "so-luong": 1 }]
+  },
+  {
+    "nguoi-dung": "7efd75d6-d6da-42ad-afbe-a6073b3461cd",
+    "chi-tiet": [
+      { "san-pham": "1728630158-572", "so-luong": 1 },
+      { "san-pham": "1728630149-461", "so-luong": 2 },
+      { "san-pham": "1728630133-185", "so-luong": 2 }
+    ]
+  },
+  {
+    "nguoi-dung": "137c560f-c509-43a2-876d-6b1a4f90b78e",
+    "chi-tiet": [
+      { "san-pham": "1728630139-273", "so-luong": 2 },
+      { "san-pham": "1728630136-259", "so-luong": 1 }
+    ]
+  },
+  {
+    "nguoi-dung": "d79424d5-fed8-4eb4-9fd7-475948783b27",
+    "chi-tiet": [
+      { "san-pham": "1728630133-182", "so-luong": 2 },
+      { "san-pham": "1728630155-548", "so-luong": 1 }
+    ]
+  },
+  {
+    "nguoi-dung": "72fbfe4c-2ea0-4aed-abb4-6b0945138123",
+    "chi-tiet": [
+      { "san-pham": "1728630136-243", "so-luong": 2 },
+      { "san-pham": "1728630133-220", "so-luong": 1 }
+    ]
+  },
+  {
+    "nguoi-dung": "0e3fbb47-ea0a-4dee-8ae6-d2940185d303",
+    "chi-tiet": [{ "san-pham": "1728630142-319", "so-luong": 1 }]
+  },
+  {
+    "nguoi-dung": "aef3cd48-4594-4766-91a4-440d7e556e9a",
+    "chi-tiet": [
+      { "san-pham": "1728630127-97", "so-luong": 1 },
+      { "san-pham": "1728630149-446", "so-luong": 2 },
+      { "san-pham": "1728630149-421", "so-luong": 1 }
+    ]
+  },
+  {
+    "nguoi-dung": "4818d2ac-f203-4751-90ad-52e376618914",
+    "chi-tiet": [
+      { "san-pham": "1728630145-391", "so-luong": 2 },
+      { "san-pham": "1728630136-225", "so-luong": 2 }
+    ]
+  },
+  {
+    "nguoi-dung": "bfafbe94-eeff-4c9d-a136-f8a2aed2c367",
+    "chi-tiet": [
+      { "san-pham": "1728630136-246", "so-luong": 2 },
+      { "san-pham": "1728630130-141", "so-luong": 1 }
+    ]
+  }
+]

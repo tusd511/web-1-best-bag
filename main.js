@@ -1,25 +1,29 @@
 const sanPhamKey = "sanPham";
 const nguoiDungKey = "nguoiDung";
+const gioHangKey = "gioHang";
 const hoaDonKey = "hoaDon";
 const sanPhamIdKey = "web-scraper-order";
 const nguoiDungIdKey = "id";
+const gioHangIdKey = "nguoi-dung";
 const hoaDonIdKey = "id";
 const sanPhamImKey = "sanPhamIm";
 const nguoiDungImKey = "nguoiDungIm";
+const gioHangImKey = "gioHangIm";
 const hoaDonImKey = "hoaDonIm";
 const theLoaiSanPhamKey = "theLoaiSanPham";
 const sanPhamFile = "san-pham.json";
 const nguoiDungFile = "nguoi-dung.json";
+const gioHangFile = "gio-hang.json";
 const hoaDonFile = "hoa-don.json";
 const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
-const dataVersion = 18;
+const dataVersion = 25;
 
 const soSanPhamMoiTrang = 12;
 
-var g_sanPham, g_nguoiDung, g_hoaDon, g_theLoaiSanPham;
-var i_sanPham, i_nguoiDung, i_hoaDon;
+var g_sanPham, g_nguoiDung, g_gioHang, g_hoaDon, g_theLoaiSanPham;
+var i_sanPham, i_nguoiDung, i_gioHang, i_hoaDon;
 
 // Get the current script element (the one that included this JS file)
 const mainJsScriptElement = document.currentScript;
@@ -32,7 +36,11 @@ const mainJsScriptDirectory = mainJsScriptPath.substring(
 
 // thêm biến phiên bản dữ liệu để ép reset localstorage
 function verifyDataVersion() {
+  const savedDataVersion = localStorage.getItem("dataVersion");
   if (localStorage.getItem("dataVersion") != dataVersion) {
+    console.info(
+      `Reset localStorage as saved dataVersion ${savedDataVersion} != ${dataVersion}`
+    );
     localStorage.clear();
     localStorage.setItem("dataVersion", dataVersion);
   }
@@ -40,14 +48,15 @@ function verifyDataVersion() {
 
 async function taiDuLieu(datakey, datafile) {
   // du lieu key nay da co trong local storage
-  const data = taiDuLieuLocalStorage(datakey);
-  if (data) {
-    return JSON.parse(data);
-  }
+  const dataObj = taiDuLieuLocalStorage(datakey);
+  if (dataObj) return dataObj;
+
   // chua co du lieu key nay trong local storage (lan dau mo web)
   // thi can phai tai du lieu ban dau tu file
   const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
-  return await response.json();
+  const json = await response.json();
+  console.debug("taiDuLieu", { response, datakey, datafile, json });
+  return json;
 }
 async function taiSanPham(sauKhiTai) {
   g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
@@ -63,6 +72,15 @@ function taiNguoiDung(sauKhiTai) {
     i_nguoiDung =
       taiDuLieuLocalStorage(nguoiDungImKey) ??
       createIndexMapping(g_nguoiDung, nguoiDungIdKey);
+    sauKhiTai();
+  });
+}
+function taiGioHang(sauKhiTai) {
+  taiDuLieu(gioHangKey, gioHangFile).then((data) => {
+    g_gioHang = data;
+    i_gioHang =
+      taiDuLieuLocalStorage(gioHangImKey) ??
+      createIndexMapping(g_gioHang, gioHangIdKey);
     sauKhiTai();
   });
 }
@@ -527,29 +545,29 @@ function luuHoaDonLocalStorage() {
   luuDuLieuLocalStorage(hoaDonKey, g_hoaDon);
 }
 function luuDuLieuLocalStorage(datakey, g_duLieu) {
-  localStorage.setItem(datakey, JSON.stringify(g_duLieu));
+  console.debug("luuDuLieuLocalStorage", { datakey, g_duLieu });
+  localStorage.setItem(
+    datakey,
+    JSON.stringify(g_duLieu, (k, v) =>
+      k == "dataVersion" || k == "dataInfo" ? undefined : v
+    )
+  );
 }
 
 function taiSanPhamLocalStorage() {
-  const stringSanPhams = taiDuLieuLocalStorage(sanPham);
-  if (stringSanPhams == null) return false;
-  g_sanPham = JSON.parse(stringSanPhams);
-  return true;
+  return taiDuLieuLocalStorage(sanPhamKey);
 }
 function taiNguoiDungLocalStorage() {
-  const stringNguoiDungs = taiDuLieuLocalStorage(nguoiDungKey);
-  if (stringNguoiDungs == null) return false;
-  g_nguoiDung = JSON.parse(stringNguoiDungs);
-  return true;
+  return taiDuLieuLocalStorage(nguoiDungKey);
 }
 function taiHoaDonLocalStorage() {
-  const stringHoaDons = taiDuLieuLocalStorage(hoaDonKey);
-  if (stringHoaDons == null) return false;
-  g_hoaDon = JSON.parse(stringHoaDons);
-  return true;
+  return taiDuLieuLocalStorage(hoaDonKey);
 }
 function taiDuLieuLocalStorage(datakey) {
-  return localStorage.getItem(datakey);
+  const dl = localStorage.getItem(datakey);
+  const obj = JSON.parse(dl);
+  console.debug("taiDuLieuLocalStorage", { datakey, strlen: dl?.length, obj });
+  return obj;
 }
 // xoa local storage de load lai danh sach san pham ban dau tu file data
 function xoaSanPhamLocalStorage() {
@@ -617,12 +635,28 @@ function createEntity(
 ) {
   entityList.push(entity);
   indexMapping[entity[idKey]] = entityList.length - 1;
+  console.debug("createEntity", {
+    entityList,
+    entityKey,
+    indexMapping,
+    indexMappingKey,
+    idKey,
+    entity,
+  });
   luuDuLieuLocalStorage(entityKey, entityList);
   luuDuLieuLocalStorage(indexMappingKey, indexMapping);
 }
 
-function readEntity(entityList, indexMapping, idKey, entityId) {
+function readEntity(entityList, entityKey, indexMapping, idKey, entityId) {
   const index = indexMapping[entityId];
+  console.debug("readEntity", {
+    entityList,
+    entityKey,
+    indexMapping,
+    idKey,
+    entityId,
+    index,
+  });
   return index !== undefined ? entityList[index] : null;
 }
 
@@ -636,6 +670,16 @@ function updateEntity(
   newEntity
 ) {
   const index = indexMapping[entityId];
+  console.debug("updateEntity", {
+    entityList,
+    entityKey,
+    indexMapping,
+    indexMappingKey,
+    idKey,
+    entityId,
+    newEntity,
+    index,
+  });
   if (index !== undefined) {
     entityList[index] = newEntity;
     luuDuLieuLocalStorage(entityKey, entityList);
@@ -651,6 +695,15 @@ function deleteEntity(
   entityId
 ) {
   const index = indexMapping[entityId];
+  console.debug("deleteEntity", {
+    entityList,
+    entityKey,
+    indexMapping,
+    indexMappingKey,
+    idKey,
+    entityId,
+    index,
+  });
   if (index !== undefined) {
     entityList.splice(index, 1);
     delete indexMapping[entityId];
@@ -677,7 +730,7 @@ function createSanPham(entity) {
 }
 
 function readSanPham(entityId) {
-  return readEntity(g_sanPham, i_sanPham, sanPhamIdKey, entityId);
+  return readEntity(g_sanPham, sanPhamKey, i_sanPham, sanPhamIdKey, entityId);
 }
 
 function updateSanPham(entityId, newEntity) {
@@ -716,7 +769,13 @@ function createNguoiDung(entity) {
 }
 
 function readNguoiDung(entityId) {
-  return readEntity(g_nguoiDung, i_nguoiDung, nguoiDungIdKey, entityId);
+  return readEntity(
+    g_nguoiDung,
+    nguoiDungKey,
+    i_nguoiDung,
+    nguoiDungIdKey,
+    entityId
+  );
 }
 
 function updateNguoiDung(entityId, newEntity) {
@@ -742,13 +801,52 @@ function deleteNguoiDung(entityId) {
   );
 }
 
+// CRUD functions for gioHang
+function createGioHang(entity) {
+  createEntity(
+    g_gioHang,
+    gioHangKey,
+    i_gioHang,
+    gioHangImKey,
+    gioHangIdKey,
+    entity
+  );
+}
+
+function readGioHang(entityId) {
+  return readEntity(g_gioHang, gioHangKey, i_gioHang, gioHangIdKey, entityId);
+}
+
+function updateGioHang(entityId, newEntity) {
+  updateEntity(
+    g_gioHang,
+    gioHangKey,
+    i_gioHang,
+    gioHangImKey,
+    gioHangIdKey,
+    entityId,
+    newEntity
+  );
+}
+
+function deleteGioHang(entityId) {
+  deleteEntity(
+    g_gioHang,
+    gioHangKey,
+    i_gioHang,
+    gioHangImKey,
+    gioHangIdKey,
+    entityId
+  );
+}
+
 // CRUD functions for hoaDon
 function createHoaDon(entity) {
   createEntity(g_hoaDon, hoaDonKey, i_hoaDon, hoaDonImKey, hoaDonImKey, entity);
 }
 
 function readHoaDon(entityId) {
-  return readEntity(g_hoaDon, i_hoaDon, hoaDonImKey, entityId);
+  return readEntity(g_hoaDon, hoaDonKey, i_hoaDon, hoaDonImKey, entityId);
 }
 
 function updateHoaDon(entityId, newEntity) {
@@ -780,7 +878,6 @@ function deleteHoaDon(entityId) {
 function themSanPham(id, sanPham) {
   if (id == null) sanPham[sanPhamIdKey] = crypto.randomUUID();
   else if (timSanPham(id)) {
-    // TODO: xu ly id bi trung
     alert("themSanPham trung id");
     return;
   } else sanPham[sanPhamIdKey] = id;
@@ -799,7 +896,6 @@ function timSanPham(id) {
 // dung timSanPhamTheoId de lay thong tin san pham cho nguoi dung sua
 function suaSanPham(id, sanPham) {
   if (!timSanPham(id)) {
-    // TODO: xu ly khong tim thay id
     alert("suaSanPham khong tim thay id");
     return;
   }
@@ -810,7 +906,6 @@ function suaSanPham(id, sanPham) {
 
 function xoaSanPham(id) {
   if (!timSanPham(id)) {
-    // TODO: xu ly ko tim thay san pham co id nay
     alert("xoaSanPham khong tim thay id");
     return;
   }
@@ -823,11 +918,12 @@ function xoaSanPham(id) {
 function themNguoiDung(id, nguoiDung) {
   if (id == null) nguoiDung[nguoiDungIdKey] = crypto.randomUUID();
   else if (timNguoiDung(id)) {
-    // TODO: xu ly id bi trung
     alert("themNguoiDung trung id");
     return;
   } else nguoiDung[nguoiDungIdKey] = id;
   createNguoiDung(nguoiDung);
+  if (readGioHang(id)) return;
+  createGioHang({ "nguoi-dung": id, "chi-tiet": [] });
 }
 
 // tim nguoi dung theo id
@@ -844,7 +940,6 @@ function timNguoiDung(id) {
 // dung timNguoiDungTheoId de lay thong tin nguoi dung cho nguoi dung sua
 function suaNguoiDung(id, nguoiDung) {
   if (!timNguoiDung(id)) {
-    // TODO: xu ly khong tim thay id
     alert("suaNguoiDung khong tim thay id");
     return;
   }
@@ -855,11 +950,59 @@ function suaNguoiDung(id, nguoiDung) {
 
 function xoaNguoiDung(id) {
   if (!timNguoiDung(id)) {
-    // TODO: xu ly ko tim thay nguoi dung co id nay
     alert("xoaNguoiDung khong tim thay id");
     return;
   }
   deleteNguoiDung(id);
+  if (!readGioHang(id)) return;
+  deleteGioHang(id);
+}
+
+// them gio hang: khong thuc hien duoc, bao loi
+// Removed as it doesn't align with the one-to-one relationship between nguoiDung and gioHang.
+function themGioHang() {
+  alert("themGioHang khong thuc hien duoc. Vui long sua gio hang hien tai.");
+}
+
+// tim gio hang theo id, tao gio hang neu khong ton tai
+function timGioHang(id) {
+  if (id == null) {
+    alert("timGioHang chua nhap id");
+    return;
+  }
+  if (!timNguoiDung(id)) {
+    if (readGioHang(id)) deleteGioHang(id);
+    alert("khong co nguoi dung co id nay de thao tac tren gio hang cua ho");
+    return;
+  }
+  let gioHang = readGioHang(id);
+  if (!gioHang) {
+    gioHang = { "nguoi-dung": id, "chi-tiet": [] };
+    createGioHang(gioHang);
+  }
+  return gioHang;
+}
+
+// sua gio hang: nhan vao chi-tiet array va cap nhat chi-tiet
+function suaChiTietGioHang(id, chiTiet) {
+  const gioHang = timGioHang(id);
+  if (!gioHang) {
+    alert("suaGioHang khong tim thay id");
+    return;
+  }
+  gioHang["chi-tiet"] = chiTiet;
+  updateGioHang(id, gioHang);
+}
+
+// xoa gio hang: xoa chi-tiet array thay vi xoa gio hang
+function xoaChiTietGioHang(id) {
+  const gioHang = timGioHang(id);
+  if (!gioHang) {
+    alert("xoaGioHang khong tim thay id");
+    return;
+  }
+  gioHang["chi-tiet"] = [];
+  updateGioHang(id, gioHang);
 }
 
 // them hoa don, co the nhap id hoac khong
@@ -889,7 +1032,6 @@ function timHoaDon(id) {
 // dung timHoaDonTheoId de lay thong tin hoa don cho nguoi dung sua
 function suaHoaDon(id, hoaDon) {
   if (!timHoaDon(id)) {
-    // TODO: xu ly khong tim thay id
     alert("suaHoaDon khong tim thay id");
     return;
   }
@@ -900,7 +1042,6 @@ function suaHoaDon(id, hoaDon) {
 
 function xoaHoaDon(id) {
   if (!timHoaDon(id)) {
-    // TODO: xu ly ko tim thay hoa don co id nay
     alert("xoaHoaDon khong tim thay id");
     return;
   }
@@ -914,6 +1055,7 @@ async function taiDuLieuTongMainJs(sauKhiTai) {
     tinhSanPhamHienThi();
   });
   taiNguoiDung(() => tinhNguoiDungHienThi());
+  taiGioHang(() => {});
   taiHoaDon(() => tinhHoaDonHienThi());
   sauKhiTai();
 }

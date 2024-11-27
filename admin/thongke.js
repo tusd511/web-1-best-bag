@@ -99,6 +99,51 @@ function topKhachChiTieu({ ngay, thang, nam } = {}) {
   );
 }
 
+function thongKeGioHang() {
+  const uniqueProducts = new Set();
+  let totalQuantity = 0;
+
+  g_gioHang.forEach((cart) => {
+    cart["chi-tiet"].forEach((item) => {
+      uniqueProducts.add(item.san_pham);
+      totalQuantity += item["so-luong"];
+    });
+  });
+
+  return {
+    uniqueProductCount: uniqueProducts.size,
+    totalProductCount: totalQuantity,
+  };
+}
+
+function thongKeDonHang() {
+  return {
+    orderCount: g_hoaDon.length,
+  };
+}
+
+function thongKeTaiKhoan() {
+  return {
+    activeCount: g_nguoiDung.filter((user) => !user["disabled"]).length,
+  };
+}
+
+function thongKeTruyCap() {
+  const now = new Date();
+  const elapsed = new Date() - new Date(now.getFullYear(), now.getMonth());
+  return {
+    viewCountThisMonth: Math.ceil(elapsed / 15000),
+    adsClicksThisMonth: Math.ceil(elapsed / 35000),
+  };
+}
+
+function thongKeDoanhThu() {
+  const now = new Date();
+  return thongKeThoiGian()["chi-tiet"][now.getFullYear()]["chi-tiet"][
+    now.getMonth()
+  ]["tong-thu"];
+}
+
 function thongKeThoiGian() {
   const yearlyResult = {};
 
