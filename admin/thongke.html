@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="./admin.css" />
+    <link
+      rel="shortcut icon"
+      href="images/icons8-bag-96.png"
+      type="image/png"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    
+    <title>Web 1 Best Bag</title>
+</head>
+<body>
+    <div class="container2">
+        <div id="quanlythongke" style="margin-top: 16px; display: block">
+          <div class="header-product">
+            <h1 style="color: #fff">THỐNG KÊ</h1>
+          </div>
+          <!-- CARDS -->
+          <div class="board">
+            <div class="card-container">
+              <div class="card-box bg-mattRed">
+                <div class="inner">
+                  <h3>23</h3>
+                  <p>Mặt hàng</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-shopping-bag"></i>
+                </div>
+                <a href="javascript:hiensanpham();" class="card-box-footer">
+                  Chi tiết &nbsp;
+                  <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="card-container">
+              <div class="card-box bg-green">
+                <div class="inner">
+                  <h3>146</h3>
+                  <p>Đơn hàng đã giao</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-clipboard-check"></i>
+                </div>
+                <a href="javascript:hiendonhang();" class="card-box-footer">
+                  Chi tiết &nbsp;
+                  <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="card-container">
+              <div class="card-box bg-orange">
+                <div class="inner">
+                  <h3>86</h3>
+                  <p>Tài khoản đang hoạt động</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-user-friends"></i>
+                </div>
+                <a
+                  href="javascript:hiennguoidung();"
+                  class="card-box-footer"
+                >
+                  Chi tiết &nbsp;
+                  <i class="fa fa-arrow-circle-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="card-container">
+              <div class="card-box bg-blue">
+                <div class="inner">
+                  <h3>1,436</h3>
+                  <p>Lượt truy cập trong tháng</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-eye"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-container">
+              <div class="card-box bg-maroon">
+                <div class="inner">
+                  <h3>679</h3>
+                  <p>Lượt nhấn vào quảng cáo</p>
+                </div>
+                <div class="icon">
+                  <i class="fas fa-ad"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-container">
+              <div class="card-box bg-red">
+                <div class="inner">
+                  <h3>68,738,000 VNĐ</h3>
+                  <p>Doanh thu tháng</p>
+                </div>
+                <div class="icon">
+                  <i class="far fa-money-bill-alt"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <form id="filterTop">
+            <label for="topsp">Top Sản Phẩm</label>
+            <select name="topsp" id="topsp">
+              <option value="ban-chay">Top Sản Phẩm Bán Chạy</option>
+              <option value="doanh-thu">Top Sản Phẩm Doanh Thu</option>
+            </select>
+            <label for="topnd">Top Khách Hàng</label>
+            <select name="topnd" id="topnd">
+              <option value="nhieu-don-nhat">Top Khách Lên Đơn</option>
+              <option value="nhieu-loai-nhat">Top Khách Mua Nhiều Loại</option>
+              <option value="nhieu-hang-nhat">Top Khách Mua Nhiều</option>
+              <option value="nhieu-tien-nhat">Top Khách Chi Tiêu</option>
+            </select>
+            <button type="submit" id="applyFilterTop">Hiển Thị</button>
+          </form>
+          
+          <div class="topsanpham"></div>
+          <div class="topkhachhang"></div>
+          
+        </div>
+    </div>
+</body>
+    
+    <script src="/main.js"></script>
+    <script src="./thongke.js"></script>
+    <script src="./admin.js"></script>
+    
+</html>
