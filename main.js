@@ -936,11 +936,18 @@ function xoaSanPham(id) {
 // neu nhap id, kiem tra xem co bi trung id hay ko
 // neu ko nhap id, se duoc random 1 id ngau nhien
 function themNguoiDung(id, nguoiDung) {
-  if (id == null) nguoiDung[nguoiDungIdKey] = crypto.randomUUID();
-  else if (timNguoiDung(id)) {
-    alert("themNguoiDung trung id");
-    return;
+  if (id == null) {
+    id = crypto.randomUUID();
+    nguoiDung[nguoiDungIdKey] = id;
   } else nguoiDung[nguoiDungIdKey] = id;
+  if (
+    timNguoiDung(id) ||
+    timNguoiDung(nguoiDung["username"]) ||
+    timNguoiDung(nguoiDung["email"])
+  ) {
+    alert("themNguoiDung trung thong tin");
+    return;
+  }
   createNguoiDung(nguoiDung);
   if (readGioHang(id)) return;
   createGioHang({ "nguoi-dung": id, "chi-tiet": [] });
