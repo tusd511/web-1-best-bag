@@ -39,9 +39,8 @@ def generate_fake_users(n) -> list[dict]:
         {
             "id": f.uuid4(),
             "name": (name := f.name()),
-            "email": f.free_email().replace(
-                "@", f".{(sname := u("".join(name.split()[-2:])).lower())}@"
-            ),
+            "username": f"{(u("".join(lname := name.lower().split()[-2:])))}.{(u("".join(reversed(lname))))}{f.random_int(1000, 9999)}",
+            "email": f.free_email().replace("@", f".{(sname := u("".join(lname)))}@"),
             "password": f"{sname}-{f.password(
                 length=8,
                 special_chars=True,

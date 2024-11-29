@@ -18,7 +18,7 @@ const hoaDonFile = "hoa-don.json";
 const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
-const dataVersion = 25;
+const dataVersion = 26;
 
 const soSanPhamMoiTrang = 12;
 
@@ -137,11 +137,12 @@ function taoBoLocSanPham() {
     container.appendChild(div);
   });
   // hien lai data tu param vao form
-  document.getElementById("search")?.setAttribute("value", search);
-  Number.isFinite(min) &&
-    document.getElementById("minPrice")?.setAttribute("value", min);
-  Number.isFinite(max) &&
-    document.getElementById("maxPrice")?.setAttribute("value", max);
+  const searchElement = document.getElementById("search");
+  if (searchElement) searchElement.value = search;
+  const minPriceElement = document.getElementById("minPrice");
+  if (minPriceElement && Number.isFinite(min)) minPriceElement.value = minPrice;
+  const maxPriceElement = document.getElementById("maxPrice");
+  if (maxPriceElement && Number.isFinite(max)) maxPriceElement.value = maxPrice;
   if (categories?.length > 0) {
     const checkboxes = document.querySelectorAll(
       '#categories input[type="checkbox"]'
@@ -150,7 +151,8 @@ function taoBoLocSanPham() {
       checkboxes.forEach((cb) => (cb.checked = categories.includes(cb.value)));
     }
   }
-  document.getElementById("sortBy")?.setAttribute("value", sort);
+  const sortByElement = document.getElementById("sortBy");
+  if (sortByElement) sortByElement.value = sort;
   if (categories?.length > 0)
     [
       ...document.querySelectorAll('#categories input[type="checkbox"]'),
@@ -186,16 +188,28 @@ function layParamUrl() {
     search: params.get("search") || "",
     categories: params.getAll("categories[]") || [],
     tab: params.get("tab") || "thongke",
-    disabled: parseInt(params.get("disabled"),2) || 0,
-    handle: params.get("handle") ,
-    topsp: params.get("topsp")|| "",
-    topnd: params.get("topnd")|| "",
+    disabled: parseInt(params.get("disabled"), 2) || 0,
+    handle: params.get("handle"),
+    topsp: params.get("topsp") || "",
+    topnd: params.get("topnd") || "",
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
 function caiParamUrlVaReload(
-  { page, sort, min, max, search, categories, tab, disabled, handle, topsp, topnd },
+  {
+    page,
+    sort,
+    min,
+    max,
+    search,
+    categories,
+    tab,
+    disabled,
+    handle,
+    topsp,
+    topnd,
+  },
   resetParam
 ) {
   const url = new URL(document.location.toString());
@@ -932,13 +946,20 @@ function themNguoiDung(id, nguoiDung) {
   createGioHang({ "nguoi-dung": id, "chi-tiet": [] });
 }
 
-// tim nguoi dung theo id
-function timNguoiDung(id) {
-  if (id == null) {
+// tim nguoi dung theo idOrUsernameOrEmail
+function timNguoiDung(idOrUsernameOrEmail) {
+  if (idOrUsernameOrEmail == null) {
     alert("timNguoiDung chua nhap id");
     return;
   }
-  return readNguoiDung(id);
+  return (
+    readNguoiDung(idOrUsernameOrEmail) ||
+    g_nguoiDung.find(
+      (n) =>
+        n["username"] === idOrUsernameOrEmail ||
+        n["email"] === idOrUsernameOrEmail
+    )
+  );
 }
 
 // sua nguoi dung, phai nhap id de biet nguoi dung can sua
