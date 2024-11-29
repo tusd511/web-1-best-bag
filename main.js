@@ -25,6 +25,8 @@ const soSanPhamMoiTrang = 12;
 var g_sanPham, g_nguoiDung, g_gioHang, g_hoaDon, g_theLoaiSanPham;
 var i_sanPham, i_nguoiDung, i_gioHang, i_hoaDon;
 
+var duLieuDaTinh;
+
 // Get the current script element (the one that included this JS file)
 const mainJsScriptElement = document.currentScript;
 const mainJsScriptPath = mainJsScriptElement.src;
@@ -170,7 +172,7 @@ function taoBoLocSanPham() {
         '#categories input[type="checkbox"]:checked'
       ),
     ].map((cb) => cb.value);
-    caiParamUrlVaReload(formObject);
+    caiParamUrl(formObject);
   });
 }
 
@@ -196,7 +198,7 @@ function layParamUrl() {
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload(
+function caiParamUrl(
   {
     page,
     sort,
@@ -210,7 +212,8 @@ function caiParamUrlVaReload(
     topsp,
     topnd,
   },
-  resetParam
+  resetParam = false,
+  reload = true
 ) {
   const url = new URL(document.location.toString());
   if (resetParam) url.search = "";
@@ -233,7 +236,8 @@ function caiParamUrlVaReload(
   setParam(handle, "handle");
   setParam(topsp, "topsp");
   setParam(topnd, "topnd");
-  window.location = url.toString();
+  if (reload) window.location = url.toString();
+  else window.history.replaceState({}, "", url.toString());
 }
 
 function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
@@ -247,43 +251,24 @@ function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
   sanPhamsDaLoc = locTheLoaiSanPham(categories, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
+
   const soLuongSanPham = sanPhamsDaLoc.length;
   const soPageToiDa = Math.ceil(soLuongSanPham / soSanPhamMoiTrang);
-  let chiSoBatDau = 0;
-  let chiSoPage = 0;
-  if (page < 1 || isNaN(page) || page == null) {
-    page = 1;
-  }
-  chiSoPage = page - 1;
-  chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
-  // phan trang bam vuot gioi han so trang
-  if (chiSoBatDau > soLuongSanPham) {
-    caiParamUrlVaReload({ page: soPageToiDa }, false);
-  }
+  createPaginationDebugTable({
+    soPageToiDa, // so trang toi da phan trang
+    sort,
+    min,
+    max,
+    search,
+    categories,
+    soLuongSanPham,
+    tongSoSanPham: g_sanPham.length,
+    soSanPhamMoiTrang,
+  });
 
-  // mang sau khi chia phan trang
-  const sanPhamsHienThi = sanPhamsDaLoc.slice(
-    chiSoBatDau,
-    chiSoBatDau + soSanPhamMoiTrang
-  );
-  hienThiSanPham(
-    sanPhamsHienThi,
-    {
-      page, // trang phan trang hien tai
-      soPageToiDa, // so trang toi da phan trang
-      chiSoPage,
-      sort,
-      min,
-      max,
-      search,
-      categories,
-      soLuongSanPham,
-      tongSoSanPham: g_sanPham.length,
-      chiSoBatDau,
-      soSanPhamMoiTrang,
-    },
-    wrapperSelector
-  );
+  duLieuDaTinh = { duLieuDaLoc: sanPhamsDaLoc, soPageToiDa, pageHienTai: page };
+
+  hienThiSanPham(duLieuDaTinh, wrapperSelector);
 }
 
 function tinhNguoiDungHienThi(wrapperSelector = ".account-list") {
@@ -308,13 +293,12 @@ function hienTrangChiTiet(id) {
   // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
 }
-function hienThiSanPham(sanPhamsHienThi, paramPhanTrang, wrapperSelector) {
-  createPaginationDebugTable(paramPhanTrang);
-  // TODO: hien thi danh sach san Pham sau khi load
-  // lay page va soPageToiDa de xu ly hien thi phan trang
-  // code hien tai chi la demo de hien thi kiem tra, can phai sua lai theo cach minh lam
-  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, wrapperSelector);
-  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
+function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
+  // TODO: hien thi danh sach san Pham sau khi load, trang 1
+  const khiBamTrang = () =>
+    hienThiDanhSach(duLieuDaTinh, renderItemSanPham, wrapperSelector);
+  khiBamTrang();
+  hienThiPagination(duLieuDaTinh, () => khiBamTrang());
 }
 
 function renderItemSanPham(sanPham) {
@@ -380,27 +364,50 @@ function renderItemSanPham(sanPham) {
   return item;
 }
 
-function hienThiDanhSach(duLieusHienThi, hamRenderItem, wrapperSelector) {
+function hienThiDanhSach(duLieuDaTinh, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("grid-container");
-  if (duLieusHienThi.length === 0)
+  const { duLieuDaLoc, soPageToiDa } = duLieuDaTinh;
+  let { pageHienTai } = duLieuDaTinh;
+  let chiSoBatDau = 0;
+  let chiSoPage = 0;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
+  chiSoPage = pageHienTai - 1;
+  chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
+  // phan trang bam vuot gioi han so trang
+  if (chiSoBatDau > duLieuDaTinh.length) {
+    caiParamUrlVaReload({ page: soPageToiDa }, false, true);
+  }
+  // mang sau khi chia phan trang
+  const duLieuPhanTrang = duLieuDaLoc.slice(
+    chiSoBatDau,
+    chiSoBatDau + soSanPhamMoiTrang
+  );
+  if (duLieuDaTinh.length === 0)
     container.appendChild(
       document.createTextNode("Khong co san pham dap ung tieu chi")
     );
-  for (const item of duLieusHienThi) {
+  for (const item of duLieuPhanTrang) {
     container.appendChild(hamRenderItem(item));
   }
   wrapper.appendChild(container);
 }
 
 function hienThiPagination(
-  pageHienTai,
-  pageToiDa,
+  duLieuDaTinh,
+  khiBamTrang,
   wrapperSelector = ".pagination"
 ) {
-  if (pageToiDa === 0) return;
+  const { soPageToiDa } = duLieuDaTinh;
+  let { pageHienTai } = duLieuDaTinh;
+  if (soPageToiDa === 0) return;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("ul");
@@ -416,9 +423,12 @@ function hienThiPagination(
       button.style.setProperty("cursor", "default");
       button.style.setProperty("pointer-events", "none");
     } else {
-      button.addEventListener("click", () =>
-        caiParamUrlVaReload({ page: goToPage }, false)
-      );
+      button.addEventListener("click", () => {
+        caiParamUrl({ page: goToPage }, false, false);
+        duLieuDaTinh.pageHienTai = goToPage;
+        hienThiPagination(duLieuDaTinh, () => khiBamTrang(), wrapperSelector);
+        khiBamTrang(goToPage);
+      });
     }
     li.appendChild(button);
     container.appendChild(li);
@@ -432,9 +442,9 @@ function hienThiPagination(
     container.appendChild(li);
   }
 
-  const soNutPagination = Math.min(pageToiDa, 5); // Ensure no more than total pages
+  const soNutPagination = Math.min(soPageToiDa, 5); // Ensure no more than total pages
   let startPage = Math.max(1, pageHienTai - Math.floor(soNutPagination / 2));
-  let endPage = Math.min(pageToiDa, startPage + soNutPagination - 1);
+  let endPage = Math.min(soPageToiDa, startPage + soNutPagination - 1);
 
   // Điều chỉnh trang bắt đầu và kết thúc để đảm bảo ít nhất hiển thị 5 nut
   if (endPage - startPage + 1 < soNutPagination) {
@@ -463,15 +473,15 @@ function hienThiPagination(
     appendButton(i, i);
   }
   // them nut trang cuoi cung
-  if (endPage < pageToiDa) {
-    if (endPage < pageToiDa - 1) {
+  if (endPage < soPageToiDa) {
+    if (endPage < soPageToiDa - 1) {
       addEllipsis();
     }
-    appendButton(pageToiDa, pageToiDa);
+    appendButton(soPageToiDa, soPageToiDa);
   }
 
   // Thêm nút trang tiếp theo
-  if (pageHienTai < pageToiDa) {
+  if (pageHienTai < soPageToiDa) {
     appendButton("Next", pageHienTai + 1);
   }
   wrapper.appendChild(container);
