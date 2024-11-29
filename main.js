@@ -48,11 +48,12 @@ function verifyDataVersion() {
   }
 }
 
-async function taiDuLieu(datakey, datafile) {
+async function taiDuLieu(datakey, datafile, dataobj) {
+  // da load roi ma van dc goi tiep (de chac an)
+  if (dataobj != null) return dataobj;
   // du lieu key nay da co trong local storage
   const dataObj = taiDuLieuLocalStorage(datakey);
   if (dataObj) return dataObj;
-
   // chua co du lieu key nay trong local storage (lan dau mo web)
   // thi can phai tai du lieu ban dau tu file
   const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
@@ -60,38 +61,51 @@ async function taiDuLieu(datakey, datafile) {
   console.debug("taiDuLieu", { response, datakey, datafile, json });
   return json;
 }
+function taoIndexMapping(g_duLieu, entityImKey, entityIdKey, i_duLieu) {
+  return (
+    i_duLieu ?? // da tao roi ma van dc goi tiep (de chac an)
+    taiDuLieuLocalStorage(entityImKey) ??
+    createIndexMapping(g_duLieu, entityIdKey)
+  );
+}
 async function taiSanPham(sauKhiTai) {
-  g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
-  g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile);
-  i_sanPham =
-    taiDuLieuLocalStorage(sanPhamImKey) ??
-    createIndexMapping(g_sanPham, sanPhamIdKey);
+  g_theLoaiSanPham = await taiDuLieu(
+    theLoaiSanPhamKey,
+    theLoaiSanPhamFile,
+    g_theLoaiSanPham
+  );
+  g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile, g_sanPham);
+  i_sanPham = taoIndexMapping(g_sanPham, sanPhamImKey, sanPhamIdKey, i_sanPham);
   await sauKhiTai();
 }
 function taiNguoiDung(sauKhiTai) {
-  taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
+  taiDuLieu(nguoiDungKey, nguoiDungFile, g_nguoiDung).then((data) => {
     g_nguoiDung = data;
-    i_nguoiDung =
-      taiDuLieuLocalStorage(nguoiDungImKey) ??
-      createIndexMapping(g_nguoiDung, nguoiDungIdKey);
+    i_nguoiDung = taoIndexMapping(
+      g_nguoiDung,
+      nguoiDungImKey,
+      nguoiDungIdKey,
+      i_nguoiDung
+    );
     sauKhiTai();
   });
 }
 function taiGioHang(sauKhiTai) {
-  taiDuLieu(gioHangKey, gioHangFile).then((data) => {
+  taiDuLieu(gioHangKey, gioHangFile, g_gioHang).then((data) => {
     g_gioHang = data;
-    i_gioHang =
-      taiDuLieuLocalStorage(gioHangImKey) ??
-      createIndexMapping(g_gioHang, gioHangIdKey);
+    i_gioHang = taoIndexMapping(
+      g_gioHang,
+      gioHangImKey,
+      gioHangIdKey,
+      i_gioHang
+    );
     sauKhiTai();
   });
 }
 function taiHoaDon(sauKhiTai) {
-  taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
+  taiDuLieu(hoaDonKey, hoaDonFile, g_hoaDon).then((data) => {
     g_hoaDon = data;
-    i_hoaDon =
-      taiDuLieuLocalStorage(hoaDonImKey) ??
-      createIndexMapping(g_hoaDon, hoaDonIdKey);
+    i_hoaDon = taoIndexMapping(g_hoaDon, hoaDonImKey, hoaDonIdKey, i_hoaDon);
     sauKhiTai();
   });
 }
@@ -426,7 +440,22 @@ function hienThiPagination(
       button.addEventListener("click", () => {
         caiParamUrl({ page: goToPage }, false, false);
         duLieuDaTinh.pageHienTai = goToPage;
+        // Calculate the scroll position relative to the bottom
+        const distanceFromBottom =
+          document.documentElement.scrollHeight -
+          window.innerHeight -
+          window.scrollY;
         hienThiPagination(duLieuDaTinh, () => khiBamTrang(), wrapperSelector);
+        // After the new content is loaded, adjust the scroll position
+        // Use setTimeout to ensure this runs after the new content is rendered
+        setTimeout(() => {
+          window.scrollTo(
+            0,
+            document.documentElement.scrollHeight -
+              window.innerHeight -
+              distanceFromBottom
+          );
+        }, 0);
         khiBamTrang(goToPage);
       });
     }
