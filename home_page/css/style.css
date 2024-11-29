@@ -1,0 +1,282 @@
+@font-face {
+    src: url('../font/Signika/static/Signika-Regular.ttf');
+    font-family: "Signika";
+}
+:root {
+    --primary-color: #006A31;
+    --secondary-color: #005a2a;
+    --hover-color: #00803c;
+    --text-color: #333;
+}
+* {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+    font-family: "Signika", sans-serif;
+}
+
+html {
+    box-sizing: border-box;
+    color: var(--text-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/*  ====================================
+                    NAVBAR
+    ====================================*/
+
+.navbar {
+    background-color: var(--primary-color);
+    font-size: 1.4rem;
+}
+
+.navbar-brand-img {
+    height: 60px;
+    width: auto;
+}
+
+.nav-link {
+    color: #fff;
+}
+
+.nav-link:hover {
+    color: #fff;
+}
+
+.nav-item {
+    width: 160px;
+    text-align: center;
+    border-radius: 20px;
+    transition: .3s ease-in;
+}
+
+.nav-item:hover {
+    background-color: var(--secondary-color);
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+.nav-user {
+    font-size: 1rem;
+}
+
+.user-setting {
+    position: absolute;
+    display: flex;
+    top: 6px;
+    right: 70px;
+}
+
+.nav-user-link {
+    font-size: 12px;
+    font-weight: 300px;
+}
+
+/* SEARCH */
+
+.nav-user {
+    align-items: center;
+}
+
+.navbar-search {
+    background-color: #fff;
+    display: flex;
+    height: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 10px;
+}
+
+.navbar-search-input {
+    padding-left: 12px;
+    border: none;
+    outline: none;
+}
+
+.navbar-search-input:focus {
+    border: none;
+    outline: none;
+}
+
+.navbar-search-btn {
+    line-height: 30px;
+    padding: 0 8px;
+    border: none;
+    border-left: 1px solid #ccc;
+    color: var(--secondary-color);
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.navbar-search-btn:focus {
+    outline: none;
+}
+
+.navbar-search-btn:hover {
+    color: var(--hover-color);
+    background-color: #ccc;
+}
+
+/* CART */
+
+.nav-cart {
+    position: relative;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+/*  ==============================
+             CAROUSEL 
+    ==============================*/
+
+.carousel-indicators li {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.carousel-indicators .active {
+    background-color:green;
+}
+
+.carousel-inner img {
+    height: 350px;
+}
+/*  ================================
+                FOOTER
+    ================================*/
+
+.footer-content {
+    background-color: var(--primary-color);
+    margin-top: 16px;
+    padding-top: 24px;
+    color: white;
+}
+
+.footer-img {
+    width: 150px;
+}
+
+.footer-address, .footer-logo {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.footer-list a {
+    color: white;
+    font-size: 14px;
+}
+
+.page-footer h3 {
+    font-size: 1.2rem;
+}
+
+.footer-lincense {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.8rem;
+    margin: 4px 0;
+}
+
+**************************
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: px;
+    /* background-color: #fff; */
+    box-shadow: 0 0 10px green(0, 0, 0, 0.1);
+  }   
+
+  button {
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 20px;
+    margin: 0 10px;
+  }
+  
+  button:hover {
+    background-color: darkgreen;
+  }
+
+  /* phan hien thi san pham va phan trang */
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2px 4px;
+    margin: 0 22px;
+    padding: 12px 10px;
+  }
+  
+  .grid {
+    display: flex;
+    flex-direction: column;
+    /* border: black solid,1px; */
+  }
+  
+  .grid-img {
+    max-width: 300px;
+    max-height: 300px;
+    width: 100%;
+    height: auto;
+    align-self: center;
+  }
+
+  .checkPrice{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  ul.pagination-list {
+    list-style-type: none;
+  }
+  
+  .pagination-list {
+    display: flex;
+    margin: auto;
+  }
+  
+  .pagination-list button {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .pagination-list button.active {
+    background-color:yellowgreen;
+  }
+  
+  table,
+  th,
+  td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 4px;
+  }
+  
