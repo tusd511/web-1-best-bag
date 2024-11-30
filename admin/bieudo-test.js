@@ -115,7 +115,7 @@ function hienBieuDoKhachSop() {
     ],
     xaxis: {
       labels: { formatter: formatVND },
-      categories: nds.map((nd) => nd["name"]),
+      categories: nds.map((nd) => nd["nguoi-dung"]["name"]),
     },
     dataLabels: {
       formatter: formatVND,
