@@ -54,6 +54,18 @@
 
 ## Nội dung hướng dẫn hiểu code
 
+### Update pagination mới
+
+- ko còn phải tải lại trang khi chuyển page
+
+- Xem cáh làm tính và hiển thị mới:
+  - ![image](https://github.com/user-attachments/assets/e805e4dd-63d5-4cd4-af0c-39e0115f0d7e)
+  - ![image](https://github.com/user-attachments/assets/5b8e18ae-8606-48b5-aab9-393a989ce37c)
+  - ![image](https://github.com/user-attachments/assets/d43e250f-4794-4f24-8bd4-e1f67763c3f3)
+  - ![image](https://github.com/user-attachments/assets/9e300b7a-bf86-439d-940e-17fc07846639)
+
+
+
 ### Sự kiện tải dữ liệu, hành động SAU khi đã tải
 
 <details>
