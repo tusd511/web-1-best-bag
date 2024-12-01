@@ -54,41 +54,25 @@
           <div style="height: 30vh"></div>
           <ul class="menu-list">
             <li class="menu-item">
-              <a
-                href="#"
-                onclick="hienthongke(); return false"
-                class="menu-link sidebar-link isAcitve"
-              >
+              <a href="#" id="thongke" class="menu-link sidebar-link isAcitve">
                 <i class="side-icon fas fa-chart-line"></i>
                 <span class="text">Thống kê</span>
               </a>
             </li>
             <li class="menu-item">
-              <a
-                href="#"
-                onclick="hiensanpham(); return false"
-                class="menu-link sidebar-link"
-              >
+              <a href="#" id="sanpham" class="menu-link sidebar-link">
                 <i class="side-icon fas fa-cubes"></i>
                 <span class="text">Sản phẩm</span>
               </a>
             </li>
             <li class="menu-item">
-              <a
-                href="#"
-                onclick="hiennguoidung(); return false"
-                class="menu-link sidebar-link"
-              >
+              <a href="#" id="nguoidung" class="menu-link sidebar-link">
                 <i class="side-icon fas fa-users"></i>
                 <span class="text">Người dùng</span>
               </a>
             </li>
             <li class="menu-item">
-              <a
-                href="#"
-                onclick="hiendonhang(); return false"
-                class="menu-link sidebar-link"
-              >
+              <a href="#" id="hoadon" class="menu-link sidebar-link">
                 <i class="side-icon fas fa-file-invoice"></i>
                 <span class="text">Đơn hàng</span>
               </a>
@@ -98,14 +82,27 @@
       </div>
       <!--END-SIDEBAR-->
       <!--CONTENT-WEB-->
-      <div class="content-wrapper">
-        
-      </div>
-
+      <div id="content-wrapper"></div>
       <!--END-CONTENT-WEB-->
     </div>
-
-    <script src="../main.js"></script>
-    <script src="./admin.js"></script>
   </body>
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.css"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.js"
+    integrity="sha256-mOrdWYHx0STnKlAY+X1swccOXZHDGZgN+rQ7rewTfO4="
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/chartjs-plugin-hierarchical@4.4.4/build/index.umd.min.js"
+    integrity="sha256-EVTb/TupbHo8mbKRyEcfU7xxnLI5c7i2tlGULQM+un4="
+    crossorigin="anonymous"
+  ></script>
+  <script src="../main.js"></script>
+  <script src="./thongke.js"></script>
+  <script src="./bieudo-test.js"></script>
+  <script src="./admin.js"></script>
 </html>
