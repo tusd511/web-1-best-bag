@@ -5,6 +5,28 @@
   - name: Deploy static content to Pages
     - https://bhbghghbgb.github.io/web-1-best-bag/
 
+## Lưu ý cho các bạn ko đọc tin nhắn zalo của nhóm
+
+- **Update: Fri Nov 29 2024 21:21:43 GMT+0700 (Indochina Time)**
+
+- nhắc lại, code liên quan đến tải, đọc, lọc, sắp xếp, phân trang, thêm sửa xoá dữ liệu, sản phẩm, người dùng, hoá đơn, giỏ hàng và nhiều loại thống kê đều đã viết trong main.js. Vui lòng link script src file main.js vào, KHÔNG copy code ra file riêng
+
+- Về phần hiện sản phẩm trang chủ, code render danh sách nằm trong admin/admin.js do bạn làm trang admin đợi mãi trang chủ chưa làm xong đã tự viết render sản phẩm. SỬ DỤNG LẠI code render sản phẩm trong đó (thay nút chỉnh sửa/xoá thành thêm giỏ hàng, v.v), KHÔNG TỰ VIẾT LẠI code đã có, sẽ ko đc ghi đánh giá
+
+- Hướng dẫn thao tác dùng hàm tải tổng dữ liệu của mainjs đã ghi trong README.md, nếu không hiểu thì hỏi chứ không viết lại.
+
+- Các hàm thao tác ghi dữ liệu `thêm/sửa/xoá____[sanPham]|[nguoiDung]|...` không tự kiểm tra object dữ liệu truyền vào có đúng format không. PHẢI ĐỌC file dữ liệu để xem mẫu format của 1 object và tạo chính xác object để truyền vào.
+  - RIÊNG sản phẩm, thì chỉ cần id, name, desc, giá gốc, giá giảm và file name hình ảnh (lưu ý đọc key các trường của object trong file dữ liệu)
+  - nếu nói xài hàm ghi dữ liệu hơi khó hiểu:
+    -Tạo object dữ liệu (vd hoá đơn) giống format của 1 object hoá đơn nằm trong file hoa-don.json (dữ liệu trong file là 1 array các hoá đơn)
+
+- dùng thư viện *fontawesome để lấy icon thì thầy cho phép
+  - ![thay cho phep font awesome](images/chophepfontawesome.png)
+
+- ngoài ra, trong trang admin và trang index mẫu có 1 số các form dùng để lọc/sắp xếp dữ liệu, bạn/các bạn làm form/giao diện vô xem qua và style lại form
+
+- đến hiện tại `Fri Nov 29 2024 21:21:43 GMT+0700 (Indochina Time)`, các file main.js/index mẫu/các trang admin đều vẫn là chưa làm xong và vẫn đang đc code thêm vào. Nên lưu ý, nếu xài git không được, thì cố gắng cập nhật bằng tay. HẠN CHẾ copy code về file của mình, vì có thể nó còn chưa xong và sẽ đc sửa lại
+
 ## test data summary
 
 <details>
@@ -17,6 +39,7 @@
   - 2 chu cuoi ten viet lien khong dau dung cho
     - sau dau cham email
     - truoc dau tru password
+    - username `[viet xuoi].[viet nguoc][4 so ngau nhien]`
   - ngay tao trong nam 2024, truoc 25/11/2024
   - bi khoa tai khoan: ty le 5%
 - 200 hoa don
@@ -27,10 +50,21 @@
     - toi da 5 so luong san pham moi chi tiet
   - trang thai xu ly: `["dang", "chua", "huy", "roi"]`, `cum_weights=[10, 25, 60, 1000]`
 
-
 </details>
 
 ## Nội dung hướng dẫn hiểu code
+
+### Update pagination mới
+
+- ko còn phải tải lại trang khi chuyển page
+
+- Xem cáh làm tính và hiển thị mới:
+  - ![image](https://github.com/user-attachments/assets/e805e4dd-63d5-4cd4-af0c-39e0115f0d7e)
+  - ![image](https://github.com/user-attachments/assets/5b8e18ae-8606-48b5-aab9-393a989ce37c)
+  - ![image](https://github.com/user-attachments/assets/d43e250f-4794-4f24-8bd4-e1f67763c3f3)
+  - ![image](https://github.com/user-attachments/assets/9e300b7a-bf86-439d-940e-17fc07846639)
+
+
 
 ### Sự kiện tải dữ liệu, hành động SAU khi đã tải
 
@@ -92,7 +126,6 @@
 5. thực hiện tương tự cho sản phẩm, người dùng, hóa đơn
 
 </details>
-
 
 ### Xử lý tab trong trang admin
 
@@ -211,7 +244,6 @@
 
 <summary>hien noi dung da dc an di</summary>
 
-
 1. ![image](https://github.com/user-attachments/assets/ca9cc847-18b2-49e8-884a-37d46ea62a8e)
 2. ![image](https://github.com/user-attachments/assets/f08eb559-26a4-47f4-b9e2-e59db3e1512a)
 3. ![image](https://github.com/user-attachments/assets/73894cc7-a6ad-44b4-8ccc-252b20400e6f)
@@ -219,6 +251,5 @@
 5. ![image](https://github.com/user-attachments/assets/f826ca95-8260-4a81-9eef-ff53411ef428)
 6. ![image](https://github.com/user-attachments/assets/17a40ffc-bb72-4668-a8af-5d2d30ba2112)
 7. ![image](https://github.com/user-attachments/assets/6fc56db2-4d35-4ff2-ad06-6eba12a357e8)
-
 
 </details>

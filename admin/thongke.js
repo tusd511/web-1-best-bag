@@ -19,8 +19,12 @@ function thongKeSanPham({ ngay, thang, nam } = {}) {
     }, {})
     // vd: { "1728630164-699": 2, "1728630145-400": 1 }
   ).map(([spId, sl]) => {
-    const sp = timSanPham(spId);
-    return { ...sp, "so-luong": sl, "tong-thu": sl * sp["price-sale-n"] };
+    const sp = readSanPham(spId);
+    return {
+      "san-pham": sp,
+      "so-luong": sl,
+      "tong-thu": sl * sp?.["price-sale-n"],
+    };
   });
 }
 
@@ -63,12 +67,13 @@ function thongKeNguoiDung({ ngay, thang, nam } = {}) {
     const tt = ct["tieu-thu"];
     // breakpoint();
     return {
-      ...timNguoiDung(ndId),
+      "nguoi-dung": readNguoiDung(ndId),
       "so-don": ct["so-don"],
       "loai-da-mua": Object.keys(tt).length,
       "da-mua": Object.values(tt).reduce((sum, qty) => sum + qty, 0),
       "tong-chi": Object.entries(tt).reduce(
-        (total, [spId, qty]) => total + qty * timSanPham(spId)["price-sale-n"],
+        (total, [spId, qty]) =>
+          total + qty * readSanPham(spId)?.["price-sale-n"],
         0
       ),
     };
@@ -105,7 +110,7 @@ function thongKeGioHang() {
 
   g_gioHang.forEach((cart) => {
     cart["chi-tiet"].forEach((item) => {
-      uniqueProducts.add(item.san_pham);
+      uniqueProducts.add(item["san-pham"]);
       totalQuantity += item["so-luong"];
     });
   });
@@ -193,7 +198,7 @@ function thongKeThoiGian() {
     hoaDon["chi-tiet"].forEach((chiTiet) => {
       dayData["loai-da-ban-set"].add(chiTiet["san-pham"]);
       dayData["da-ban"] += chiTiet["so-luong"];
-      const sanPham = timSanPham(chiTiet["san-pham"]);
+      const sanPham = readSanPham(chiTiet["san-pham"]);
       dayData["tong-thu"] +=
         (sanPham["price-sale-n"] || 0) * chiTiet["so-luong"];
     });
@@ -306,28 +311,3 @@ function thongKeThoiGian() {
 async function thongKeThoiGian2() {
   return await (await fetch("./tktgv18.json")).json();
 }
-
-// JSON.parse(
-//   JSON.stringify({ dataVersion, ...thongKeThoiGian() }, (key, value) =>
-//     value instanceof Set ? [...value] : value
-//   )
-// );
-
-// taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
-//     g_nguoiDung = data;
-//     i_nguoiDung =
-//       taiDuLieuLocalStorage(nguoiDungImKey) ??
-//       createIndexMapping(g_nguoiDung, nguoiDungIdKey);
-//   });
-//   taiDuLieu(sanPhamKey, sanPhamFile).then((data) => {
-//     g_sanPham = data;
-//     i_sanPham =
-//       taiDuLieuLocalStorage(sanPhamImKey) ??
-//       createIndexMapping(g_sanPham, sanPhamIdKey);
-//   });
-//   taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
-//     g_hoaDon = data;
-//     i_hoaDon =
-//       taiDuLieuLocalStorage(hoaDonImKey) ??
-//       createIndexMapping(g_hoaDon, hoaDonIdKey);
-//   });

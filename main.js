@@ -18,12 +18,14 @@ const hoaDonFile = "hoa-don.json";
 const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
-const dataVersion = 25;
+const dataVersion = 26;
 
 const soSanPhamMoiTrang = 12;
 
 var g_sanPham, g_nguoiDung, g_gioHang, g_hoaDon, g_theLoaiSanPham;
 var i_sanPham, i_nguoiDung, i_gioHang, i_hoaDon;
+
+var duLieuDaTinh;
 
 // Get the current script element (the one that included this JS file)
 const mainJsScriptElement = document.currentScript;
@@ -46,11 +48,12 @@ function verifyDataVersion() {
   }
 }
 
-async function taiDuLieu(datakey, datafile) {
+async function taiDuLieu(datakey, datafile, dataobj) {
+  // da load roi ma van dc goi tiep (de chac an)
+  if (dataobj != null) return dataobj;
   // du lieu key nay da co trong local storage
   const dataObj = taiDuLieuLocalStorage(datakey);
   if (dataObj) return dataObj;
-
   // chua co du lieu key nay trong local storage (lan dau mo web)
   // thi can phai tai du lieu ban dau tu file
   const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
@@ -58,38 +61,51 @@ async function taiDuLieu(datakey, datafile) {
   console.debug("taiDuLieu", { response, datakey, datafile, json });
   return json;
 }
+function taoIndexMapping(g_duLieu, entityImKey, entityIdKey, i_duLieu) {
+  return (
+    i_duLieu ?? // da tao roi ma van dc goi tiep (de chac an)
+    taiDuLieuLocalStorage(entityImKey) ??
+    createIndexMapping(g_duLieu, entityIdKey)
+  );
+}
 async function taiSanPham(sauKhiTai) {
-  g_theLoaiSanPham = await taiDuLieu(theLoaiSanPhamKey, theLoaiSanPhamFile);
-  g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile);
-  i_sanPham =
-    taiDuLieuLocalStorage(sanPhamImKey) ??
-    createIndexMapping(g_sanPham, sanPhamIdKey);
+  g_theLoaiSanPham = await taiDuLieu(
+    theLoaiSanPhamKey,
+    theLoaiSanPhamFile,
+    g_theLoaiSanPham
+  );
+  g_sanPham = await taiDuLieu(sanPhamKey, sanPhamFile, g_sanPham);
+  i_sanPham = taoIndexMapping(g_sanPham, sanPhamImKey, sanPhamIdKey, i_sanPham);
   await sauKhiTai();
 }
 function taiNguoiDung(sauKhiTai) {
-  taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
+  taiDuLieu(nguoiDungKey, nguoiDungFile, g_nguoiDung).then((data) => {
     g_nguoiDung = data;
-    i_nguoiDung =
-      taiDuLieuLocalStorage(nguoiDungImKey) ??
-      createIndexMapping(g_nguoiDung, nguoiDungIdKey);
+    i_nguoiDung = taoIndexMapping(
+      g_nguoiDung,
+      nguoiDungImKey,
+      nguoiDungIdKey,
+      i_nguoiDung
+    );
     sauKhiTai();
   });
 }
 function taiGioHang(sauKhiTai) {
-  taiDuLieu(gioHangKey, gioHangFile).then((data) => {
+  taiDuLieu(gioHangKey, gioHangFile, g_gioHang).then((data) => {
     g_gioHang = data;
-    i_gioHang =
-      taiDuLieuLocalStorage(gioHangImKey) ??
-      createIndexMapping(g_gioHang, gioHangIdKey);
+    i_gioHang = taoIndexMapping(
+      g_gioHang,
+      gioHangImKey,
+      gioHangIdKey,
+      i_gioHang
+    );
     sauKhiTai();
   });
 }
 function taiHoaDon(sauKhiTai) {
-  taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
+  taiDuLieu(hoaDonKey, hoaDonFile, g_hoaDon).then((data) => {
     g_hoaDon = data;
-    i_hoaDon =
-      taiDuLieuLocalStorage(hoaDonImKey) ??
-      createIndexMapping(g_hoaDon, hoaDonIdKey);
+    i_hoaDon = taoIndexMapping(g_hoaDon, hoaDonImKey, hoaDonIdKey, i_hoaDon);
     sauKhiTai();
   });
 }
@@ -137,11 +153,12 @@ function taoBoLocSanPham() {
     container.appendChild(div);
   });
   // hien lai data tu param vao form
-  document.getElementById("search")?.setAttribute("value", search);
-  Number.isFinite(min) &&
-    document.getElementById("minPrice")?.setAttribute("value", min);
-  Number.isFinite(max) &&
-    document.getElementById("maxPrice")?.setAttribute("value", max);
+  const searchElement = document.getElementById("search");
+  if (searchElement) searchElement.value = search;
+  const minPriceElement = document.getElementById("minPrice");
+  if (minPriceElement && Number.isFinite(min)) minPriceElement.value = minPrice;
+  const maxPriceElement = document.getElementById("maxPrice");
+  if (maxPriceElement && Number.isFinite(max)) maxPriceElement.value = maxPrice;
   if (categories?.length > 0) {
     const checkboxes = document.querySelectorAll(
       '#categories input[type="checkbox"]'
@@ -150,7 +167,8 @@ function taoBoLocSanPham() {
       checkboxes.forEach((cb) => (cb.checked = categories.includes(cb.value)));
     }
   }
-  document.getElementById("sortBy")?.setAttribute("value", sort);
+  const sortByElement = document.getElementById("sortBy");
+  if (sortByElement) sortByElement.value = sort;
   if (categories?.length > 0)
     [
       ...document.querySelectorAll('#categories input[type="checkbox"]'),
@@ -168,7 +186,7 @@ function taoBoLocSanPham() {
         '#categories input[type="checkbox"]:checked'
       ),
     ].map((cb) => cb.value);
-    caiParamUrlVaReload(formObject);
+    caiParamUrl(formObject);
   });
 }
 
@@ -186,17 +204,30 @@ function layParamUrl() {
     search: params.get("search") || "",
     categories: params.getAll("categories[]") || [],
     tab: params.get("tab") || "thongke",
-    disabled: parseInt(params.get("disabled"),2) || 0,
-    handle: params.get("handle") ,
-    topsp: params.get("topsp")|| "",
-    topnd: params.get("topnd")|| "",
+    disabled: parseInt(params.get("disabled"), 2) || 0,
+    handle: params.get("handle"),
+    topsp: params.get("topsp") || "",
+    topnd: params.get("topnd") || "",
   };
 }
 
 // goi ham nay khi bam phan trang hoac sap xep/loc de tai lai trang voi param moi
-function caiParamUrlVaReload(
-  { page, sort, min, max, search, categories, tab, disabled, handle, topsp, topnd },
-  resetParam
+function caiParamUrl(
+  {
+    page,
+    sort,
+    min,
+    max,
+    search,
+    categories,
+    tab,
+    disabled,
+    handle,
+    topsp,
+    topnd,
+  },
+  resetParam = false,
+  reload = true
 ) {
   const url = new URL(document.location.toString());
   if (resetParam) url.search = "";
@@ -219,7 +250,8 @@ function caiParamUrlVaReload(
   setParam(handle, "handle");
   setParam(topsp, "topsp");
   setParam(topnd, "topnd");
-  window.location = url.toString();
+  if (reload) window.location = url.toString();
+  else window.history.replaceState({}, "", url.toString());
 }
 
 function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
@@ -233,43 +265,24 @@ function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
   sanPhamsDaLoc = locTheLoaiSanPham(categories, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
+
   const soLuongSanPham = sanPhamsDaLoc.length;
   const soPageToiDa = Math.ceil(soLuongSanPham / soSanPhamMoiTrang);
-  let chiSoBatDau = 0;
-  let chiSoPage = 0;
-  if (page < 1 || isNaN(page) || page == null) {
-    page = 1;
-  }
-  chiSoPage = page - 1;
-  chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
-  // phan trang bam vuot gioi han so trang
-  if (chiSoBatDau > soLuongSanPham) {
-    caiParamUrlVaReload({ page: soPageToiDa }, false);
-  }
+  createPaginationDebugTable({
+    soPageToiDa, // so trang toi da phan trang
+    sort,
+    min,
+    max,
+    search,
+    categories,
+    soLuongSanPham,
+    tongSoSanPham: g_sanPham.length,
+    soSanPhamMoiTrang,
+  });
 
-  // mang sau khi chia phan trang
-  const sanPhamsHienThi = sanPhamsDaLoc.slice(
-    chiSoBatDau,
-    chiSoBatDau + soSanPhamMoiTrang
-  );
-  hienThiSanPham(
-    sanPhamsHienThi,
-    {
-      page, // trang phan trang hien tai
-      soPageToiDa, // so trang toi da phan trang
-      chiSoPage,
-      sort,
-      min,
-      max,
-      search,
-      categories,
-      soLuongSanPham,
-      tongSoSanPham: g_sanPham.length,
-      chiSoBatDau,
-      soSanPhamMoiTrang,
-    },
-    wrapperSelector
-  );
+  duLieuDaTinh = { duLieuDaLoc: sanPhamsDaLoc, soPageToiDa, pageHienTai: page };
+
+  hienThiSanPham(duLieuDaTinh, wrapperSelector);
 }
 
 function tinhNguoiDungHienThi(wrapperSelector = ".account-list") {
@@ -294,13 +307,12 @@ function hienTrangChiTiet(id) {
   // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
 }
-function hienThiSanPham(sanPhamsHienThi, paramPhanTrang, wrapperSelector) {
-  createPaginationDebugTable(paramPhanTrang);
-  // TODO: hien thi danh sach san Pham sau khi load
-  // lay page va soPageToiDa de xu ly hien thi phan trang
-  // code hien tai chi la demo de hien thi kiem tra, can phai sua lai theo cach minh lam
-  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, wrapperSelector);
-  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
+function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
+  // TODO: hien thi danh sach san Pham sau khi load, trang 1
+  const khiBamTrang = () =>
+    hienThiDanhSach(duLieuDaTinh, renderItemSanPham, wrapperSelector);
+  khiBamTrang();
+  hienThiPagination(duLieuDaTinh, () => khiBamTrang());
 }
 
 function renderItemSanPham(sanPham) {
@@ -366,28 +378,55 @@ function renderItemSanPham(sanPham) {
   return item;
 }
 
-function hienThiDanhSach(duLieusHienThi, hamRenderItem, wrapperSelector) {
+function hienThiDanhSach(duLieuDaTinh, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("grid-container");
-  if (duLieusHienThi.length === 0)
+  const { duLieuDaLoc, soPageToiDa } = duLieuDaTinh;
+  let { pageHienTai } = duLieuDaTinh;
+  let chiSoBatDau = 0;
+  let chiSoPage = 0;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
+  chiSoPage = pageHienTai - 1;
+  chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
+  // phan trang bam vuot gioi han so trang
+  if (chiSoBatDau > duLieuDaTinh.length) {
+    caiParamUrl({ page: soPageToiDa }, false, true);
+  }
+  // mang sau khi chia phan trang
+  const duLieuPhanTrang = duLieuDaLoc.slice(
+    chiSoBatDau,
+    chiSoBatDau + soSanPhamMoiTrang
+  );
+  if (duLieuDaTinh.length === 0)
     container.appendChild(
       document.createTextNode("Khong co san pham dap ung tieu chi")
     );
-  for (const item of duLieusHienThi) {
+  for (const item of duLieuPhanTrang) {
     container.appendChild(hamRenderItem(item));
   }
   wrapper.appendChild(container);
 }
 
 function hienThiPagination(
-  pageHienTai,
-  pageToiDa,
+  duLieuDaTinh,
+  khiBamTrang,
   wrapperSelector = ".pagination"
 ) {
-  if (pageToiDa === 0) return;
+  const { soPageToiDa } = duLieuDaTinh;
+  let { pageHienTai } = duLieuDaTinh;
+  if (soPageToiDa === 0) return;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
   const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) {
+    console.error(`Không tìm thấy phần tử với selector: ${wrapperSelector}`);
+    return; // Nếu không tìm thấy, dừng lại và không làm gì thêm
+  }
   wrapper.innerHTML = "";
   const container = document.createElement("ul");
   container.classList.add("pagination-list");
@@ -402,9 +441,27 @@ function hienThiPagination(
       button.style.setProperty("cursor", "default");
       button.style.setProperty("pointer-events", "none");
     } else {
-      button.addEventListener("click", () =>
-        caiParamUrlVaReload({ page: goToPage }, false)
-      );
+      button.addEventListener("click", () => {
+        caiParamUrl({ page: goToPage }, false, false);
+        duLieuDaTinh.pageHienTai = goToPage;
+        // Calculate the scroll position relative to the bottom
+        const distanceFromBottom =
+          document.documentElement.scrollHeight -
+          window.innerHeight -
+          window.scrollY;
+        hienThiPagination(duLieuDaTinh, () => khiBamTrang(), wrapperSelector);
+        // After the new content is loaded, adjust the scroll position
+        // Use setTimeout to ensure this runs after the new content is rendered
+        setTimeout(() => {
+          window.scrollTo(
+            0,
+            document.documentElement.scrollHeight -
+              window.innerHeight -
+              distanceFromBottom
+          );
+        }, 0);
+        khiBamTrang(goToPage);
+      });
     }
     li.appendChild(button);
     container.appendChild(li);
@@ -418,9 +475,9 @@ function hienThiPagination(
     container.appendChild(li);
   }
 
-  const soNutPagination = Math.min(pageToiDa, 5); // Ensure no more than total pages
+  const soNutPagination = Math.min(soPageToiDa, 5); // Ensure no more than total pages
   let startPage = Math.max(1, pageHienTai - Math.floor(soNutPagination / 2));
-  let endPage = Math.min(pageToiDa, startPage + soNutPagination - 1);
+  let endPage = Math.min(soPageToiDa, startPage + soNutPagination - 1);
 
   // Điều chỉnh trang bắt đầu và kết thúc để đảm bảo ít nhất hiển thị 5 nut
   if (endPage - startPage + 1 < soNutPagination) {
@@ -449,15 +506,15 @@ function hienThiPagination(
     appendButton(i, i);
   }
   // them nut trang cuoi cung
-  if (endPage < pageToiDa) {
-    if (endPage < pageToiDa - 1) {
+  if (endPage < soPageToiDa) {
+    if (endPage < soPageToiDa - 1) {
       addEllipsis();
     }
-    appendButton(pageToiDa, pageToiDa);
+    appendButton(soPageToiDa, soPageToiDa);
   }
 
   // Thêm nút trang tiếp theo
-  if (pageHienTai < pageToiDa) {
+  if (pageHienTai < soPageToiDa) {
     appendButton("Next", pageHienTai + 1);
   }
   wrapper.appendChild(container);
@@ -922,23 +979,37 @@ function xoaSanPham(id) {
 // neu nhap id, kiem tra xem co bi trung id hay ko
 // neu ko nhap id, se duoc random 1 id ngau nhien
 function themNguoiDung(id, nguoiDung) {
-  if (id == null) nguoiDung[nguoiDungIdKey] = crypto.randomUUID();
-  else if (timNguoiDung(id)) {
-    alert("themNguoiDung trung id");
-    return;
+  if (id == null) {
+    id = crypto.randomUUID();
+    nguoiDung[nguoiDungIdKey] = id;
   } else nguoiDung[nguoiDungIdKey] = id;
+  if (
+    timNguoiDung(id) ||
+    timNguoiDung(nguoiDung["username"]) ||
+    timNguoiDung(nguoiDung["email"])
+  ) {
+    alert("themNguoiDung trung thong tin");
+    return;
+  }
   createNguoiDung(nguoiDung);
   if (readGioHang(id)) return;
   createGioHang({ "nguoi-dung": id, "chi-tiet": [] });
 }
 
-// tim nguoi dung theo id
-function timNguoiDung(id) {
-  if (id == null) {
+// tim nguoi dung theo idOrUsernameOrEmail
+function timNguoiDung(idOrUsernameOrEmail) {
+  if (idOrUsernameOrEmail == null) {
     alert("timNguoiDung chua nhap id");
     return;
   }
-  return readNguoiDung(id);
+  return (
+    readNguoiDung(idOrUsernameOrEmail) ||
+    g_nguoiDung.find(
+      (n) =>
+        n["username"] === idOrUsernameOrEmail ||
+        n["email"] === idOrUsernameOrEmail
+    )
+  );
 }
 
 // sua nguoi dung, phai nhap id de biet nguoi dung can sua
@@ -1060,9 +1131,13 @@ async function taiDuLieuTongMainJs(sauKhiTai) {
     taoBoLocSanPham();
     tinhSanPhamHienThi();
   });
-  taiNguoiDung(() => tinhNguoiDungHienThi());
+  taiNguoiDung(() => {
+    tinhNguoiDungHienThi();
+  });
   taiGioHang(() => {});
-  taiHoaDon(() => tinhHoaDonHienThi());
+  taiHoaDon(() => {
+    tinhHoaDonHienThi();
+  });
   sauKhiTai();
 }
 

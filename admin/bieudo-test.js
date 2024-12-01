@@ -18,11 +18,12 @@ function formatVND(value) {
   });
 }
 
-function hienBieuDo() {
-  let chart2;
+function hienBieuDoDoanhThu() {
+  const graphTime = document.querySelector("#graph-time");
+  const nam = 2024;
   // tktg = thongKeThoiGian();
   thongKeThoiGian2().then((tktg) => {
-    const year2024 = tktg["chi-tiet"]["2024"];
+    const year2024 = tktg["chi-tiet"][nam];
     let yearGraphOptions = {
       chart: {
         type: "bar",
@@ -34,6 +35,18 @@ function hienBieuDo() {
             let monthGraphOptions = {
               chart: {
                 type: "bar",
+                events: {
+                  dataPointSelection: function (event, chartContext, config) {
+                    chart.updateOptions(yearGraphOptions);
+                    graphTime.textContent = `Nam ${nam}`;
+                  },
+                },
+              },
+              plotOptions: {
+                bar: {
+                  dataLabels: { orientation: "vertical" },
+                  horizontal: false,
+                },
               },
               series: [
                 {
@@ -41,6 +54,12 @@ function hienBieuDo() {
                   data: days.map((day) => day["tong-thu"]),
                 },
               ],
+              xaxis: {
+                labels: { formatter: (n) => `Ngay ${n + 1}` },
+                categories: Array(days.length)
+                  .fill()
+                  .map((v, i) => i),
+              },
               yaxis: {
                 labels: { formatter: formatVND },
                 categories: Object.keys(days),
@@ -49,19 +68,14 @@ function hienBieuDo() {
                 formatter: formatVND,
               },
             };
-            if (!chart2) {
-              chart2 = new ApexCharts(
-                document.querySelector("#chart2"),
-                monthGraphOptions
-              );
-              chart2.render();
-              return;
-            }
-            chart2.updateOptions(monthGraphOptions);
+            chart.updateOptions(monthGraphOptions);
+            graphTime.textContent = `Nam ${nam}, thang ${monthIndex + 1}`;
           },
         },
       },
-      plotOptions: { bar: { horizontal: true } },
+      plotOptions: {
+        bar: { dataLabels: { orientation: "horizontal" }, horizontal: true },
+      },
       series: [
         {
           name: "profits",
@@ -81,11 +95,48 @@ function hienBieuDo() {
       yearGraphOptions
     );
     chart.render();
+    if (graphTime) {
+      graphTime.textContent = `Nam ${nam}`;
+    }
   });
 }
 
+function hienBieuDoKhachSop() {
+  const tknd = thongKeNguoiDung();
+  const nds = tknd.sort((a, b) => b["tong-chi"] - a["tong-chi"]).slice(0, 10);
+  let yearGraphOptions = {
+    chart: {
+      type: "bar",
+    },
+    plotOptions: { bar: { horizontal: true } },
+    series: [
+      {
+        name: "profits",
+        data: nds.map((nd) => nd["tong-chi"]),
+      },
+    ],
+    xaxis: {
+      labels: { formatter: formatVND },
+      categories: nds.map((nd) => nd["nguoi-dung"]["name"]),
+    },
+    dataLabels: {
+      formatter: formatVND,
+    },
+  };
+  let chart = new ApexCharts(
+    document.querySelector("#chart2"),
+    yearGraphOptions
+  );
+  chart.render();
+}
+
 window.addEventListener("load", () =>
-  taiDuLieuTongMainJs(() => taiHoaDon(() => hienBieuDo()))
+  taiDuLieuTongMainJs(() =>
+    taiHoaDon(() => {
+      hienBieuDoDoanhThu();
+      hienBieuDoKhachSop();
+    })
+  )
 );
 
 // function generateRandomData(num) {
