@@ -422,8 +422,75 @@ function hienThiPagination(
   if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
     pageHienTai = 1;
   }
+  const onPaginationChange = (goToPage) => {
+    goToPage = parseInt(goToPage, 10);
+    caiParamUrl({ page: goToPage }, false, false);
+    duLieuDaTinh.pageHienTai = goToPage;
+    // Calculate the scroll position relative to the bottom
+    const distanceFromBottom =
+      document.documentElement.scrollHeight -
+      window.innerHeight -
+      window.scrollY;
+    hienThiPagination(duLieuDaTinh, () => khiBamTrang(), wrapperSelector);
+    // After the new content is loaded, adjust the scroll position
+    // Use setTimeout to ensure this runs after the new content is rendered
+    setTimeout(() => {
+      window.scrollTo(
+        0,
+        document.documentElement.scrollHeight -
+          window.innerHeight -
+          distanceFromBottom
+      );
+    }, 0);
+    khiBamTrang(goToPage);
+  };
+  if (pageHienTai > soPageToiDa) {
+    onPaginationChange(soPageToiDa);
+    return;
+  }
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
+  const popover = (function () {
+    // Create the form element
+    const form = document.createElement("form");
+    form.classList.add("pagination-popover");
+    form.popover = "auto";
+    form.addEventListener("toggle", (e) => {
+      if (e.newState == "open") input.focus();
+    });
+    form.addEventListener("submit", () =>
+      onPaginationChange(new FormData(form).get("page"))
+    );
+
+    // Create the label element
+    const label = document.createElement("label");
+    label.setAttribute("for", "page");
+    label.textContent = "Go to Page...";
+
+    // Create the input element
+    const input = document.createElement("input");
+    input.setAttribute("name", "page");
+    input.setAttribute("type", "number");
+    input.setAttribute("step", 1);
+    input.setAttribute("min", 1);
+    input.setAttribute("max", soPageToiDa);
+
+    // Create the button element
+    const button = document.createElement("button");
+    button.setAttribute("type", "submit");
+    button.textContent = "Go";
+
+    // Append the elements to the form
+    form.appendChild(label);
+    form.appendChild(document.createElement("br")); // Line break for spacing
+    form.appendChild(input);
+    form.appendChild(button);
+
+    // Append the form to the body (or any other container)
+    return form;
+  })();
+  wrapper.appendChild(popover);
+
   const container = document.createElement("ul");
   container.classList.add("pagination-list");
 
@@ -437,27 +504,7 @@ function hienThiPagination(
       button.style.setProperty("cursor", "default");
       button.style.setProperty("pointer-events", "none");
     } else {
-      button.addEventListener("click", () => {
-        caiParamUrl({ page: goToPage }, false, false);
-        duLieuDaTinh.pageHienTai = goToPage;
-        // Calculate the scroll position relative to the bottom
-        const distanceFromBottom =
-          document.documentElement.scrollHeight -
-          window.innerHeight -
-          window.scrollY;
-        hienThiPagination(duLieuDaTinh, () => khiBamTrang(), wrapperSelector);
-        // After the new content is loaded, adjust the scroll position
-        // Use setTimeout to ensure this runs after the new content is rendered
-        setTimeout(() => {
-          window.scrollTo(
-            0,
-            document.documentElement.scrollHeight -
-              window.innerHeight -
-              distanceFromBottom
-          );
-        }, 0);
-        khiBamTrang(goToPage);
-      });
+      button.addEventListener("click", () => onPaginationChange(goToPage));
     }
     li.appendChild(button);
     container.appendChild(li);
@@ -465,8 +512,11 @@ function hienThiPagination(
   // ham them nhanh dau 3 cham (e.g. 1 ... 5 6 7)
   function addEllipsis() {
     const li = document.createElement("li");
-    const ellipsis = document.createElement("span");
-    ellipsis.textContent = "...";
+    const ellipsis = document.createElement("button");
+    ellipsis.textContent = "…";
+    ellipsis.style.setProperty("font-weight", "bold");
+    ellipsis.popoverTargetElement = popover;
+    ellipsis.popoverTargetAction = "toggle";
     li.appendChild(ellipsis);
     container.appendChild(li);
   }
@@ -483,10 +533,16 @@ function hienThiPagination(
       endPage = startPage + soNutPagination - 1;
     }
   }
+  if (startPage === 2 && endPage > 5) endPage--;
+  else if (
+    endPage === soPageToiDa - 1 &&
+    startPage < soPageToiDa - soNutPagination + 1
+  )
+    startPage++;
 
   // Thêm nút trang trước
   if (pageHienTai > 1) {
-    appendButton("Previous", pageHienTai - 1);
+    appendButton("← ", pageHienTai - 1);
   }
 
   // them nut trang dau tien
@@ -511,7 +567,7 @@ function hienThiPagination(
 
   // Thêm nút trang tiếp theo
   if (pageHienTai < soPageToiDa) {
-    appendButton("Next", pageHienTai + 1);
+    appendButton(" →", pageHienTai + 1);
   }
   wrapper.appendChild(container);
 }

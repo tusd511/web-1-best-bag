@@ -7,25 +7,35 @@
 
 ## Lưu ý cho các bạn ko đọc tin nhắn zalo của nhóm
 
+- **Update: Mon Dec 02 2024 11:31:53 GMT+0700 (Indochina Time)**: Trên tinh thần mỗi người làm rồi tự cố gắng ghép vào chứ đừng chờ.
+
 - **Update: Fri Nov 29 2024 21:21:43 GMT+0700 (Indochina Time)**
 
-- nhắc lại, code liên quan đến tải, đọc, lọc, sắp xếp, phân trang, thêm sửa xoá dữ liệu, sản phẩm, người dùng, hoá đơn, giỏ hàng và nhiều loại thống kê đều đã viết trong main.js. Vui lòng link script src file main.js vào, KHÔNG copy code ra file riêng
+<details open>
 
-- Về phần hiện sản phẩm trang chủ, code render danh sách nằm trong admin/admin.js do bạn làm trang admin đợi mãi trang chủ chưa làm xong đã tự viết render sản phẩm. SỬ DỤNG LẠI code render sản phẩm trong đó (thay nút chỉnh sửa/xoá thành thêm giỏ hàng, v.v), KHÔNG TỰ VIẾT LẠI code đã có, sẽ ko đc ghi đánh giá
+<summary>an noi dung da dc hien len</summary>
 
-- Hướng dẫn thao tác dùng hàm tải tổng dữ liệu của mainjs đã ghi trong README.md, nếu không hiểu thì hỏi chứ không viết lại.
+- nhắc lại, code liên quan đến tải, đọc, lọc, sắp xếp, phân trang, thêm sửa xoá dữ liệu, sản phẩm, người dùng, hoá đơn, giỏ hàng và nhiều loại thống kê đều đã viết trong `main.js/index mẫu/thư mục admin`. Vui lòng link script src file `main.js/admin.js/*.js` vào, KHÔNG copy code ra file riêng vì fix bug sẽ ko update đc
+
+- Về phần hiện sản phẩm trang chủ, code render danh sách nằm trong admin/admin.js do bạn làm trang admin đợi mãi trang chủ chưa làm xong đã tự viết render sản phẩm. SỬ DỤNG LẠI code render sản phẩm trong đó (thay nút chỉnh sửa/xoá thành thêm giỏ hàng, v.v), Code chức năng/giao diện đã có viết rồi mà tự viết lại thì **ko tính đóng góp**
+
+- Hướng dẫn thao tác dùng hàm tải tổng dữ liệu của mainjs đã ghi trong `README.md`: [Sự kiện tải dữ liệu, hành động SAU khi đã tải](#sự-kiện-tải-dữ-liệu-hành-động-sau-khi-đã-tải), nếu không hiểu thì hỏi chứ không viết lại.
 
 - Các hàm thao tác ghi dữ liệu `thêm/sửa/xoá____[sanPham]|[nguoiDung]|...` không tự kiểm tra object dữ liệu truyền vào có đúng format không. PHẢI ĐỌC file dữ liệu để xem mẫu format của 1 object và tạo chính xác object để truyền vào.
+
   - RIÊNG sản phẩm, thì chỉ cần id, name, desc, giá gốc, giá giảm và file name hình ảnh (lưu ý đọc key các trường của object trong file dữ liệu)
   - nếu nói xài hàm ghi dữ liệu hơi khó hiểu:
     -Tạo object dữ liệu (vd hoá đơn) giống format của 1 object hoá đơn nằm trong file hoa-don.json (dữ liệu trong file là 1 array các hoá đơn)
 
-- dùng thư viện *fontawesome để lấy icon thì thầy cho phép
+- dùng thư viện \*fontawesome để lấy icon thì thầy cho phép
+
   - ![thay cho phep font awesome](images/chophepfontawesome.png)
 
 - ngoài ra, trong trang admin và trang index mẫu có 1 số các form dùng để lọc/sắp xếp dữ liệu, bạn/các bạn làm form/giao diện vô xem qua và style lại form
 
 - đến hiện tại `Fri Nov 29 2024 21:21:43 GMT+0700 (Indochina Time)`, các file main.js/index mẫu/các trang admin đều vẫn là chưa làm xong và vẫn đang đc code thêm vào. Nên lưu ý, nếu xài git không được, thì cố gắng cập nhật bằng tay. HẠN CHẾ copy code về file của mình, vì có thể nó còn chưa xong và sẽ đc sửa lại
+
+</details>
 
 ## test data summary
 
@@ -58,13 +68,17 @@
 
 - ko còn phải tải lại trang khi chuyển page
 
+<details open>
+
+<summary>an noi dung da dc hien len</summary>
+
 - Xem cáh làm tính và hiển thị mới:
   - ![image](https://github.com/user-attachments/assets/e805e4dd-63d5-4cd4-af0c-39e0115f0d7e)
   - ![image](https://github.com/user-attachments/assets/5b8e18ae-8606-48b5-aab9-393a989ce37c)
   - ![image](https://github.com/user-attachments/assets/d43e250f-4794-4f24-8bd4-e1f67763c3f3)
   - ![image](https://github.com/user-attachments/assets/9e300b7a-bf86-439d-940e-17fc07846639)
 
-
+</details open>
 
 ### Sự kiện tải dữ liệu, hành động SAU khi đã tải
 
