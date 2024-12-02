@@ -1281,6 +1281,7 @@ function showDebugMenu() {
   document.body.appendChild(dialog);
 
   const popover = document.createElement("div");
+  popover.id = "debugMessage";
   popover.classList.add("popover");
   popover.setAttribute("popover", "auto");
   dialog.appendChild(popover);

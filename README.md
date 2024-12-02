@@ -47,7 +47,7 @@
 
 2. quyết định mà giỏ hàng lưu 1 mảng riêng chứ k lưu trong người dùng là để thuận tiện cho xử lý form thêm và sửa người dùng
 
-3. bắt buộc phải gọi hàm tim/them/xoa/sua hàm của dữ liệu vì đã có viết xử lý trong đấy rồi, đừng tự thao tác lên mảng toàn cục g_
+3. bắt buộc phải gọi hàm tim/them/xoa/sua hàm của dữ liệu vì đã có viết xử lý trong đấy rồi, đừng tự thao tác lên mảng toàn cục g\_
 
 </details>
 
@@ -266,132 +266,207 @@
 
 ### Popup, modal, popover, overlays, popups, popovers, dialogs, etc
 
-- vì môn ko cho xài thư viện, dùng https://developer.mozilla.org/en-US/docs/Web/API/Popover_API, ,do trình duyệt hỗ trợ để tạo Popup, modal, popover (https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover), overlays, popups, popovers, dialogs (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog), etc 
+- vì môn ko cho xài thư viện, dùng https://developer.mozilla.org/en-US/docs/Web/API/Popover_API, ,do trình duyệt hỗ trợ để tạo Popup, modal, popover (https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover), overlays, popups, popovers, dialogs (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog), etc
 
 <details>
 
 <summary>hien noi dung da dc an di</summary>
 
+- đọc `hienThiPagination` va `showDebugMenu` trong `main.js`
+
 1. ví dụ modal dialog (mờ nền, ko bấm đc đằng sau, bấm ESC để tắt)
 2. ![image](https://github.com/user-attachments/assets/8d5dd1e4-c381-495d-8bf6-697b0e07ba6f)
 3. code liên quan:
 
-    ```javascript
-    function showDebugMenu() {
-      const existingDialog = document.getElementById("debugDialog");
-      if (existingDialog) {
-        existingDialog.showModal();
-        return;
-      }
-      // Create the dialog element
-      const dialog = document.createElement("dialog");
-      dialog.id = "debugDialog";
-      dialog.style.width = "calc(100% - 200px)";
-      dialog.style.height = "calc(100% - 100px)";
-      dialog.style.padding = "20px";
-      document.body.appendChild(dialog);
+   ```javascript
+   function showDebugMenu() {
+     const existingDialog = document.getElementById("debugDialog");
+     if (existingDialog) {
+       existingDialog.showModal();
+       return;
+     }
+     // Create the dialog element
+     const dialog = document.createElement("dialog");
+     dialog.id = "debugDialog";
+     dialog.style.width = "calc(100% - 200px)";
+     dialog.style.height = "calc(100% - 100px)";
+     dialog.style.padding = "20px";
+     document.body.appendChild(dialog);
 
-      const closeButton = document.createElement("button");
-      closeButton.textContent = "Close";
-      closeButton.style.float = "right";
-      closeButton.onclick = () => dialog.close();
-      dialog.appendChild(closeButton);
-    
-      const title = document.createElement("h2");
-      title.textContent = "Debug menu for Web 1 Best Bag";
-      dialog.appendChild(title);
+     const closeButton = document.createElement("button");
+     closeButton.textContent = "Close";
+     closeButton.style.float = "right";
+     closeButton.onclick = () => dialog.close();
+     dialog.appendChild(closeButton);
 
-      // ...
-      dialog.showModal();
-    }
-    ```
-4. ví dụ popover (ko mờ nền, bấm đằng sau/ESC để tắt
+     const title = document.createElement("h2");
+     title.textContent = "Debug menu for Web 1 Best Bag";
+     dialog.appendChild(title);
+
+     // ...
+     dialog.showModal();
+   }
+   ```
+
+4. ví dụ popover (ko mờ nền, bấm đằng sau/ESC để tắt)
 5. ![image](https://github.com/user-attachments/assets/1c5a738c-d3c6-43a5-aca9-12293306a9cd)
 6. ![image](https://github.com/user-attachments/assets/5f569f10-58a9-483b-be37-221c6850f7b5)
 7. code liên quan:
 
-  - Toggle bằng tay
+- Toggle bằng tay
 
-    ```javascript
-    const popover = document.createElement("div");
-    popover.classList.add("popover");
-    popover.setAttribute("popover", "auto");
-    dialog.appendChild(popover);
-  
-    // Show popover message
-    function showPopover(message) {
-      popover.textContent = message;
-      popover.showPopover();
-    }
+  ```javascript
+  const popover = document.createElement("div");
+  popover.classList.add("popover");
+  popover.setAttribute("popover", "auto");
+  dialog.appendChild(popover);
 
-    const downloadLocalStorageButton = createButton(
+  // Show popover message
+  function showPopover(message) {
+    popover.textContent = message;
+    popover.showPopover();
+  }
+
+  const downloadLocalStorageButton = createButton(
     "Download Local Storage",
     () => {
       downloadFile("localstorage.json", JSON.stringify(localStorage));
       showPopover("Local Storage: Downloaded Local Storage");
     }
+  );
+  dialog.appendChild(downloadLocalStorageButton);
+  ```
+
+- Toggle tự động bằng action lên 1 phần tử (nhấn nút, check box, v.v)
+
+  ```javascript
+  const wrapper = document.querySelector(wrapperSelector);
+  wrapper.innerHTML = "";
+  const popover = (function () {
+    // Create the form element
+    const form = document.createElement("form");
+    form.classList.add("pagination-popover");
+    form.popover = "auto";
+    form.addEventListener("toggle", (e) => {
+      if (e.newState == "open") input.focus();
+    });
+    form.addEventListener("submit", () =>
+      onPaginationChange(new FormData(form).get("page"))
     );
-    dialog.appendChild(downloadLocalStorageButton);
-    ```
 
-  - Toggle tự động bằng action lên 1 phần tử (nhấn nút, check box, v.v)  
+    // Create the label element
+    const label = document.createElement("label");
+    label.setAttribute("for", "page");
+    label.textContent = "Go to Page...";
 
-    ```javascript
-    const wrapper = document.querySelector(wrapperSelector);
-    wrapper.innerHTML = "";
-    const popover = (function () {
-      // Create the form element
-      const form = document.createElement("form");
-      form.classList.add("pagination-popover");
-      form.popover = "auto";
-      form.addEventListener("toggle", (e) => {
-        if (e.newState == "open") input.focus();
-      });
-      form.addEventListener("submit", () =>
-        onPaginationChange(new FormData(form).get("page"))
-      );
-  
-      // Create the label element
-      const label = document.createElement("label");
-      label.setAttribute("for", "page");
-      label.textContent = "Go to Page...";
-  
-      // Create the input element
-      const input = document.createElement("input");
-      input.setAttribute("name", "page");
-      input.setAttribute("type", "number");
-      input.setAttribute("step", 1);
-      input.setAttribute("min", 1);
-      input.setAttribute("max", soPageToiDa);
-  
-      // Create the button element
-      const button = document.createElement("button");
-      button.setAttribute("type", "submit");
-      button.textContent = "Go";
-  
-      // Append the elements to the form
-      form.appendChild(label);
-      form.appendChild(document.createElement("br")); // Line break for spacing
-      form.appendChild(input);
-      form.appendChild(button);
-  
-      // Append the form to the body (or any other container)
-      return form;
-    })();
-    wrapper.appendChild(popover);
-    
-    // ham them nhanh dau 3 cham (e.g. 1 ... 5 6 7)
-    function addEllipsis() {
-      const li = document.createElement("li");
-      const ellipsis = document.createElement("button");
-      ellipsis.textContent = "…";
-      ellipsis.style.setProperty("font-weight", "bold");
-      ellipsis.popoverTargetElement = popover;
-      ellipsis.popoverTargetAction = "toggle";
-      li.appendChild(ellipsis);
-      container.appendChild(li);
-    }
-    ```
+    // Create the input element
+    const input = document.createElement("input");
+    input.setAttribute("name", "page");
+    input.setAttribute("type", "number");
+    input.setAttribute("step", 1);
+    input.setAttribute("min", 1);
+    input.setAttribute("max", soPageToiDa);
+
+    // Create the button element
+    const button = document.createElement("button");
+    button.setAttribute("type", "submit");
+    button.textContent = "Go";
+
+    // Append the elements to the form
+    form.appendChild(label);
+    form.appendChild(document.createElement("br")); // Line break for spacing
+    form.appendChild(input);
+    form.appendChild(button);
+
+    // Append the form to the body (or any other container)
+    return form;
+  })();
+  wrapper.appendChild(popover);
+
+  // ham them nhanh dau 3 cham (e.g. 1 ... 5 6 7)
+  function addEllipsis() {
+    const li = document.createElement("li");
+    const ellipsis = document.createElement("button");
+    ellipsis.textContent = "…";
+    ellipsis.style.setProperty("font-weight", "bold");
+    ellipsis.popoverTargetElement = popover;
+    ellipsis.popoverTargetAction = "toggle";
+    li.appendChild(ellipsis);
+    container.appendChild(li);
+  }
+  ```
+
+</details>
+
+<details>
+
+<summary>cach lam animation cho dialog va popover</summary>
+
+- đọc `/* debug */` trong `style.css` cạnh `main.js`
+- ![image](images/2024-12-02_22-07-00-ezgif.com-resize.gif)
+
+1. https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dialog#animating_dialogs
+2. https://developer.mozilla.org/en-US/docs/Web/CSS/::backdrop
+3. https://blog.logrocket.com/animating-dialog-popover-elements-css-starting-style/
+4. code lien quan:
+
+   - css cho slide up/ slide down
+
+   ```css
+   dialog#debugDialog {
+     transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
+     animation: dialog-slide-hide 0.5s ease-out normal;
+     &::backdrop {
+       animation: dialog-backdrop-hide 0.5s ease-out normal;
+     }
+     &[open] {
+       animation: dialog-slide-show 0.5s ease-out normal;
+       &::backdrop {
+         animation: dialog-backdrop-show 0.5s ease-out normal;
+       }
+     }
+   }
+
+   @keyframes dialog-slide-show {
+     from {
+       transform: translateY(calc(-50vh - 60%));
+     }
+     to {
+       transform: translateY(0%);
+     }
+   }
+
+   @keyframes dialog-slide-hide {
+     to {
+       transform: translateY(calc(-50vh - 60%));
+     }
+   }
+
+   div#debugMessage {
+     transition: display 0.5s allow-discrete;
+     animation: popover-slide-hide 0.5s ease-out normal;
+     &:popover-open {
+       animation: popover-slide-show 0.5s ease-out normal;
+     }
+   }
+
+   @keyframes popover-slide-show {
+     from {
+       transform: translateY(calc(-50vh - 60%));
+     }
+     to {
+       transform: translateY(0%);
+     }
+   }
+
+   @keyframes popover-slide-hide {
+     to {
+       transform: translateY(calc(-50vh - 60%));
+     }
+   }
+   ```
+
+</details>
 
 - Browser compatibility (né safari ra)
   - ![image](https://github.com/user-attachments/assets/2bc4b56a-3c7f-4a3e-a61d-812ccd4c6a30)
