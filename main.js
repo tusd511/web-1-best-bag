@@ -236,6 +236,7 @@ function caiParamUrl(
     if (param !== undefined) params.set(name, param);
   };
   const setParamArray = (ps, name) => {
+    if (ps === undefined) return;
     params.delete(name);
     if (Array.isArray(ps)) ps.forEach((p) => params.append(name, p));
   };

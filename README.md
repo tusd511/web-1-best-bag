@@ -267,3 +267,17 @@
 7. ![image](https://github.com/user-attachments/assets/6fc56db2-4d35-4ff2-ad06-6eba12a357e8)
 
 </details>
+
+## Lưu ý:
+
+<details>
+
+<summary>hien noi dung da dc an di</summary>
+
+1. toan bo link phai xai relative path vi host bang github pages
+nếu xài link kiểu này /index.html sẽ bị lỗi
+
+2. quyết định mà giỏ hàng lưu 1 mảng riêng chứ k lưu trong người dùng là để thuận tiện cho xử lý form thêm và sửa người dùng
+
+3. bắt buộc phải gọi hàm tim/them/xoa/sua hàm của dữ liệu vì đã có viết xử lý trong đấy rồi, đừng tự thao tác lên mảng toàn cục g_
+</details>
