@@ -266,7 +266,7 @@
 
 ### Popup, modal, popover, overlays, popups, popovers, dialogs, etc
 
-- vì môn ko cho xài thư viện, dùng https://developer.mozilla.org/en-US/docs/Web/API/Popover_AP, ,do trình duyệt hỗ trợ để tạo Popup, modal, popover, overlays, popups, popovers, dialogs, etc
+- vì môn ko cho xài thư viện, dùng https://developer.mozilla.org/en-US/docs/Web/API/Popover_API, ,do trình duyệt hỗ trợ để tạo Popup, modal, popover, overlays, popups, popovers, dialogs, etc (https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/popover)
 
 <details>
 
@@ -392,6 +392,10 @@
       container.appendChild(li);
     }
     ```
+
+- Browser compatibility (né safari ra)
+  - ![image](https://github.com/user-attachments/assets/2bc4b56a-3c7f-4a3e-a61d-812ccd4c6a30)
+  - ![image](https://github.com/user-attachments/assets/7f15a356-6f4d-4b28-b45a-52d98c5d6833)
 
 </details>
 
