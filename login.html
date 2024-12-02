@@ -343,6 +343,11 @@
     document.body.style.backgroundSize = "20%"; // Set the final size
   });
   document.querySelector(".container").style.marginBottom = "0";
+  const urlParams = new URLSearchParams(window.location.search);
+const status = urlParams.get('status');
+if(status == "signup") {
+document.querySelector(".container").classList.add("right-panel-active");
+}
 </script>
 </body>
 </html>

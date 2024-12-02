@@ -2,12 +2,11 @@ var g_sanPham;
 var soSanPhamMoiTrang = 12;
 
 function taiSanPham() {
-  // san pham da co trong local storage
+  
   if (taiSanPhamLocalStorage()) {
     tinhSanPhamHienThi();
     return;
   }
-  // chua co san pham trong local storage (lan dau mo web)
   fetch("../san-pham.json")
     .then((res) => res.text())
     .then((text) => {
@@ -17,10 +16,6 @@ function taiSanPham() {
     });
 }
 
-// pge: trang dang hien thi trong phan trang (set cai nay de di chuyen phan trang)
-// sort: thu tu sap xep gia san pham
-// min: gia thap nhat khi loc san pham
-// max: gia cao nhat
 function layParamUrl() {
   const params = new URL(document.location.toString()).searchParams;
   return {
@@ -63,19 +58,16 @@ function tinhSanPhamHienThi() {
   }
   chiSoPage = page - 1;
   chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
-  // phan trang bam vuot gioi han so trang
   if (chiSoBatDau > soLuongSanPham) {
     return;
   }
-
-  // mang sau khi chia phan trang
   const sanPhamsHienThi = sanPhamsDaLoc.slice(
     chiSoBatDau,
     chiSoBatDau + soSanPhamMoiTrang
   );
   hienThiSanPham(sanPhamsHienThi, {
-    page, // trang phan trang hien tai
-    soPageToiDa, // so trang toi da phan trang
+    page, 
+    soPageToiDa, 
     chiSoPage,
     sort,
     min,
@@ -89,11 +81,9 @@ function tinhSanPhamHienThi() {
 
 function hienTrangChiTiet(id) {
   const sanPham = timSanPham(id);
-  // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
 }
 function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
-//   createPaginationDebugTable(paramPhanTrang);
   hienThiGrid(sanPhamsHienThi);
   hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
 }
@@ -231,19 +221,6 @@ function sapXepSanPham(thuTu, sanPhamsDaLoc) {
     return sanPhamsDaLoc.toSorted((a, b) => a.matchScore - b.matchScore);
   return sanPhamsDaLoc;
 }
-
-function locGiaCaoNhat(max, sanPhamsDaLoc) {
-  if (max != null && !isNaN(max))
-    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] <= max);
-  return sanPhamsDaLoc;
-}
-
-function locGiaThapNhat(min, sanPhamsDaLoc) {
-  if (min != null && !isNaN(min))
-    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] >= min);
-  return sanPhamsDaLoc;
-}
-
 function timTheoTen(name, sanPhamsDaLoc) {
   const sanitizedInput = name.normalize().toLowerCase();
   const keywords = sanitizedInput.split(/\s+/);
@@ -386,3 +363,4 @@ function convertNumberToPrice(number)
   });
   return result;
 }
+
