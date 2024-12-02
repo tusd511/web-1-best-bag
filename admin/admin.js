@@ -1,9 +1,11 @@
-var esanpham = document.getElementById("quanlysanpham");
-var edonhang = document.getElementById("quanlydonhang");
-var enguoidung = document.getElementById("quanlynguoidung");
-var ethongke = document.getElementById("quanlythongke");
-
-var sidebar = document.getElementsByClassName("sideMenu")[0];
+const toggler = document.querySelector(".topbar-toggler");
+const collapse = document.querySelector(".topbar-collapse");
+if (toggler) {
+  toggler.addEventListener("click", () => {
+    collapse.style.display =
+      collapse.style.display === "flex" ? "none" : "flex";
+  });
+}
 
 function PhongSide() {
   sidebar.style.width = "200px";
@@ -11,52 +13,6 @@ function PhongSide() {
 
 function ThuSide() {
   sidebar.style.width = "80px";
-}
-
-var noActive = document.getElementsByClassName("sidebar-link");
-
-function hiensanpham() {
-  for (i = 0; i < noActive.length; i++)
-    if (noActive[i].classList.contains("isActive"))
-      noActive[i].classList.remove("isActive");
-  noActive[1].classList.add("isActive");
-  esanpham.style.display = "block";
-  edonhang.style.display = "none";
-  enguoidung.style.display = "none";
-  ethongke.style.display = "none";
-}
-
-function hiendonhang() {
-  for (i = 0; i < noActive.length; i++)
-    if (noActive[i].classList.contains("isActive"))
-      noActive[i].classList.remove("isActive");
-  noActive[3].classList.add("isActive");
-  esanpham.style.display = "none";
-  enguoidung.style.display = "none";
-  ethongke.style.display = "none";
-  edonhang.style.display = "block";
-}
-
-function hiennguoidung() {
-  for (i = 0; i < noActive.length; i++)
-    if (noActive[i].classList.contains("isActive"))
-      noActive[i].classList.remove("isActive");
-  noActive[2].classList.add("isActive");
-  esanpham.style.display = "none";
-  edonhang.style.display = "none";
-  ethongke.style.display = "none";
-  enguoidung.style.display = "block";
-}
-
-function hienthongke() {
-  for (i = 0; i < noActive.length; i++)
-    if (noActive[i].classList.contains("isActive"))
-      noActive[i].classList.remove("isActive");
-  noActive[0].classList.add("isActive");
-  esanpham.style.display = "none";
-  edonhang.style.display = "none";
-  enguoidung.style.display = "none";
-  ethongke.style.display = "block";
 }
 
 function kichHoat(e) {
@@ -73,59 +29,23 @@ function kichHoat(e) {
   }
 }
 
-async function taiDuLieu(datakey, datafile) {
-  // du lieu key nay da co trong local storage
-  const data = taiDuLieuLocalStorage(datakey);
-  if (data) {
-    return JSON.parse(data);
+function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhSanPhamHienThi khong tim thay wrapper!");
+    return;
   }
-  // chua co du lieu key nay trong local storage (lan dau mo web)
-  // thi can phai tai du lieu ban dau tu file
-  const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
-  return await response.json();
-}
-
-function taiHoaDon() {
-  taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
-    g_hoaDon = data;
-    i_hoaDon =
-      taiDuLieuLocalStorage(hoaDonImKey) ??
-      createIndexMapping(g_hoaDon, hoaDonIdKey);
-    tinhHoaDonHienThi();
-    
-  });
-}
-
-function tinhSanPhamHienThi() {
   let { page, sort, min, max, search, categories } = layParamUrl();
   let sanPhamsDaLoc = [...g_sanPham];
   sanPhamsDaLoc = locGiaSanPham(min, max, sanPhamsDaLoc);
   sanPhamsDaLoc = locTheLoaiSanPham(categories, sanPhamsDaLoc);
   if (search) sanPhamsDaLoc = timTheoTen(search, sanPhamsDaLoc);
   sanPhamsDaLoc = sapXepSanPham(sort, sanPhamsDaLoc);
+
   const soLuongSanPham = sanPhamsDaLoc.length;
   const soPageToiDa = Math.ceil(soLuongSanPham / soSanPhamMoiTrang);
-  let chiSoBatDau = 0;
-  let chiSoPage = 0;
-  if (page < 1 || isNaN(page) || page == null) {
-    page = 1;
-  }
-  chiSoPage = page - 1;
-  chiSoBatDau = chiSoPage * soSanPhamMoiTrang;
-  // phan trang bam vuot gioi han so trang
-  if (chiSoBatDau > soLuongSanPham) {
-    caiParamUrlVaReload({ page: soPageToiDa }, false);
-  }
 
-  // mang sau khi chia phan trang
-  const sanPhamsHienThi = sanPhamsDaLoc.slice(
-    chiSoBatDau,
-    chiSoBatDau + soSanPhamMoiTrang
-  );
-  hienThiSanPham(sanPhamsHienThi, {
-    page, // trang phan trang hien tai
+  createPaginationDebugTable({
     soPageToiDa, // so trang toi da phan trang
-    chiSoPage,
     sort,
     min,
     max,
@@ -133,24 +53,44 @@ function tinhSanPhamHienThi() {
     categories,
     soLuongSanPham,
     tongSoSanPham: g_sanPham.length,
-    chiSoBatDau,
     soSanPhamMoiTrang,
   });
+
+  duLieuDaTinh = { duLieuDaLoc: sanPhamsDaLoc, soPageToiDa, pageHienTai: page };
+
+  hienThiSanPham(duLieuDaTinh, wrapperSelector);
 }
 
-function hienThiDanhSach(duLieusHienThi, hamRenderItem, wrapperSelector) {
+function hienThiDanhSach(duLieuDaTinh, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) {
+    console.error(`Không tìm thấy phần tử với selector: ${wrapperSelector}`);
+    return; // Nếu không tìm thấy, dừng lại và không làm gì thêm
+  }
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("grid-container");
-  if (duLieusHienThi.length === 0)
+  const { duLieuDaLoc, soPageToiDa } = duLieuDaTinh;
+  let { pageHienTai } = duLieuDaTinh;
+  let chiSoBatDau = 0;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
+  chiSoBatDau = (pageHienTai - 1) * soSanPhamMoiTrang;
+  if (chiSoBatDau > duLieuDaTinh.length) {
+    caiParamUrl({ page: soPageToiDa }, false, true);
+  }
+  const duLieuPhanTrang = duLieuDaLoc.slice(
+    chiSoBatDau,
+    chiSoBatDau + soSanPhamMoiTrang
+  );
+  if (duLieuDaTinh.length === 0)
     container.appendChild(
       document.createTextNode("Khong co san pham dap ung tieu chi")
     );
-  for (const item of duLieusHienThi) {
+  for (const item of duLieuPhanTrang) {
     container.appendChild(hamRenderItem(item));
   }
-
   wrapper.appendChild(container);
 }
 function renderItemSanPham(sanPham) {
@@ -207,62 +147,69 @@ function renderItemSanPham(sanPham) {
   wrapCart.appendChild(card);
   return wrapCart;
 }
-function hienThiSanPham(sanPhamsHienThi, paramPhanTrang) {
-  createPaginationDebugTable(paramPhanTrang);
-  hienThiDanhSach(sanPhamsHienThi, renderItemSanPham, ".product-list");
-  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa);
+function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
+  const khiBamTrang = () =>
+    hienThiDanhSach(duLieuDaTinh, renderItemSanPham, wrapperSelector);
+  khiBamTrang();
+  hienThiPagination(duLieuDaTinh, () => khiBamTrang());
 }
 
 function adminSuaSanPham(id) {
   const sanPham = timSanPham(id);
+  if (!sanPham) {
+    alert("Khong tim thay san pham!");
+  }
+
   // TODO: hien form chinh sua
 
-  //   suaSanPham(id, newSanPham);
+  updateSanPham(id, newSanPham);
 }
 
 function adminXoaSanPham(id) {
-  xoaSanPham(id);
+  if (confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) {
+    deleteSanPham(id);
+  }
 }
 var soNguoiDungMoiTrang = 25;
-function tinhNguoiDungHienThi() {
+function tinhNguoiDungHienThi(wrapperSelector = ".account-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhNguoiDungHienThi khong tim thay wrapper");
+    return;
+  }
   let { page, sort, disabled } = layParamUrl();
   let nguoiDungsDaLoc = [...g_nguoiDung];
   nguoiDungsDaLoc = locTrangThaiKhoa(disabled, nguoiDungsDaLoc);
   nguoiDungsDaLoc = sapXepNguoiDung(sort, nguoiDungsDaLoc);
+
   const soLuongNguoiDung = nguoiDungsDaLoc.length;
   const soPageToiDa = Math.ceil(soLuongNguoiDung / soNguoiDungMoiTrang);
-  let chiSoBatDau = 0;
-  if (page < 1 || isNaN(page) || page == null) {
-    page = 1;
-  }
-  chiSoBatDau = (page - 1) * soNguoiDungMoiTrang;
-  if (chiSoBatDau > soLuongNguoiDung) {
-    caiParamUrlVaReload({ page: soPageToiDa }, false);
-  }
-  const nguoiDungsHienThi = nguoiDungsDaLoc.slice(
-    chiSoBatDau,
-    Math.min(chiSoBatDau + soNguoiDungMoiTrang, soLuongNguoiDung)
-  );
-  hienThiNguoiDung(nguoiDungsHienThi, {
-    page,
+  createPaginationDebugTable({
     soPageToiDa,
     sort,
+    disabled,
     soLuongNguoiDung,
     tongSoNguoiDung: g_nguoiDung.length,
-    chiSoBatDau,
     soNguoiDungMoiTrang,
   });
+
+  duLieuNguoiDungDaTinh = {
+    duLieuNguoiDungDaLoc: nguoiDungsDaLoc,
+    soPageToiDa,
+    pageHienTai: page,
+  };
+  hienThiNguoiDung(duLieuNguoiDungDaTinh, wrapperSelector);
 }
-function hienThiNguoiDung(nguoiDungsHienThi, paramPhanTrang) {
-  createPaginationDebugTable(paramPhanTrang);
-  hienThiDanhSachNguoiDung(
-    nguoiDungsHienThi,
-    renderItemNguoiDung,
-    ".account-list"
-  );
+function hienThiNguoiDung(duLieuNguoiDungDaTinh, wrapperSelector) {
+  const khiBamTrangNguoiDung = () =>
+    hienThiDanhSachNguoiDung(
+      duLieuNguoiDungDaTinh,
+      renderItemNguoiDung,
+      wrapperSelector
+    );
+  khiBamTrangNguoiDung();
   hienThiPagination(
-    paramPhanTrang.page,
-    paramPhanTrang.soPageToiDa,
+    duLieuNguoiDungDaTinh,
+    () => khiBamTrangNguoiDung(),
     ".pagination2"
   );
 }
@@ -297,11 +244,15 @@ function renderItemNguoiDung(nguoiDung) {
   return rowNguoiDung;
 }
 function hienThiDanhSachNguoiDung(
-  duLieusHienThi,
+  duLieuNguoiDungDaTinh,
   hamRenderItem,
   wrapperSelector
 ) {
   const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) {
+    console.error(`Không tìm thấy phần tử với selector: ${wrapperSelector}`);
+    return; // Nếu không tìm thấy, dừng lại và không làm gì thêm
+  }
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("container-nguoidung");
@@ -323,7 +274,7 @@ function hienThiDanhSachNguoiDung(
   th2.textContent = "Tên khách hàng";
   th3.textContent = "Email";
   th4.textContent = "Password";
-  th5.textContent = "Trạng thái"; 
+  th5.textContent = "Trạng thái";
   tr.appendChild(th);
   tr.appendChild(th2);
   tr.appendChild(th3);
@@ -332,9 +283,23 @@ function hienThiDanhSachNguoiDung(
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
-  if (duLieusHienThi === 0)
+  const { duLieuNguoiDungDaLoc, soPageToiDa } = duLieuNguoiDungDaTinh;
+  let { pageHienTai } = duLieuNguoiDungDaTinh;
+  let chiSoBatDau = 0;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
+  chiSoBatDau = (pageHienTai - 1) * soNguoiDungMoiTrang;
+  if (chiSoBatDau > duLieuNguoiDungDaTinh.length) {
+    caiParamUrl({ page: soPageToiDa }, false, true);
+  }
+  const duLieuNguoiDungPhanTrang = duLieuNguoiDungDaLoc.slice(
+    chiSoBatDau,
+    chiSoBatDau + soNguoiDungMoiTrang
+  );
+  if (duLieuNguoiDungDaTinh.length === 0)
     container.appendChild(document.createTextNode("Khong co khach hang nao"));
-  for (const item of duLieusHienThi) {
+  for (const item of duLieuNguoiDungPhanTrang) {
     tbody.appendChild(hamRenderItem(item));
   }
   table.appendChild(tbody);
@@ -356,54 +321,65 @@ function sapXepNguoiDung(sort, nguoiDungsDaLoc) {
 
 //lọc những tài khoản bị khóa
 function locTrangThaiKhoa(disabled, nguoiDungsDaLoc) {
-  if(disabled===0){
+  if (disabled === 0) {
     return nguoiDungsDaLoc;
   }
-  if(disabled===1)
+  if (disabled === 1)
     return nguoiDungsDaLoc.filter(
-      (nguoiDung) => nguoiDung["disabled"] === true);
-  if(disabled===-1)
+      (nguoiDung) => nguoiDung["disabled"] === true
+    );
+  if (disabled === -1)
     return nguoiDungsDaLoc.filter(
-      (nguoiDung) => nguoiDung["disabled"] === false);
+      (nguoiDung) => nguoiDung["disabled"] === false
+    );
   return nguoiDungsDaLoc;
 }
 
 var soHoaDonMoiTrang = 25;
-function tinhHoaDonHienThi() {
+function tinhHoaDonHienThi(wrapperSelector = ".order-list") {
+  if (!document.querySelector(wrapperSelector)) {
+    console.info("tinhHoaDonHienThi khong tim thay wrapper");
+    return;
+  }
   let { page, sort, handle } = layParamUrl();
   let hoaDonsDaLoc = [...g_hoaDon];
   hoaDonsDaLoc = locXuLyHoaDon(handle, hoaDonsDaLoc);
-  hoaDonsDaLoc = sapXepHoaDon(sort,hoaDonsDaLoc);
+  hoaDonsDaLoc = sapXepHoaDon(sort, hoaDonsDaLoc);
+
   const soLuongHoaDon = hoaDonsDaLoc.length;
   const soPageToiDa = Math.ceil(soLuongHoaDon / soHoaDonMoiTrang);
-  let chiSoBatDau = 0;
-  if (page < 1 || isNaN(page) || page == null) {
-    page = 1;
-  }
-  chiSoBatDau = (page - 1) * soHoaDonMoiTrang;
-  if (chiSoBatDau > soLuongHoaDon) {
-    caiParamUrlVaReload({ page: soPageToiDa }, false);
-  }
 
-  const hoaDonsHienThi = hoaDonsDaLoc.slice(
-    chiSoBatDau,
-    Math.min(chiSoBatDau + soHoaDonMoiTrang, soLuongHoaDon)
-  );
-  hienThiHoaDon(hoaDonsHienThi, {
-    page,
+  createPaginationDebugTable({
     soPageToiDa,
     sort,
+    handle,
     soLuongHoaDon,
     tongSoHoaDon: g_hoaDon.length,
-    chiSoBatDau,
     soHoaDonMoiTrang,
   });
+
+  duLieuHoaDonDaTinh = {
+    duLieuHoaDonDaLoc: hoaDonsDaLoc,
+    soPageToiDa,
+    pageHienTai: page,
+  };
+
+  hienThiHoaDon(duLieuHoaDonDaTinh, wrapperSelector);
 }
 
-function hienThiHoaDon(hoaDonsHienThi, paramPhanTrang) {
-  createPaginationDebugTable(paramPhanTrang);
-  hienThiDanhSachHoaDon(hoaDonsHienThi, renderItemHoaDon, ".order-list");
-  hienThiPagination(paramPhanTrang.page, paramPhanTrang.soPageToiDa,".pagination3");
+function hienThiHoaDon(duLieuHoaDonDaTinh, wrapperSelector) {
+  const khiBamTrangHoaDon = () =>
+    hienThiDanhSachHoaDon(
+      duLieuHoaDonDaTinh,
+      renderItemHoaDon,
+      wrapperSelector
+    );
+  khiBamTrangHoaDon();
+  hienThiPagination(
+    duLieuHoaDonDaTinh,
+    () => khiBamTrangHoaDon(),
+    ".pagination3"
+  );
 }
 
 function renderItemHoaDon(hoaDon) {
@@ -412,8 +388,7 @@ function renderItemHoaDon(hoaDon) {
   ngayTaoHoaDon.textContent = hoaDon["ngay-tao"];
   rowHoaDon.appendChild(ngayTaoHoaDon);
   const khachHang = document.createElement("td");
-  khachHang.textContent = timNguoiDung(hoaDon["nguoi-dung"])["name"]; 
-  //khachHang.textContent = hoaDon["nguoi-dung"];
+  khachHang.textContent = timNguoiDung(hoaDon["nguoi-dung"])["name"];
   rowHoaDon.appendChild(khachHang);
   const chiTietHoaDon = document.createElement("td");
   const minitable = document.createElement("table");
@@ -421,12 +396,20 @@ function renderItemHoaDon(hoaDon) {
   for (let i = 0; i < hoaDon["chi-tiet"].length; i++) {
     const trmini = document.createElement("tr");
     const tdmini = document.createElement("td");
-    
-    //tdmini.textContent = timSanPham(hoaDon["chi-tiet"][i]["san-pham"])["name"];
-    //tdmini.textContent = hoaDon["chi-tiet"][i]["san-pham"];
+    const checksp = timSanPham(hoaDon["chi-tiet"][i]["san-pham"]);
+    if (checksp) {
+      tdmini.textContent = checksp["name"];
+    } else {
+      tdmini.textContent = "!!! Khong tim thay san pham";
+    }
+
     trmini.appendChild(tdmini);
     const tdmini2 = document.createElement("td");
-    tdmini2.textContent = hoaDon["chi-tiet"][i]["so-luong"];
+    if (checksp) {
+      tdmini2.textContent = hoaDon["chi-tiet"][i]["so-luong"];
+    } else {
+      tdmini2.textContent = "#";
+    }
     trmini.appendChild(tdmini2);
     minitable.appendChild(trmini);
   }
@@ -436,27 +419,27 @@ function renderItemHoaDon(hoaDon) {
   const select = document.createElement("select");
   select.classList.add("select-donhang");
   const chua = document.createElement("option");
-  chua.value="chua";
-  chua.textContent="Chưa";
+  chua.value = "chua";
+  chua.textContent = "Chưa";
   select.appendChild(chua);
   const dang = document.createElement("option");
   dang.value = "dang";
-  dang.textContent="Đang";
+  dang.textContent = "Đang";
   select.appendChild(dang);
   const huy = document.createElement("option");
-  huy.value="huy";
-  huy.textContent="Hủy";
+  huy.value = "huy";
+  huy.textContent = "Hủy";
   select.appendChild(huy);
   const roi = document.createElement("option");
-  roi.value="roi";
-  roi.textContent="Rồi";
+  roi.value = "roi";
+  roi.textContent = "Rồi";
   select.appendChild(roi);
   select.value = hoaDon["xu-ly"];
-  if(select.value==="roi") select.disabled = true;
+  if (select.value === "roi") select.disabled = true;
   xuly.classList.add(select.value);
   select.addEventListener("change", () => {
-    xuly.className="";
-    switch(select.value){
+    xuly.className = "";
+    switch (select.value) {
       case "chua":
         xuly.classList.add("chua");
         break;
@@ -468,7 +451,7 @@ function renderItemHoaDon(hoaDon) {
         break;
       case "roi":
         xuly.classList.add("roi");
-        select.disabled= true;
+        select.disabled = true;
         break;
     }
   });
@@ -477,8 +460,16 @@ function renderItemHoaDon(hoaDon) {
   return rowHoaDon;
 }
 
-function hienThiDanhSachHoaDon(duLieusHienThi, hamRenderItem, wrapperSelector) {
+function hienThiDanhSachHoaDon(
+  duLieuHoaDonDaTinh,
+  hamRenderItem,
+  wrapperSelector
+) {
   const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) {
+    console.error(`Không tìm thấy phần tử với selector: ${wrapperSelector}`);
+    return; // Nếu không tìm thấy, dừng lại và không làm gì thêm
+  }
   wrapper.innerHTML = "";
   const container = document.createElement("div");
   container.classList.add("container-hoadon");
@@ -505,9 +496,24 @@ function hienThiDanhSachHoaDon(duLieusHienThi, hamRenderItem, wrapperSelector) {
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
-  if (duLieusHienThi === 0)
+  const { duLieuHoaDonDaLoc, soPageToiDa } = duLieuHoaDonDaTinh;
+  let { pageHienTai } = duLieuHoaDonDaTinh;
+  let chiSoBatDau = 0;
+  if (pageHienTai < 1 || isNaN(pageHienTai) || pageHienTai == null) {
+    pageHienTai = 1;
+  }
+  chiSoBatDau = (pageHienTai - 1) * soHoaDonMoiTrang;
+  if (chiSoBatDau > duLieuHoaDonDaTinh) {
+    caiParamUrl({ page: soPageToiDa }, false, true);
+  }
+
+  const duLieuHoaDonPhanTrang = duLieuHoaDonDaLoc.slice(
+    chiSoBatDau,
+    chiSoBatDau + soHoaDonMoiTrang
+  );
+  if (duLieuHoaDonDaTinh.length === 0)
     container.appendChild(document.createTextNode("Khong co hoa don nao"));
-  for (const item of duLieusHienThi) {
+  for (const item of duLieuHoaDonPhanTrang) {
     tbody.appendChild(hamRenderItem(item));
   }
   table.appendChild(tbody);
@@ -527,48 +533,31 @@ function sapXepHoaDon(sort, hoaDonsDaLoc) {
   return hoaDonsDaLoc;
 }
 //lọc sản phẩm chưa hoặc đã được xử lý
-function locXuLyHoaDon(handle, hoaDonsDaLoc ){
-  if(handle===null)
-    return hoaDonsDaLoc;
-  if(handle==="chua")
-    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="chua");
-  if(handle==="dang")
-    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="dang");
-  if(handle==="huy")
-    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="huy");
-  if(handle==="roi")
-    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"]==="roi");
+function locXuLyHoaDon(handle, hoaDonsDaLoc) {
+  if (handle === null) return hoaDonsDaLoc;
+  if (handle === "chua")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"] === "chua");
+  if (handle === "dang")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"] === "dang");
+  if (handle === "huy")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"] === "huy");
+  if (handle === "roi")
+    return hoaDonsDaLoc.filter((hoaDon) => hoaDon["xu-ly"] === "roi");
   return hoaDonsDaLoc;
 }
 
-function kiemTraTabHienTai() {
-  const params = layParamUrl();
-  return params["tab"] || "thongke";
-}
-
-//function taiSanPham() {} // chay duoc roi nen tam tat di
 window.addEventListener("load", function () {
-  //taiSanPham();
-  taiNguoiDung();
-  taiHoaDon();
-  tinhTopHienThi();
-  
-  
-
-
-  //taiNguoiDung();
-  //taiHoaDon();
-
+  onPageLoad();
 });
 
-function timNguoiDung(id){
-  return g_nguoiDung.find((nguoiDung)=> nguoiDung["id"]===id);
+function timNguoiDung(id) {
+  return g_nguoiDung.find((nguoiDung) => nguoiDung["id"] === id);
 }
 
 function renderItemTopSanPham(item) {
   const rowTopBanChay = document.createElement("tr");
   const tenSanPhamBanChay = document.createElement("td");
-  tenSanPhamBanChay.textContent =  item.name;
+  tenSanPhamBanChay.textContent = item["san-pham"]["name"];
   rowTopBanChay.appendChild(tenSanPhamBanChay);
   const daBan = document.createElement("td");
   daBan.textContent = item["so-luong"];
@@ -581,7 +570,7 @@ function renderItemTopSanPham(item) {
   rowTopBanChay.appendChild(tongThu);
   return rowTopBanChay;
 }
-function hienThiTopSanPham(topSanPham, hamRenderItem, wrapperSelector){
+function hienThiTopSanPham(topSanPham, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("div");
@@ -605,16 +594,16 @@ function hienThiTopSanPham(topSanPham, hamRenderItem, wrapperSelector){
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
-  for (let i = 0; i < Math.min(topSanPham.length,10);i++) {
+  for (let i = 0; i < Math.min(topSanPham.length, 10); i++) {
     tbody.appendChild(hamRenderItem(topSanPham[i]));
   }
   const khac = document.createElement("tr");
   const td = document.createElement("td");
-  td.textContent="...";
+  td.textContent = "...";
   const td2 = document.createElement("td");
-  td2.textContent="...";
+  td2.textContent = "...";
   const td3 = document.createElement("td");
-  td3.textContent="...";
+  td3.textContent = "...";
   khac.appendChild(td);
   khac.appendChild(td2);
   khac.appendChild(td3);
@@ -624,93 +613,69 @@ function hienThiTopSanPham(topSanPham, hamRenderItem, wrapperSelector){
   wrapper.appendChild(container);
 }
 
-/*function hienThiSelectTopSanPham(wrapperSelector){
-  const wrapper = document.querySelector(wrapperSelector);
-  wrapper.innerHTML = "";
-  const container = document.createElement("div");
-  const selectTopSanPham = document.createElement("select");
-  const banchay = document.createElement("option");
-  banchay.value="ban-chay";
-  banchay.textContent="Top Bán Chạy";
-  selectTopSanPham.appendChild(banchay);
-  const doanhthu = document.createElement("option");
-  doanhthu.value= "doanh-thu";
-  doanhthu.textContent =" Top Doanh Thu Cao";
-  selectTopSanPham.appendChild(doanhthu);
-  selectTopSanPham.addEventListener("change", () =>{
-    let data;
-    if(selectTopSanPham.value==="ban-chay"){
-      data=topSanPhamBanChay();
-    } else if(selectTopSanPham.value==="doanh-thu"){
-      data = topSanPhamDoanhThu();
-    }
-    hienThiTopSanPham(data,renderItemTopSanPham,".topsanpham")
-  });
-  container.appendChild(selectTopSanPham);
-  wrapper.appendChild(container);
-}*/
-
-function sapXepTopSanPham(topsp,topSanPhamsDaLoc){
-  if(topsp === "ban-chay"){
+function sapXepTopSanPham(topsp, topSanPhamsDaLoc) {
+  if (topsp === "ban-chay") {
     topSanPhamsDaLoc = topSanPhamBanChay();
   }
-  if(topsp === "doanh-thu")
-    topSanPhamsDaLoc = topSanPhamDoanhThu();
+  if (topsp === "doanh-thu") topSanPhamsDaLoc = topSanPhamDoanhThu();
   return topSanPhamsDaLoc;
 }
 
-function sapXepTopNguoiDung(topnd,topNguoiDungsDaLoc){
-  if(topnd==="nhieu-don-nhat"||topnd==="")
-    topNguoiDungsDaLoc=topKhachLenDon();
-  if(topnd==="nhieu-loai-nhat")
-    topNguoiDungsDaLoc=topKhachMuaNhieuLoai();
-  if(topnd==="nhieu-hang-nhat")
-    topNguoiDungsDaLoc=topKhachMuaNhieu();
-  if(topnd==="nhieu-tien-nhat")
-    topNguoiDungsDaLoc=topKhachChiTieu();
+function sapXepTopNguoiDung(topnd, topNguoiDungsDaLoc) {
+  if (topnd === "nhieu-don-nhat" || topnd === "")
+    topNguoiDungsDaLoc = topKhachLenDon();
+  if (topnd === "nhieu-loai-nhat") topNguoiDungsDaLoc = topKhachMuaNhieuLoai();
+  if (topnd === "nhieu-hang-nhat") topNguoiDungsDaLoc = topKhachMuaNhieu();
+  if (topnd === "nhieu-tien-nhat") topNguoiDungsDaLoc = topKhachChiTieu();
   return topNguoiDungsDaLoc;
 }
 
-function tinhTopHienThi(){
-  let { topsp, topnd}=layParamUrl();
-  console.log("đã lấy param")
+function tinhTopHienThi() {
+  let { topsp, topnd } = layParamUrl();
+  console.log("đã lấy param");
   let topSanPhamsDaLoc = thongKeSanPham();
   console.log("Thống kê sản phẩm:", topSanPhamsDaLoc);
-  topSanPhamsDaLoc = sapXepTopSanPham(topsp,topSanPhamsDaLoc);
-  const topSanPhamsHienThi = topSanPhamsDaLoc.slice(0,10);
-  let topNguoiDungsDaLoc = [];
-  topNguoiDungsDaLoc = thongKeNguoiDung();
-  topNguoiDungsDaLoc = sapXepTopNguoiDung(topnd,topNguoiDungsDaLoc);
-  const topNguoiDungsHienThi = topNguoiDungsDaLoc.slice(0,10);
-  hienThiTop(topNguoiDungsHienThi,topSanPhamsHienThi);
+  topSanPhamsDaLoc = sapXepTopSanPham(topsp, topSanPhamsDaLoc);
+  const topSanPhamsHienThi = topSanPhamsDaLoc.slice(0, 10);
+  let topNguoiDungsDaLoc = thongKeNguoiDung();
+  topNguoiDungsDaLoc = sapXepTopNguoiDung(topnd, topNguoiDungsDaLoc);
+  const topNguoiDungsHienThi = topNguoiDungsDaLoc.slice(0, 10);
+  hienThiTop(topNguoiDungsHienThi, topSanPhamsHienThi);
 }
 
-function hienThiTop(topNguoiDungsHienThi,topSanPhamsHienThi){
-  hienThiTopNguoiDung(topNguoiDungsHienThi,renderItemTopNguoiDung,".topkhachhang");
-  hienThiTopSanPham(topSanPhamsHienThi,renderItemTopSanPham,".topsanpham");
+function hienThiTop(topNguoiDungsHienThi, topSanPhamsHienThi) {
+  hienThiTopNguoiDung(
+    topNguoiDungsHienThi,
+    renderItemTopNguoiDung,
+    ".topkhachhang"
+  );
+  hienThiTopSanPham(topSanPhamsHienThi, renderItemTopSanPham, ".topsanpham");
 }
 
-function renderItemTopNguoiDung(item){
+function renderItemTopNguoiDung(item) {
   const rowTopNguoiDung = document.createElement("tr");
   const tenNguoiDung = document.createElement("td");
-  tenNguoiDung.textContent= item["ten"];
+  tenNguoiDung.textContent = item["nguoi-dung"]["name"];
   rowTopNguoiDung.appendChild(tenNguoiDung);
   const soDon = document.createElement("td");
-  soDon.textContent=item["so-don"];
+  soDon.textContent = item["so-don"];
   rowTopNguoiDung.appendChild(soDon);
   const loaiDaMua = document.createElement("td");
-  loaiDaMua.textContent=item["loai-da-mua"];
+  loaiDaMua.textContent = item["loai-da-mua"];
   rowTopNguoiDung.appendChild(loaiDaMua);
   const daMua = document.createElement("td");
-  daMua.textContent=item["da-mua"];
+  daMua.textContent = item["da-mua"];
   rowTopNguoiDung.appendChild(daMua);
   const tongChi = document.createElement("td");
-  tongChi.textContent=item["tong-chi"];
+  tongChi.textContent = item["tong-chi"].toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
   rowTopNguoiDung.appendChild(tongChi);
   return rowTopNguoiDung;
 }
 
-function hienThiTopNguoiDung(topNguoiDung, hamRenderItem, wrapperSelector){
+function hienThiTopNguoiDung(topNguoiDung, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
   wrapper.innerHTML = "";
   const container = document.createElement("div");
@@ -742,22 +707,22 @@ function hienThiTopNguoiDung(topNguoiDung, hamRenderItem, wrapperSelector){
   thead.appendChild(tr);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
-  if(topNguoiDung.length===0)
+  if (topNguoiDung.length === 0)
     container.appendChild(document.createTextNode("Khong co hoa don nao"));
-  for (let i = 0; i < Math.min(topNguoiDung.length,10);i++) {
+  for (let i = 0; i < Math.min(topNguoiDung.length, 10); i++) {
     tbody.appendChild(hamRenderItem(topNguoiDung[i]));
   }
   const khac = document.createElement("tr");
   const td = document.createElement("td");
-  td.textContent="...";
+  td.textContent = "...";
   const td2 = document.createElement("td");
-  td2.textContent="...";
+  td2.textContent = "...";
   const td3 = document.createElement("td");
-  td3.textContent="...";
+  td3.textContent = "...";
   const td4 = document.createElement("td");
-  td4.textContent="...";
+  td4.textContent = "...";
   const td5 = document.createElement("td");
-  td5.textContent="...";
+  td5.textContent = "...";
   khac.appendChild(td);
   khac.appendChild(td2);
   khac.appendChild(td3);
@@ -769,137 +734,551 @@ function hienThiTopNguoiDung(topNguoiDung, hamRenderItem, wrapperSelector){
   wrapper.appendChild(container);
 }
 
-
-
-/*function hienThiSelectTopNguoiDung(wrapperSelector){
-  const wrapper = document.querySelector(wrapperSelector);
-  wrapper.innerHTML = "";
-  const container = document.createElement("div");
-  const selectTopNguoiDung = document.createElement("select");
-  const nhieuDonNhat = document.createElement("option");
-  nhieuDonNhat.value = "nhieu-don-nhat";
-  nhieuDonNhat.textContent = "Nhiều Lượt Mua Nhất";
-  selectTopNguoiDung.appendChild(nhieuDonNhat);
-  const nhieuLoaiNhat = document.createElement("option");
-  nhieuLoaiNhat.value ="nhieu-loai-nhat";
-  nhieuLoaiNhat.textContent="Mua Nhiều Loại Nhất";
-  selectTopNguoiDung.appendChild(nhieuLoaiNhat);
-  const nhieuHangNhat = document.createElement("option");
-  nhieuHangNhat.value = "nhieu-hang-nhat";
-  nhieuHangNhat.textContent="Mua Nhiều Hàng Nhất";
-  selectTopNguoiDung.appendChild(nhieuHangNhat);
-  const nhieuTienNhat = document.createElement("option");
-  nhieuTienNhat.value="nhieu-tien-nhat";
-  nhieuTienNhat.textContent="Chi Tiêu Nhiều Nhất";
-  selectTopNguoiDung.appendChild(nhieuTienNhat);
-  selectTopNguoiDung.addEventListener("change", () => {
-    let data;
-    switch(selectTopNguoiDung.value){
-      case "nhieu-don-nhat":
-        data = topKhachLenDon();
-        break;
-      case "nhieu-loai-nhat":
-        data = topKhachMuaNhieuLoai();
-        break;
-      case "nhieu-hang-nhat":
-        data = topKhachMuaNhieu();
-        break;
-      case "nhieu-tien-nhat":
-        data = topKhachChiTieu();
-        break;
-    }
-    hienThiTopNguoiDung(data,renderItemTopNguoiDung,".topnguoidung")
-  });
-  container.appendChild(selectTopNguoiDung);
-  wrapper.appendChild(container);
-}*/
-
-
-/*function topSanPhamBanChay(hoaDon){
-  const sanPhamMap = new Map();
-  hoaDon.forEach(hD => {
-    hD["chi-tiet"].forEach( cT =>{
-      const sP = cT["san-pham"];
-      const sL = cT["so-luong"];
-      if(sanPhamMap.has(sP)){
-        sanPhamMap.set(sP, sanPhamMap.get(sP) + sL);
-      } else {
-        sanPhamMap.set(sP, sL);
+function loadTabContent(tabName, sauKhiTai) {
+  fetch(`${tabName}.html`)
+    .then((response) => response.text())
+    .then((data) => {
+      const content_area = document.getElementById("content-wrapper");
+      if (content_area) {
+        content_area.innerHTML = data;
       }
+      sauKhiTai();
     });
-  });
-  const topBanChay = Array.from(sanPhamMap.entries())
-  .map(([sP,sL])=> ({sP,sL}))
-  .sort((a,b)=> b.sL - a.sL);
-
-  return topBanChay;
 }
 
-const topBanChay = topSanPhamBanChay(hoaDon);*/
+var tabthongke = document.getElementById("thongke");
+if (tabthongke) {
+  tabthongke.addEventListener("click", () => {
+    caiParamUrl({ tab: "thongke" }, false);
+  });
+}
 
-/*function hienThiMenuThongKe(){
+var tabnguoidung = document.getElementById("nguoidung");
+if (tabnguoidung) {
+  tabnguoidung.addEventListener("click", () => {
+    caiParamUrl({ tab: "nguoidung" }, false);
+  });
+}
 
-  const board = document.createElement("div");
-  board.classList.add("board");
-  const cardContainer = document.createElement("div");
-  cardContainer.classList.add("card-container");
-  const cardBox = document.createElement("div");
-  cardBox.classList.add("card-box", "bg-mattRed");
-  const inner = document.createElement("div");
-  inner.classList.add("inner");
-  const h3 = document.createElement("h3");
-  h3.textContent= [...g_sanPham].length;
-  inner.appendChild(h3);
-  const p = document.createElement("p");
-  p.textContent = "Sản phẩm";
-  inner.appendChild(p);
-  cardBox.appendChild(inner);
-  const icon = document.createElement("div");
-  icon.classList.add("icon");
-  const i = document.createElement("i");
-  i.classList.add("fas", "fa-shopping-bag");
-  icon.appendChild(i);
-  cardBox.appendChild(icon);
-  const a = document.createElement("a");
-  a.classList.add("card-box-footer");
-  a.href="#";
-  a.textContent ="Chi tiết &nbsp;"
-  const muiTen = document.createElement("i");
-  muiTen.classList.add("fa", "fa-arrow-circle-right");
-  a.appendChild(muiTen);
-  cardBox.appendChild(a);
-  cardContainer.appendChild(cardBox);
-  board.appendChild(cardContainer);
-  //--------------
-  const cardContainer2 = document.createElement("div");
-  cardContainer2.classList.add("card-container");
-  const cardBox2 = document.createElement("div");
-  cardBox2.classList.add("card-box", "bg-mattRed");
-  const inner2 = document.createElement("div");
-  inner2.classList.add("inner");
-  const h32 = document.createElement("h3");
-  h32.textContent= [...g_sanPham].length;
-  inner2.appendChild(h32);
-  const p2 = document.createElement("p");
-  p2.textContent = "Sản phẩm";
-  inner2.appendChild(p2);
-  cardBox2.appendChild(inner2);
-  const icon2 = document.createElement("div");
-  icon2.classList.add("icon");
-  const i2 = document.createElement("i");
-  i2.classList.add("fas", "fa-clipboard-check");
-  icon2.appendChild(i);
-  cardBox2.appendChild(icon2);
-  const a2 = document.createElement("a");
-  a2.classList.add("card-box-footer");
-  a2.href="#";
-  a2.textContent ="Chi tiết &nbsp;"
-  const muiTen2 = document.createElement("i");
-  muiTen2.classList.add("fa", "fa-arrow-circle-right");
-  a2.appendChild(muiTen2);
-  cardBox.appendChild(a2);
-  cardContainer2.appendChild(cardBox2);
-  board.appendChild(cardContainer2);
+var tabsanpham = document.getElementById("sanpham");
+if (tabsanpham) {
+  tabsanpham.addEventListener("click", () => {
+    caiParamUrl({ tab: "sanpham" }, false);
+  });
+}
 
+var tabhoadon = document.getElementById("hoadon");
+if (tabhoadon) {
+  tabhoadon.addEventListener("click", () => {
+    caiParamUrl({ tab: "hoadon" }, false);
+  });
+}
 
-}*/
+function onPageLoad() {
+  const params = layParamUrl();
+  const tab = params["tab"] || "thongke";
+  switch (tab) {
+    case "thongke":
+      loadTabContent("thongke", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocTop();
+            tinhTopHienThi();
+            themChuyenTrangVaoThongKe();
+            themDuLieuVaoTheThongKe();
+          })
+        )
+      );
+      if (tabthongke) {
+        tabthongke.classList.add("isActive");
+      }
+      break;
+    case "nguoidung":
+      loadTabContent("nguoidung", () =>
+        taiDuLieuTongMainJs(() =>
+          taiNguoiDung(() => {
+            taoBoLocNguoiDung();
+          })
+        )
+      );
+
+      tabnguoidung.classList.add("isActive");
+      break;
+    case "sanpham":
+      loadTabContent("sanpham", () =>
+        taiDuLieuTongMainJs(() => taiSanPham(() => {}))
+      );
+      tabsanpham.classList.add("isActive");
+      break;
+    case "hoadon":
+      loadTabContent("hoadon", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocHoaDon();
+          })
+        )
+      );
+
+      tabhoadon.classList.add("isActive");
+      break;
+    case "bieudo-test":
+      loadTabContent("bieudo-test", () =>
+        taiDuLieuTongMainJs(() => taiHoaDon(() => {}))
+      );
+      doiMauBackGround();
+      break;
+    default:
+      loadTabContent("thongke", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocTop();
+            tinhTopHienThi();
+            themChuyenTrangVaoThongKe();
+            themDuLieuVaoTheThongKe();
+          })
+        )
+      );
+      tabnguoidung.classList.add("isActive");
+  }
+}
+
+function taoBoLocNguoiDung() {
+  // Lấy form
+  const form = document.getElementById("filter");
+  if (!form) {
+    console.error("Không tìm thấy form #filter");
+    return;
+  }
+
+  // Lấy các phần tử trong form
+  const disabledSelect = document.getElementById("disabled");
+  const sortSelect = document.getElementById("sort");
+
+  // Kiểm tra và lưu lại các giá trị từ URL
+  const { disabled, sort } = layParamUrl(); // Hàm giả định lấy params từ URL
+  if (disabled !== undefined) disabledSelect.value = disabled;
+  if (sort !== undefined) sortSelect.value = sort;
+
+  // Xử lý khi form được submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Lấy giá trị từ form
+    const formData = new FormData(form);
+    const filterParams = {};
+    formData.forEach((value, key) => {
+      filterParams[key] = value;
+    });
+
+    // Kiểm tra và hiển thị cảnh báo nếu cần
+    if (!filterParams.disabled && !filterParams.sort) {
+      alert("Vui lòng chọn ít nhất một bộ lọc hoặc sắp xếp");
+      return;
+    }
+
+    // Cập nhật URL hoặc gửi dữ liệu qua AJAX
+    caiParamUrl(filterParams); // Hàm giả định cập nhật URL hoặc gửi request
+  });
+}
+
+function taoBoLocHoaDon() {
+  // Lấy form và các phần tử bên trong
+  const form = document.getElementById("filterHoaDon");
+  if (!form) {
+    console.error("Không tìm thấy form #filterHoaDon");
+    return;
+  }
+
+  const handleSelect = document.getElementById("handle");
+  const sortSelect = document.getElementById("sort");
+
+  // Lấy dữ liệu từ URL và hiển thị lại trên form
+  const { handle, sort } = layParamUrl(); // Hàm lấy dữ liệu từ URL
+  if (handle !== undefined) handleSelect.value = handle;
+  if (sort !== undefined) sortSelect.value = sort;
+
+  // Xử lý sự kiện submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    // Thu thập dữ liệu từ form
+    const formData = new FormData(form);
+    const filterParams = {};
+    formData.forEach((value, key) => {
+      filterParams[key] = value;
+    });
+
+    // Hiển thị thông báo nếu không chọn gì
+    if (!filterParams.handle && !filterParams.sort) {
+      alert("Vui lòng chọn ít nhất một bộ lọc hoặc sắp xếp");
+      return;
+    }
+
+    // Gửi dữ liệu hoặc cập nhật URL
+    caiParamUrl(filterParams); // Hàm giả định gửi request hoặc reload trang
+  });
+}
+
+function taoBoLocTop() {
+  const form = document.getElementById("filterTop");
+  if (!form) {
+    console.error("Không tìm thấy form #filterTop");
+    return;
+  }
+
+  const topspSelect = document.getElementById("topsp");
+  const topndSelect = document.getElementById("topnd");
+
+  // Lấy tham số từ URL
+  const { topsp, topnd } = layParamUrl();
+  if (topsp) topspSelect.value = topsp;
+  if (topnd) topndSelect.value = topnd;
+
+  // Xử lý submit
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const params = new FormData(form);
+    const filterParams = {};
+    params.forEach((value, key) => {
+      filterParams[key] = value;
+    });
+    caiParamUrl(filterParams);
+  });
+}
+
+function themChuyenTrangVaoThongKe() {
+  var chuyenTrangSanPham = document.getElementById("cardsanpham");
+  if (!chuyenTrangSanPham) {
+    console.error("Không tìm thấy id de chuyen trang san pham");
+    return;
+  }
+  chuyenTrangSanPham.addEventListener("click", () => {
+    caiParamUrl({ tab: "sanpham" }, false);
+  });
+  var chuyenTrangNguoiDung = document.getElementById("cardnguoidung");
+  if (!chuyenTrangNguoiDung) {
+    console.error("Không tìm thấy id de chuyen trang nguoi dung");
+    return;
+  }
+  chuyenTrangNguoiDung.addEventListener("click", () => {
+    caiParamUrl({ tab: "nguoidung" }, false);
+  });
+  var chuyenTrangHoaDon = document.getElementById("cardhoadon");
+  if (!chuyenTrangHoaDon) {
+    console.error("Không tìm thấy id de chuyen trang nguoi dung");
+    return;
+  }
+  chuyenTrangHoaDon.addEventListener("click", () => {
+    caiParamUrl({ tab: "hoadon" }, false);
+  });
+  var chuyenTrangBieuDo = document.getElementById("carddoanhthu");
+  if (!chuyenTrangBieuDo) {
+    console.error("khong tim thay id de chuyen trang bieu do");
+    return;
+  }
+  chuyenTrangBieuDo.addEventListener("click", () => {
+    caiParamUrl({ tab: "bieudo-test" }, false);
+  });
+}
+
+function doiMauBackGround() {
+  var bg = document.getElementById("content-wrapper");
+  if (!bg) {
+    console.error("khong tim thay content wrapper");
+    return;
+  }
+  bg.classList.add("change-background");
+}
+
+function themDuLieuVaoTheThongKe() {
+  const soLieuSp = thongKeGioHang();
+  var soLieuSanPham = document.querySelector(".bg-mattRed .inner h3");
+  soLieuSanPham.textContent = soLieuSp["totalProductCount"];
+  var tenSoLieuSanPham = document.querySelector(".bg-mattRed .inner p");
+  tenSoLieuSanPham.textContent = soLieuSp["uniqueProductCount"] + " mặt hàng";
+  const soLieuHd = thongKeDonHang();
+  var soLieuHoaDon = document.querySelector(".bg-green .inner h3");
+  soLieuHoaDon.textContent = soLieuHd["orderCount"];
+  var tenSoLieuHoaDon = document.querySelector(".bg-green .inner p");
+  tenSoLieuHoaDon.textContent = "Đơn hàng";
+  const soLieuTk = thongKeTaiKhoan();
+  var soLieuTaiKhoan = document.querySelector(".bg-orange .inner h3");
+  soLieuTaiKhoan.textContent = soLieuTk["activeCount"];
+  var tenSoLieuTaiKhoan = document.querySelector(".bg-orange .inner p");
+  tenSoLieuTaiKhoan.textContent = "Tài khoản đang hoạt động";
+  const soLieuTc = thongKeTruyCap();
+  var soLieuLuotXem = document.querySelector(".bg-blue .inner h3");
+  soLieuLuotXem.textContent = soLieuTc["viewCountThisMonth"];
+  var tenSoLieuLuotXem = document.querySelector(".bg-blue .inner p");
+  tenSoLieuLuotXem.textContent = "Lượt truy cập trang";
+  var soLieuXemAd = document.querySelector(".bg-maroon .inner h3");
+  soLieuXemAd.textContent = soLieuTc["adsClicksThisMonth"];
+  var tenSoLieuXemAd = document.querySelector(".bg-maroon .inner p");
+  tenSoLieuXemAd.textContent = "Lượt nhấn vào quảng cáo";
+  const soLieuTg = thongKeThoiGian();
+  if (soLieuTg) {
+    var soLieuDoanhThu = document.querySelector(".bg-red .inner h3");
+    soLieuDoanhThu.textContent = thongKeDoanhThu().toLocaleString("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    var tenSoLieuDoanhThu = document.querySelector(".bg-red .inner p");
+    tenSoLieuDoanhThu.textContent = "Doanh thu tháng";
+  }
+}
+
+// !!!  CHU Y --------------------------------------------------------------------------------------------
+/*function thongKeSanPham({ ngay, thang, nam } = {}) {
+  return Object.entries(
+    g_hoaDon.reduce((spSl, hd) => {
+      // Kiểm tra điều kiện lọc ngày
+      if (!shouldProcessDate(hd["ngay-tao"], { ngay, thang, nam })) return spSl;
+
+      // Xử lý từng chi tiết hóa đơn
+      hd["chi-tiet"].forEach((ct) => {
+        const sp = ct["san-pham"];
+        spSl[sp] = (spSl[sp] ?? 0) + ct["so-luong"];
+      });
+      return spSl;
+    }, {})
+  ).map(([spId, sl]) => {
+    const sp = timSanPham(spId);
+
+    // Nếu không tìm thấy sản phẩm
+    if (!sp) {
+      console.warn(`Không tìm thấy sản phẩm với ID: ${spId}`);
+      return {
+        id: spId,
+        name: "Unknown Product", // Tên mặc định nếu không tìm thấy sản phẩm
+        "so-luong": sl,
+        "tong-thu": 0, // Không tính doanh thu cho sản phẩm không tồn tại
+      };
+    }
+
+    // Nếu sản phẩm tồn tại
+    return {
+      ...sp,
+      "so-luong": sl,
+      "tong-thu": sl * (sp["price-sale-n"] ?? 0), // Giá trị mặc định là 0 nếu `price-sale-n` không tồn tại
+    };
+  });
+}
+function thongKeNguoiDung({ ngay, thang, nam } = {}) {
+  return Object.entries(
+    g_hoaDon.reduce((ndCt, hd) => {
+      // Lọc các hóa đơn dựa trên ngày
+      if (!shouldProcessDate(hd["ngay-tao"], { ngay, thang, nam })) return ndCt;
+
+      const nd = hd["nguoi-dung"];
+      if (!ndCt[nd]) ndCt[nd] = { "tieu-thu": {}, "so-don": 0 };
+
+      // Tăng số đơn của người dùng
+      ndCt[nd]["so-don"] += 1;
+
+      // Thống kê tiêu thụ sản phẩm của người dùng
+      hd["chi-tiet"].forEach((ct) => {
+        const sp = ct["san-pham"];
+        ndCt[nd]["tieu-thu"][sp] =
+          (ndCt[nd]["tieu-thu"][sp] ?? 0) + ct["so-luong"];
+      });
+
+      return ndCt;
+    }, {})
+  ).map(([ndId, ct]) => {
+    const tt = ct["tieu-thu"];
+
+    // Lấy thông tin người dùng
+    const nguoiDung = timNguoiDung(ndId);
+    if (!nguoiDung) {
+      console.warn(`Không tìm thấy người dùng với ID: ${ndId}`);
+      return {
+        id: ndId,
+        name: "Unknown User",
+        "so-don": ct["so-don"],
+        "loai-da-mua": Object.keys(tt).length,
+        "da-mua": Object.values(tt).reduce((sum, qty) => sum + qty, 0),
+        "tong-chi": 0, // Không tính tổng chi cho người dùng không tồn tại
+      };
+    }
+
+    // Tính tổng chi
+    const tongChi = Object.entries(tt).reduce((total, [spId, qty]) => {
+      const sp = timSanPham(spId);
+      if (!sp) {
+        console.warn(`Không tìm thấy sản phẩm với ID: ${spId}`);
+        return total; // Bỏ qua sản phẩm không tồn tại
+      }
+      const priceSale = sp["price-sale-n"] ?? 0; // Giá trị mặc định nếu thiếu
+      return total + qty * priceSale;
+    }, 0);
+
+    return {
+      ...nguoiDung,
+      "so-don": ct["so-don"],
+      "loai-da-mua": Object.keys(tt).length,
+      "da-mua": Object.values(tt).reduce((sum, qty) => sum + qty, 0),
+      "tong-chi": tongChi,
+    };
+  });
+}
+
+function thongKeThoiGian() {
+  const yearlyResult = {};
+
+  // Step 1: Fill daily data
+  g_hoaDon.forEach((hoaDon) => {
+    const ngayTao = new Date(hoaDon["ngay-tao"]);
+    const year = ngayTao.getFullYear();
+    const month = ngayTao.getMonth() + 1; // getMonth() is zero-based
+    const day = ngayTao.getDate();
+
+    if (!yearlyResult[year]) {
+      yearlyResult[year] = {
+        "chi-tiet": Array(12)
+          .fill()
+          .map(() => ({
+            "so-don": 0,
+            "so-khach-set": new Set(),
+            "so-khach": 0,
+            "loai-da-ban-set": new Set(),
+            "loai-da-ban": 0,
+            "da-ban": 0,
+            "tong-thu": 0,
+            "chi-tiet": [],
+          })),
+      };
+    }
+    if (yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"].length === 0) {
+      yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"] = Array(
+        new Date(year, month, 0).getDate()
+      )
+        .fill()
+        .map(() => ({
+          "so-don": 0,
+          "so-khach-set": new Set(),
+          "so-khach": 0,
+          "loai-da-ban-set": new Set(),
+          "loai-da-ban": 0,
+          "da-ban": 0,
+          "tong-thu": 0,
+        }));
+    }
+
+    const dayData =
+      yearlyResult[year]["chi-tiet"][month - 1]["chi-tiet"][day - 1];
+    dayData["so-don"] += 1;
+    dayData["so-khach-set"].add(hoaDon["nguoi-dung"]);
+    hoaDon["chi-tiet"].forEach((chiTiet) => {
+      dayData["loai-da-ban-set"].add(chiTiet["san-pham"]);
+      dayData["da-ban"] += chiTiet["so-luong"];
+      const sanPham = timSanPham(chiTiet["san-pham"]);
+      if(sanPham!= null || sanPham != undefined)
+      dayData["tong-thu"] +=
+        (sanPham["price-sale-n"] || 0) * chiTiet["so-luong"];
+    });
+  });
+
+  // Step 2: Aggregate monthly data
+  Object.entries(yearlyResult).forEach(([year, yearData]) => {
+    yearData["chi-tiet"].forEach((monthDetail, monthIndex) => {
+      const monthData = {
+        "so-don": 0,
+        "so-khach-set": new Set(),
+        "so-khach": 0,
+        "loai-da-ban-set": new Set(),
+        "loai-da-ban": 0,
+        "da-ban": 0,
+        "tong-thu": 0,
+        "chi-tiet": monthDetail["chi-tiet"],
+      };
+
+      monthData["chi-tiet"].forEach((dayData) => {
+        monthData["so-don"] += dayData["so-don"];
+        dayData["so-khach-set"].forEach(
+          monthData["so-khach-set"].add,
+          monthData["so-khach-set"]
+        );
+        dayData["so-khach"] = dayData["so-khach-set"].size;
+        dayData["loai-da-ban-set"].forEach(
+          monthData["loai-da-ban-set"].add,
+          monthData["loai-da-ban-set"]
+        );
+        dayData["loai-da-ban"] = dayData["loai-da-ban-set"].size;
+        monthData["da-ban"] += dayData["da-ban"];
+        monthData["tong-thu"] += dayData["tong-thu"];
+      });
+
+      yearlyResult[year]["chi-tiet"][monthIndex] = {
+        ...monthData,
+        "so-khach": monthData["so-khach-set"].size,
+        "loai-da-ban": monthData["loai-da-ban-set"].size,
+      };
+    });
+  });
+
+  // Step 3: Aggregate yearly data
+  Object.entries(yearlyResult).forEach(([year, yearDetail]) => {
+    const yearData = {
+      "so-don": 0,
+      "so-khach-set": new Set(),
+      "so-khach": 0,
+      "loai-da-ban-set": new Set(),
+      "loai-da-ban": 0,
+      "da-ban": 0,
+      "tong-thu": 0,
+      "chi-tiet": yearDetail["chi-tiet"],
+    };
+
+    yearData["chi-tiet"].forEach((monthData) => {
+      yearData["so-don"] += monthData["so-don"];
+      monthData["so-khach-set"].forEach(
+        yearData["so-khach-set"].add,
+        yearData["so-khach-set"]
+      );
+      monthData["loai-da-ban-set"].forEach(
+        yearData["loai-da-ban-set"].add,
+        yearData["loai-da-ban-set"]
+      );
+      yearData["da-ban"] += monthData["da-ban"];
+      yearData["tong-thu"] += monthData["tong-thu"];
+    });
+
+    yearlyResult[year] = {
+      ...yearData,
+      "so-khach": yearData["so-khach-set"].size,
+      "loai-da-ban": yearData["loai-da-ban-set"].size,
+    };
+  });
+
+  // Step 4: Aggregate all years into the final object
+  const allTimeResult = {
+    "so-don": 0,
+    "so-khach-set": new Set(),
+    "so-khach": 0,
+    "loai-da-ban-set": new Set(),
+    "loai-da-ban": 0,
+    "da-ban": 0,
+    "tong-thu": 0,
+    "chi-tiet": yearlyResult, // Use the result from Steps 1-3
+  };
+
+  Object.values(yearlyResult).forEach((yearData) => {
+    allTimeResult["so-don"] += yearData["so-don"];
+    yearData["so-khach-set"].forEach(
+      allTimeResult["so-khach-set"].add,
+      allTimeResult["so-khach-set"]
+    );
+    yearData["loai-da-ban-set"].forEach(
+      allTimeResult["loai-da-ban-set"].add,
+      allTimeResult["loai-da-ban-set"]
+    );
+    allTimeResult["da-ban"] += yearData["da-ban"];
+    allTimeResult["tong-thu"] += yearData["tong-thu"];
+  });
+
+  allTimeResult["so-khach"] = allTimeResult["so-khach-set"].size;
+  allTimeResult["loai-da-ban"] = allTimeResult["loai-da-ban-set"].size;
+
+  return allTimeResult;
+}
+*/

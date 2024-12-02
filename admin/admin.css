@@ -665,7 +665,10 @@ table {
 tr {
   transition: all 0.5s ease-in;
 }
-
+h1 {
+  color: #fff;
+  text-align: center;
+}
 /*-------------------------------------------------------*/
 /*QUAN LY DON HANG*/
 #quanlydonhang {
@@ -732,26 +735,46 @@ td {
   background-color: #212529;
 }
 
-
-
-#filterTop{
-  gap:10px;
-  right:20px;
+#filterTop {
+  gap: 10px;
+  right: 20px;
 }
 #filterTop label {
-  color:#fff;
+  color: #fff;
   font-size: 15px;
 }
 
-.best-seller{
-  display:flex;
+.best-seller {
+  display: flex;
   flex-direction: row;
   justify-content: space-around;
-
-  
 }
 
+#content-wrapper {
+  margin-left: 80px;
+  width: 100%;
+}
 
+.tieu-de h1 {
+  text-align: center;
+  padding: 15px 15px;
+  color: #fff;
+}
+
+table th {
+  background-color: #303232;
+}
+
+table tr:hover {
+  background-color: #6c757d;
+}
+form {
+  color: #fff;
+}
+
+.change-background {
+  background-color: #d3d3d3;
+}
 /*-------------------------------------------------------*/
 .Dark {
   --blackLight: #303337;
@@ -854,4 +877,71 @@ html {
 @font-face {
   src: url("../font/Signika/static/Signika-Regular.ttf");
   font-family: "Signika";
+}
+
+.topbar {
+  background-color: #333;
+  padding: 10px 20px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.topbar-toggler {
+  background: none;
+  border: 1px solid #fff;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+.topbar-collapse {
+  display: none;
+  flex-direction: column;
+  background-color: #444;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.topbar-content {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.topbar-item {
+  margin: 5px 0;
+}
+.topbar-link {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+.avatar-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.topbar-dropmenu {
+  display: none;
+  position: absolute;
+  background-color: #555;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+.topbar-dropmenu a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  margin: 5px 0;
+}
+.topbar-item:hover .topbar-dropmenu {
+  display: block;
 }

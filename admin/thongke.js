@@ -311,28 +311,3 @@ function thongKeThoiGian() {
 async function thongKeThoiGian2() {
   return await (await fetch("./tktgv18.json")).json();
 }
-
-// JSON.parse(
-//   JSON.stringify({ dataVersion, ...thongKeThoiGian() }, (key, value) =>
-//     value instanceof Set ? [...value] : value
-//   )
-// );
-
-// taiDuLieu(nguoiDungKey, nguoiDungFile).then((data) => {
-//     g_nguoiDung = data;
-//     i_nguoiDung =
-//       taiDuLieuLocalStorage(nguoiDungImKey) ??
-//       createIndexMapping(g_nguoiDung, nguoiDungIdKey);
-//   });
-//   taiDuLieu(sanPhamKey, sanPhamFile).then((data) => {
-//     g_sanPham = data;
-//     i_sanPham =
-//       taiDuLieuLocalStorage(sanPhamImKey) ??
-//       createIndexMapping(g_sanPham, sanPhamIdKey);
-//   });
-//   taiDuLieu(hoaDonKey, hoaDonFile).then((data) => {
-//     g_hoaDon = data;
-//     i_hoaDon =
-//       taiDuLieuLocalStorage(hoaDonImKey) ??
-//       createIndexMapping(g_hoaDon, hoaDonIdKey);
-//   });

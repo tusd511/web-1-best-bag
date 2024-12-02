@@ -14,26 +14,97 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
-    <script src="../main.js"></script>
-    <script src="./admin.js"></script>
+
     <title>Web 1 Best Bag</title>
   </head>
   <body>
-    
-    <div class="debug-table"></div>
-    <div class="statistical"></div>
-    <div class="best-seller">
-      <div class="select-topsanpham"></div>
-      <div class="topsanpham"></div>
-      <div class="select-topkhachhang"></div>
-      <div class="topkhachhang"></div>
-    </div>
+    <form id="filterHoaDon">
+      <label for="xu-ly">Lọc hóa đơn:</label>
+      <select id="handle" name="handle">
+        <option>Chưa chọn</option>
+        <option value="chua">Chưa xử lý</option>
+        <option value="dang">Đang xử lý</option>
+        <option value="huy">Chờ thanh toán</option>
+        <option value="roi">Đã xử lý</option>
+      </select>
+      <label for="sort">&nbsp; Sắp xếp theo:</label>
+      <select id="sort" name="sort">
+        <option value="">Chưa chọn</option>
+        <option value="asc">Đầu tiên</option>
+        <option value="desc">Gần đây</option>
+      </select>
+      <button type="submit" id="applyFilter">Áp dụng</button>
+    </form>
+    <form id="filter">
+      <label for="disabled">&nbsp; Lọc tài khoản:</label>
+      <select id="disabled" name="disabled">
+        <option value="0">Chưa chọn</option>
+        <option value="1">Bị Khóa</option>
+        <option value="-1">Không Khóa</option>
+      </select>
+      <label for="sort">&nbsp; Sắp xếp theo:</label>
+      <select id="sort" name="sort">
+        <option value="">Chưa chọn</option>
+        <option value="asc">Khách hàng lâu năm</option>
+        <option value="desc">Khách hàng mới</option>
+      </select>
+      <button type="submit" id="apply">Áp dụng</button>
+    </form>
+    <form id="productForm" style="border: 1px solid green">
+      <label for="search">Name:</label>
+      <input type="text" id="search" name="search" placeholder="Product Name" />
+
+      <label for="priceRange">Price Range:</label>
+      <input type="number" id="minPrice" name="min" placeholder="Min Price" />
+      <input type="number" id="maxPrice" name="max" placeholder="Max Price" />
+
+      <label for="categories">Categories:</label>
+      <div id="categories"></div>
+
+      <label for="sortBy">Sort By:</label>
+      <select id="sortBy" name="sort">
+        <option value selected>(Chua chon)</option>
+        <option value="asc">Price Ascending</option>
+        <option value="desc">Price Descending</option>
+        <option value="best">Best Match</option>
+      </select>
+
+      <button type="submit">Search</button>
+    </form>
+    <form id="filterTop">
+      <label for="topsp">Top Sản Phẩm</label>
+      <select name="topsp" id="topsp">
+        <option value="ban-chay">Top Sản Phẩm Bán Chạy</option>
+        <option value="doanh-thu">Top Sản Phẩm Doanh Thu</option>
+      </select>
+      <label for="topnd">Top Khách Hàng</label>
+      <select name="topnd" id="topnd">
+        <option value="nhieu-don-nhat">Top Khách Lên Đơn</option>
+        <option value="nhieu-loai-nhat">Top Khách Mua Nhiều Loại</option>
+        <option value="nhieu-hang-nhat">Top Khách Mua Nhiều</option>
+        <option value="nhieu-tien-nhat">Top Khách Chi Tiêu</option>
+      </select>
+      <button type="submit" id="applyFilterTop">Hiển Thị</button>
+    </form>
+
+    <div class="topsanpham"></div>
+
+    <!-- <div class="topkhachhang"></div> -->
+    <!-- <div class="debug-table"></div> -->
+    <!-- <div class="statistical"></div> -->
+    <!-- <div class="best-seller"> -->
+    <!-- <div class="select-topsanpham"></div> -->
+    <!-- <div class="topsanpham"></div> -->
+    <!-- <div class="select-topkhachhang"></div> -->
+    <!-- <div class="topkhachhang"></div> -->
+    <!-- </div> -->
     <div class="product-list"></div>
     <div class="pagination"></div>
     <div class="account-list"></div>
     <div class="pagination2"></div>
     <div class="order-list"></div>
     <div class="pagination3"></div>
-    
   </body>
+  <script src="../main.js"></script>
+  <script src="./admin.js"></script>
 </html>
