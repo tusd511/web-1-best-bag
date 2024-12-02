@@ -217,7 +217,7 @@ function hienThiNguoiDung(duLieuNguoiDungDaTinh, wrapperSelector) {
 function renderItemNguoiDung(nguoiDung) {
   const rowNguoiDung = document.createElement("tr");
   const ngaytao = document.createElement("td");
-  ngaytao.textContent = nguoiDung["ngay-tao"];
+  ngaytao.textContent = formatDateLocaleVn(nguoiDung["ngay-tao"]);
   rowNguoiDung.appendChild(ngaytao);
   const name = document.createElement("td");
   name.textContent = nguoiDung["name"];
@@ -385,12 +385,13 @@ function hienThiHoaDon(duLieuHoaDonDaTinh, wrapperSelector) {
 function renderItemHoaDon(hoaDon) {
   const rowHoaDon = document.createElement("tr");
   const ngayTaoHoaDon = document.createElement("td");
-  ngayTaoHoaDon.textContent = hoaDon["ngay-tao"];
+  ngayTaoHoaDon.textContent = formatDateLocaleVn(hoaDon["ngay-tao"]);
   rowHoaDon.appendChild(ngayTaoHoaDon);
   const khachHang = document.createElement("td");
   khachHang.textContent = timNguoiDung(hoaDon["nguoi-dung"])["name"];
   rowHoaDon.appendChild(khachHang);
   const chiTietHoaDon = document.createElement("td");
+  chiTietHoaDon.colSpan = "2";
   const minitable = document.createElement("table");
   minitable.style.borderCollapse = "collapse";
   for (let i = 0; i < hoaDon["chi-tiet"].length; i++) {
@@ -402,8 +403,6 @@ function renderItemHoaDon(hoaDon) {
     } else {
       tdmini.textContent = "!!! Khong tim thay san pham";
     }
-
-    trmini.appendChild(tdmini);
     const tdmini2 = document.createElement("td");
     if (checksp) {
       tdmini2.textContent = hoaDon["chi-tiet"][i]["so-luong"];
@@ -411,6 +410,7 @@ function renderItemHoaDon(hoaDon) {
       tdmini2.textContent = "#";
     }
     trmini.appendChild(tdmini2);
+    trmini.appendChild(tdmini);
     minitable.appendChild(trmini);
   }
   chiTietHoaDon.appendChild(minitable);
@@ -489,11 +489,23 @@ function hienThiDanhSachHoaDon(
   th2.textContent = "Người dùng";
   th3.textContent = "Chi tiết";
   th4.textContent = "Đã xác nhận";
+  th.rowSpan = "2";
+  th2.rowSpan = "2";
+  th3.colSpan = "2"; // Span two columns for "Chi tiết"
+  th4.rowSpan = "2";
+  const tr2 = document.createElement("tr"); // Second row
+  const th3_1 = document.createElement("th");
+  const th3_2 = document.createElement("th");
+  th3_1.textContent = "SL";
+  th3_2.textContent = "Tên Sản Phẩm";
+  tr2.appendChild(th3_1);
+  tr2.appendChild(th3_2);
   tr.appendChild(th);
   tr.appendChild(th2);
   tr.appendChild(th3);
   tr.appendChild(th4);
   thead.appendChild(tr);
+  thead.appendChild(tr2);
   table.appendChild(thead);
   const tbody = document.createElement("tbody");
   const { duLieuHoaDonDaLoc, soPageToiDa } = duLieuHoaDonDaTinh;

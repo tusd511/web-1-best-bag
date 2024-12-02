@@ -701,6 +701,18 @@ td {
 .container-hoadon {
   overflow-y: auto;
 }
+.order-table td,
+th {
+  padding: 0;
+}
+.order-table > tbody > tr > td:nth-child(3) td:nth-child(1),
+.order-table > thead > tr:nth-child(2) > th:nth-child(1) {
+  width: 30px;
+}
+.order-table > tbody > tr > td:nth-child(3) td:nth-child(2),
+.order-table > thead > tr:nth-child(2) > th:nth-child(2) {
+  text-align: start;
+}
 .order-table tbody tr {
   display: table-row;
   height: auto;
