@@ -221,6 +221,19 @@ function sapXepSanPham(thuTu, sanPhamsDaLoc) {
     return sanPhamsDaLoc.toSorted((a, b) => a.matchScore - b.matchScore);
   return sanPhamsDaLoc;
 }
+
+function locGiaCaoNhat(max, sanPhamsDaLoc) {
+  if (max != null && !isNaN(max))
+    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] <= max);
+  return sanPhamsDaLoc;
+}
+
+function locGiaThapNhat(min, sanPhamsDaLoc) {
+  if (min != null && !isNaN(min))
+    return sanPhamsDaLoc.filter((sanPham) => sanPham["price-sale-n"] >= min);
+  return sanPhamsDaLoc;
+}
+
 function timTheoTen(name, sanPhamsDaLoc) {
   const sanitizedInput = name.normalize().toLowerCase();
   const keywords = sanitizedInput.split(/\s+/);
