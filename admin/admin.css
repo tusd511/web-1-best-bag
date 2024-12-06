@@ -957,3 +957,352 @@ html {
 .topbar-item:hover .topbar-dropmenu {
   display: block;
 }
+
+
+.button-container{
+  justify-content: center;
+  text-align: right;
+  margin-top: 20px;
+  margin-left: 20px;
+  align-items: center;
+}
+
+.mode-button{
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.mode-button:hover{
+  box-shadow: 0 10px 20px rgba(255, 255, 255, 0.8);
+  transform: translateY(-3px);
+}
+
+.color-add{
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+}
+
+.color-edit{
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+  background: linear-gradient(135deg, #159ee2, #03537a);
+}
+
+.color-delete{
+  box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
+  background: linear-gradient(135deg, #E53935, #D32F2F);
+}
+
+.ready-for-delete{
+  background: linear-gradient(135deg, #cc0000, #990000);
+   /* Nền đỏ gradient */
+  color: white; /* Chữ trắng nổi bật */
+  border: 3px solid #fff; /* Không viền */
+  box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.5); /* Ánh sáng đỏ từ bên trong */
+  transition: background 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng mượt */
+}
+
+/*
+--------------------------------------------------------------------------------
+*/
+
+
+#editFormDialog {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top:20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #303232;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* Tiêu đề của form */
+#editFormDialog h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #fff;
+}
+
+/* Style cho form */
+#editForm {
+  display: block;
+  margin-top: 20px;
+}
+
+/* Label */
+#editForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Input fields */
+#editForm input[type="text"],
+#editForm input[type="email"],
+#editForm input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #ccc;
+}
+
+/* Checkbox style */
+#editForm input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* Nút Cập nhật */
+#editForm button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#editForm button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Nút Thoát */
+#closeFormBtn {
+  background-color: #a7140a;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+}
+
+#closeFormBtn:hover {
+  background-color: #e53935;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+dialog {
+  width:500px;
+  border: none;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+
+/*
+--------------------------------------------------------------------------------
+*/
+#productForm {
+  margin-left:35px;
+  width: 95%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-height: 90px;  /* Ban đầu form sẽ chỉ cao như vậy */
+  overflow: hidden;  /* Ẩn phần ngoài vùng giới hạn */
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;  /* Hiệu ứng thu gọn/mở rộng */
+}
+
+#productForm:hover {
+  max-height: 700px;  /* Khi hover, form sẽ mở rộng */
+  padding: 20px;  /* Khoảng cách trong form sẽ rộng hơn khi mở rộng */
+}
+
+#productForm label {
+  display: block;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+#productForm input,
+#productForm select {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;  /* Đảm bảo input không tràn ra ngoài */
+}
+
+#productForm button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#productForm button:hover {
+  background-color: #45a049;
+}
+
+#categories{
+  display:flex;
+  gap:20px;
+}
+
+
+/*
+--------------------------------------------------------------------------------
+*/
+#infoFormDialog {
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top:20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #303232;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+#infoFormDialog h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #fff;
+}
+#infoForm {
+  display: block;
+  margin-top: 20px;
+}
+#editForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #fff;
+}
+#infoForm input[type="text"],
+#infoForm input[type="number"],
+#infoForm input[type="files"],
+#infoForm select,
+#infoForm textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: #ccc;
+}
+#infoForm button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+  margin-top:20px;
+  margin-bottom: 10px;
+}
+#infoForm button[type="submit"]:hover {
+  background-color: #45a049;
+}
+#cancel-button {
+  background-color: #a7140a;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  width: 100%;
+}
+
+#cancel-button:hover {
+  background-color: #e53935;
+}
+/*
+--------------------------------------------------------------------------------
+*/
+#invoiceDialog{
+  margin-left:20px;
+  margin-top:20px;
+  background:#303232;
+  width:100vw;
+  justify-content: center;
+}
+#invoiceForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap:20px;
+  width:100%;
+}
+.left-invoice input[type="number"]{
+  text-align: center;
+}
+.left-invoice {
+  width:48%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.right-invoice{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap:20px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.tiny-image{
+  width:40px;
+  height: auto;
+}
+.lagre-image{
+  width: 200px;
+  height:auto;
+}
+.tooltip{
+  display:none;
+  position: absolute;
+  transform: translateX(-50%);
+  top: 100%;
+  left:150%;
+  z-index:10;
+  background-color: #323232;
+  border: 1px solid #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding:5px;
+}
+#invoiceDialog button{
+  background-color: transparent;
+  border:1px solid #ccc;
+  width: 40px;
+  height:auto;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.buttonForm{
+  display: flex;
+  justify-content: flex-end;
+  width:100%;
+}
+/*
+--------------------------------------------------------------------------------
+*/

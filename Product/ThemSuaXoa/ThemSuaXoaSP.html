@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thêm/Sửa Sản Phẩm</title>
+    <link rel="stylesheet" href="ThemSuaXoaSP.css" />
+  </head>
+  <body>
+    <div class="product-form-container">
+      <form id="productAddEditForm">
+        <h2 id="formTitle">Thêm Sản Phẩm Mới</h2>
+
+        <div class="form-group">
+          <label for="productImage">Hình ảnh:</label>
+          <input type="file" id="productImage" name="image" accept="image/*" />
+          <div id="imagePreview"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="productName">Tên sản phẩm:</label>
+          <input type="text" id="productName" name="name" required />
+        </div>
+
+        <div class="form-group">
+          <label for="productCategory">Danh mục:</label>
+          <select id="productCategory" name="category" required>
+            <option value="">Chọn danh mục</option>
+            <option value="tote">Tote</option>
+            <option value="standard">Standard</option>
+            <option value="sling">Sling</option>
+            <option value="messenger">Messenger</option>
+            <option value="laptop">Laptop</option>
+            <option value="duffle">Duffle</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="productDescription">Mô tả:</label>
+          <textarea
+            id="productDescription"
+            name="description"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="productOriginalPrice">Giá gốc:</label>
+          <input
+            type="number"
+            id="productOriginalPrice"
+            name="price-n"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="productSalePrice">Giá khuyến mãi:</label>
+          <input
+            type="number"
+            id="productSalePrice"
+            name="price-sale-n"
+            min="0"
+            required
+          />
+        </div>
+
+        <div class="form-buttons">
+          <button type="submit" id="submitBtn">Lưu</button>
+          <button type="button" id="cancelBtn">Hủy</button>
+        </div>
+      </form>
+    </div>
+    <script src="../main.js"></script>
+    <script src="admin.js"></script>
+    <script src="ThemSuaXoaSP.js"></script>
+  </body>
+</html>
