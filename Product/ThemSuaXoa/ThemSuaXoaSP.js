@@ -13,7 +13,7 @@ function adminSuaSanPham(id) {
   // Lưu sản phẩm cần sửa vào localStorage
   localStorage.setItem("editing-product", JSON.stringify(sanPham));
   // Chuyển đến trang form với mode sửa
-  window.location.href = "pra.html?mode=edit";
+  window.location.href = "ThemSuaXoaSP.html?mode=edit";
 }
 
 function adminXoaSanPham(id) {
@@ -33,8 +33,8 @@ function adminXoaSanPham(id) {
     }
   }
 }
-// Xử lý form trong pra.html
-if (window.location.pathname.includes("pra.html")) {
+// Xử lý form trong ThemSuaXoaSP.html
+if (window.location.pathname.includes("ThemSuaXoaSP.html")) {
   window.addEventListener("load", () => {
     const form = document.getElementById("productAddEditForm");
     const formTitle = document.getElementById("formTitle");

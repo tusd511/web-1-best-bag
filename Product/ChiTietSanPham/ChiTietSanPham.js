@@ -15,7 +15,7 @@ function hienTrangChiTiet(id) {
 // Thêm sự kiện load để hiển thị chi tiết sản phẩm
 window.addEventListener("load", function () {
   // Kiểm tra nếu đang ở trang chi tiết sản phẩm
-  if (window.location.pathname.includes("pa.html")) {
+  if (window.location.pathname.includes("ChiTietSanPham.html")) {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
 
@@ -23,7 +23,7 @@ window.addEventListener("load", function () {
     const chiTietSanPham = JSON.parse(localStorage.getItem("chiTietSanPham"));
 
     if (chiTietSanPham && chiTietSanPham["web-scraper-order"] === id) {
-      // TODO: Hiển thị chi tiết sản phẩm lên trang pa.html
+      // TODO: Hiển thị chi tiết sản phẩm lên trang ChiTietSanPham.html
       console.info("Chi tiết sản phẩm:", chiTietSanPham);
     }
   }
