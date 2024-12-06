@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="style.css"/>
     <link
-      rel="shortcut icon"
-      href="images/icons8-bag-96.png"
-      type="image/png"
+            rel="shortcut icon"
+            href="images/icons8-bag-96.png"
+            type="image/png"
     />
     <script type="module">
-      import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.3.5/+esm";
+      import {transliterate} from "https://cdn.jsdelivr.net/npm/transliteration@2.3.5/+esm";
+
       window.transliterate = transliterate;
     </script>
     <script type="module">
@@ -42,66 +43,219 @@
     </script>
     <script src="main.js"></script>
     <title>Web 1 Best Bag</title>
-  </head>
-  <body>
-    <div
-      style="
+</head>
+<body>
+<div
+        style="
         display: flex;
         flex-direction: column;
         gap: 10px;
         justify-content: center;
         width: 100%;
       "
-    >
-      <div
-        id="search-container"
-        style="
+>
+    <div
+            id="search-container"
+            style="
           display: flex;
           flex-direction: row;
           justify-content: center;
           width: 100%;
         "
-      >
+    >
         <form id="productForm" style="border: 1px solid green">
-          <label for="search">Name:</label>
-          <input
-            type="text"
-            id="search"
-            name="search"
-            placeholder="Product Name"
-          />
+            <label for="search">Name:</label>
+            <input
+                    type="text"
+                    id="search"
+                    name="search"
+                    placeholder="Product Name"
+            />
 
-          <label for="priceRange">Price Range:</label>
-          <input
-            type="number"
-            id="minPrice"
-            name="min"
-            placeholder="Min Price"
-          />
-          <input
-            type="number"
-            id="maxPrice"
-            name="max"
-            placeholder="Max Price"
-          />
+            <label for="priceRange">Price Range:</label>
+            <input
+                    type="number"
+                    id="minPrice"
+                    name="min"
+                    placeholder="Min Price"
+            />
+            <input
+                    type="number"
+                    id="maxPrice"
+                    name="max"
+                    placeholder="Max Price"
+            />
 
-          <label for="categories">Categories:</label>
-          <div id="categories"></div>
+            <label for="categories">Categories:</label>
+            <div id="categories"></div>
 
-          <label for="sortBy">Sort By:</label>
-          <select id="sortBy" name="sort">
-            <option value selected>(Chua chon)</option>
-            <option value="asc">Price Ascending</option>
-            <option value="desc">Price Descending</option>
-            <option value="best">Best Match</option>
-          </select>
+            <label for="sortBy">Sort By:</label>
+            <select id="sortBy" name="sort">
+                <option value selected>(Chua chon)</option>
+                <option value="asc">Price Ascending</option>
+                <option value="desc">Price Descending</option>
+                <option value="best">Best Match</option>
+            </select>
 
-          <button type="submit">Search</button>
+            <button type="submit">Search</button>
         </form>
-      </div>
-      <div class="debug-table"></div>
-      <div class="product-list"></div>
-      <div class="pagination"></div>
     </div>
-  </body>
+    <div class="debug-table"></div>
+    <div class="product-list"></div>
+    <div class="pagination"></div>
+</div>
+<dialog id="loginDialog">
+    <div class="login-container" id="login-container">
+        <div class="form-container sign-up-container">
+            <form action="#" id="signUpForm">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <input type="text" id="username" placeholder="Username"/>
+                <input type="text" id="name" placeholder="Name"/>
+                <input type="email" id="email" placeholder="Email"/>
+                <input type="password" id="password_signup" placeholder="Password"/>
+                <input type="checkbox" id="showPasswordCheckboxSignUp"/> Show Password
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form id="signInForm">
+                <h1>Sign in</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <input type="text" id="emailOrUsernameField" placeholder="Email"/>
+                <input type="password" id="password_signin" placeholder="Password"/>
+                <input type="checkbox" id="showPasswordCheckboxSignIn" checked/> Show Password
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>
+                        To keep connected with us please login with your personal info
+                    </p>
+                    <button class="ghost" id="signInSlide">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" id="signUpSlide">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="login-container">
+        <div class="form-container sign-up-container">
+            <form action="#" id="signUpForm">
+                <h1>Create Account</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your email for registration</span>
+                <input type="text" id="username" placeholder="Username"/>
+                <input type="text" id="name" placeholder="Name"/>
+                <input type="email" id="email" placeholder="Email"/>
+                <input type="password" id="password_signup" placeholder="Password"/>
+                <input type="checkbox" id="showPasswordCheckboxSignUp"/> Show Password
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <div class="form-container sign-in-container">
+            <form id="signInForm">
+                <h1>Sign in</h1>
+                <div class="social-container">
+                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
+                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+                <span>or use your account</span>
+                <input type="text" id="emailOrUsernameField" placeholder="Email"/>
+                <input type="password" id="password_signin" placeholder="Password"/>
+                <input type="checkbox" id="showPasswordCheckboxSignIn" checked/> Show Password
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>
+                        To keep connected with us please login with your personal info
+                    </p>
+                    <button class="ghost" id="signInSlide">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" id="signUpSlide">Sign Up</button>
+                </div>
+            </div>
+        </div>
+        <script>
+          const signUpButton = document.getElementById("signUpSlide");
+          const signInButton = document.getElementById("signInSlide");
+          const container = document.getElementById("container");
+
+          signUpButton.addEventListener("click", () => {
+            container.classList.add("right-panel-active");
+          });
+
+          signInButton.addEventListener("click", () => {
+            container.classList.remove("right-panel-active");
+          });
+
+          const showPasswordCheckboxSignIn = document.getElementById("showPasswordCheckboxSignIn");
+          const showPasswordCheckboxSignUp = document.getElementById("showPasswordCheckboxSignUp");
+          const passwordFieldSignIn = document.getElementById("password_signin");
+          const passwordFieldSignUp = document.getElementById("password_signup");
+
+
+          showPasswordCheckboxSignIn.addEventListener("change", () => {
+            if (showPasswordCheckboxSignIn.checked) {
+              passwordFieldSignIn.type = "text";
+            } else {
+              passwordFieldSignIn.type = "password";
+            }
+          });
+          showPasswordCheckboxSignUp.addEventListener("change", () => {
+            if (showPasswordCheckboxSignUp.checked) {
+              passwordFieldSignUp.type = "text";
+            } else {
+              passwordFieldSignUp.type = "password";
+            }
+          });
+        </script>
+        <script>
+          window.addEventListener("load", function () {
+            document.body.style.backgroundSize = "20%"; // Set the final size
+          });
+          document.querySelector(".container").style.marginBottom = "0";
+          const urlParams = new URLSearchParams(window.location.search);
+          const status = urlParams.get('status');
+          if (status === "signup") {
+            document.querySelector(".container").classList.add("right-panel-active");
+          }
+        </script>
+    </div>
+
+
+
+</dialog>
+</body>
 </html>
