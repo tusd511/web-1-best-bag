@@ -23,9 +23,10 @@ function hienBieuDoDoanhThu() {
   const historyLink = document.querySelector("#chart-navback");
   tktg = thongKeThoiGian();
   // thongKeThoiGian2().then((tktg) => {
-  function createHistory(text, callback) {
+  function createHistory(text1, text2, text3, callback) {
     function addSlash() {
       const slash = document.createElement("h2");
+      slash.style.fontSize = "64px";
       slash.textContent = "/";
       historyLink.appendChild(slash);
     }
@@ -39,8 +40,17 @@ function hienBieuDoDoanhThu() {
 
     const elementa = document.createElement("a");
     elementa.href = "#";
-    const element = document.createElement("h2");
-    element.textContent = text;
+    const element = document.createElement("h3");
+    element.appendChild(document.createTextNode(text1));
+    element.appendChild(document.createElement("br"));
+    if (text2) {
+      element.appendChild(document.createTextNode(text2));
+      element.appendChild(document.createElement("br"));
+    }
+    if (text3) {
+      element.appendChild(document.createTextNode(text3));
+      element.appendChild(document.createElement("br"));
+    }
     elementa.addEventListener("click", () => {
       const index = history.indexOf(elementa);
       if (index === history.length - 1) return;
@@ -60,8 +70,12 @@ function hienBieuDoDoanhThu() {
           const yearIndex = config.dataPointIndex;
           const year = Object.keys(tktg["chi-tiet"])[yearIndex];
           const yearData = tktg["chi-tiet"][year];
-          createHistory(`Nam ${year}`, () =>
-            chart.updateOptions(yearGraphOptions)
+          const monthCount = yearData["chi-tiet"].length;
+          createHistory(
+            `Nam ${year}`,
+            `Avg: ${formatVND(Math.ceil(yearData["tong-thu"] / monthCount))}`,
+            `Sum: ${formatVND(yearData["tong-thu"])}`,
+            () => chart.updateOptions(yearGraphOptions)
           );
           let yearGraphOptions = {
             chart: {
@@ -69,9 +83,16 @@ function hienBieuDoDoanhThu() {
               events: {
                 dataPointSelection: function (event, chartContext, config) {
                   const monthIndex = config.dataPointIndex;
-                  const days = yearData["chi-tiet"][monthIndex]["chi-tiet"];
-                  createHistory(`Thang ${monthIndex + 1}`, () =>
-                    chart.updateOptions(monthGraphOptions)
+                  const monthData = yearData["chi-tiet"][monthIndex];
+                  const days = monthData["chi-tiet"];
+                  const dayCount = days.length;
+                  createHistory(
+                    `Thang ${monthIndex + 1} (${dayCount} ngay)`,
+                    `Avg: ${formatVND(
+                      Math.ceil(monthData["tong-thu"]) / dayCount
+                    )}`,
+                    `Sum: ${formatVND(monthData["tong-thu"])}`,
+                    () => chart.updateOptions(monthGraphOptions)
                   );
                   let monthGraphOptions = {
                     chart: {
@@ -167,7 +188,13 @@ function hienBieuDoDoanhThu() {
     decadeGraphOptions
   );
   chart.render();
-  createHistory("root", () => chart.updateOptions(decadeGraphOptions));
+  const yearCount = Object.keys(tktg["chi-tiet"]).length;
+  createHistory(
+    `2020s`,
+    `Avg: ${formatVND(Math.ceil(tktg["tong-thu"] / yearCount))}`,
+    `Sum: ${formatVND(tktg["tong-thu"])}`,
+    () => chart.updateOptions(decadeGraphOptions)
+  );
 }
 
 function hienBieuDoKhachSop() {
@@ -193,17 +220,51 @@ function hienBieuDoKhachSop() {
     },
   };
   let chart = new ApexCharts(
-    document.querySelector("#chart2"),
+    document.querySelector("#chart"),
     yearGraphOptions
   );
+  chart.render();
+}
+
+function hienBieuDoBanChay() {
+  const tkdm = thongKeDanhMuc();
+  const categories = Object.keys(tkdm);
+  const soLuongs = Object.values(tkdm);
+  const totalSoLuong = soLuongs.reduce((total, num) => total + num, 0);
+  const options = {
+    series: soLuongs,
+    labels: categories,
+    chart: { type: "pie" },
+    title: { text: "San Pham Categories", align: "center" },
+    dataLabels: {
+      enabled: true,
+      formatter: (val, opts) => {
+        const soLuong = opts.w.config.series[opts.seriesIndex];
+        const category = opts.w.config.labels[opts.seriesIndex];
+        const percentage = val.toFixed(2);
+        return `${category} ${soLuong} (${percentage}%)`;
+      },
+    },
+  };
+  let chart = new ApexCharts(document.querySelector("#chart"), options);
   chart.render();
 }
 
 window.addEventListener("load", () =>
   taiDuLieuTongMainJs(() =>
     taiHoaDon(() => {
-      hienBieuDoDoanhThu();
-      hienBieuDoKhachSop();
+      const { chart } = layParamUrl();
+      const chartTypes = {
+        doanhthu: hienBieuDoDoanhThu,
+        khachsop: hienBieuDoKhachSop,
+        banchay: hienBieuDoBanChay,
+      };
+      chartTypes[chart ?? "doanhthu"]?.();
+      document.querySelector("#chartForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        caiParamUrl({ chart: form.get("chart") }, false, true);
+      });
     })
   )
 );

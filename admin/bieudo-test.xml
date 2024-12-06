@@ -34,14 +34,21 @@
     <!-- <div class="debug-table"></div> -->
 
     <!-- <div class="chart"> -->
+    <form id="chartForm" style="border: 1px solid green">
+      <select id="chartType" name="chart">
+        <option value="doanhthu" selected>Doanh thu</option>
+        <option value="khachsop">Khach sop</option>
+        <option value="banchay">Ban chay</option>
+      </select>
+      <button type="submit">Go</button>
+    </form>
     <div id="chart-wrapper">
       <div
         id="chart-navback"
-        style="display: flex; padding: 0 36px; gap: 12px"
+        style="display: flex; padding: 0 36px; gap: 12px; align-items: center"
       ></div>
       <div id="chart"></div>
       <!-- <canvas id="hierarchicalChart" width="3000" height="2000"></canvas> -->
     </div>
-    <div id="chart2"></div>
   </body>
 </html>

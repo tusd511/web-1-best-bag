@@ -131,13 +131,11 @@ li {
   background-color: #505050;
 }
 
-.isActive i,
-span {
+.isActive i {
   color: #fff !important;
 }
 
-.sidebar .menu-link i,
-span {
+.sidebar .menu-link i {
   min-height: 60px;
   color: var(--mattGray);
   font-size: 1.2rem;
@@ -145,8 +143,7 @@ span {
   padding: 8px;
 }
 
-.menu-link:hover i,
-span {
+.menu-link:hover i {
   color: #fff;
 }
 
@@ -958,8 +955,7 @@ html {
   display: block;
 }
 
-
-.button-container{
+.button-container {
   justify-content: center;
   text-align: right;
   margin-top: 20px;
@@ -967,40 +963,40 @@ html {
   align-items: center;
 }
 
-.mode-button{
+.mode-button {
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
   border: none;
   border-radius: 50px;
   cursor: pointer;
-  
+
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.mode-button:hover{
+.mode-button:hover {
   box-shadow: 0 10px 20px rgba(255, 255, 255, 0.8);
   transform: translateY(-3px);
 }
 
-.color-add{
+.color-add {
   box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
-  background: linear-gradient(135deg, #4CAF50, #8BC34A);
+  background: linear-gradient(135deg, #4caf50, #8bc34a);
 }
 
-.color-edit{
+.color-edit {
   box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
   background: linear-gradient(135deg, #159ee2, #03537a);
 }
 
-.color-delete{
+.color-delete {
   box-shadow: 0 4px 15px rgba(229, 57, 53, 0.4);
-  background: linear-gradient(135deg, #E53935, #D32F2F);
+  background: linear-gradient(135deg, #e53935, #d32f2f);
 }
 
-.ready-for-delete{
+.ready-for-delete {
   background: linear-gradient(135deg, #cc0000, #990000);
-   /* Nền đỏ gradient */
+  /* Nền đỏ gradient */
   color: white; /* Chữ trắng nổi bật */
   border: 3px solid #fff; /* Không viền */
   box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.5); /* Ánh sáng đỏ từ bên trong */
@@ -1011,11 +1007,10 @@ html {
 --------------------------------------------------------------------------------
 */
 
-
 #editFormDialog {
   max-width: 800px;
   margin: 0 auto;
-  margin-top:20px;
+  margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
   background-color: #303232;
@@ -1101,31 +1096,30 @@ dialog::backdrop {
 }
 
 dialog {
-  width:500px;
+  width: 500px;
   border: none;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-
 /*
 --------------------------------------------------------------------------------
 */
 #productForm {
-  margin-left:35px;
+  margin-left: 35px;
   width: 95%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  max-height: 90px;  /* Ban đầu form sẽ chỉ cao như vậy */
-  overflow: hidden;  /* Ẩn phần ngoài vùng giới hạn */
-  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;  /* Hiệu ứng thu gọn/mở rộng */
+  max-height: 90px; /* Ban đầu form sẽ chỉ cao như vậy */
+  overflow: hidden; /* Ẩn phần ngoài vùng giới hạn */
+  transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; /* Hiệu ứng thu gọn/mở rộng */
 }
 
 #productForm:hover {
-  max-height: 700px;  /* Khi hover, form sẽ mở rộng */
-  padding: 20px;  /* Khoảng cách trong form sẽ rộng hơn khi mở rộng */
+  max-height: 700px; /* Khi hover, form sẽ mở rộng */
+  padding: 20px; /* Khoảng cách trong form sẽ rộng hơn khi mở rộng */
 }
 
 #productForm label {
@@ -1139,13 +1133,13 @@ dialog {
   width: 100%;
   padding: 5px;
   margin-bottom: 10px;
-  box-sizing: border-box;  /* Đảm bảo input không tràn ra ngoài */
+  box-sizing: border-box; /* Đảm bảo input không tràn ra ngoài */
 }
 
 #productForm button {
   width: 100%;
   padding: 10px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 5px;
@@ -1156,11 +1150,10 @@ dialog {
   background-color: #45a049;
 }
 
-#categories{
-  display:flex;
-  gap:20px;
+#categories {
+  display: flex;
+  gap: 20px;
 }
-
 
 /*
 --------------------------------------------------------------------------------
@@ -1168,7 +1161,7 @@ dialog {
 #infoFormDialog {
   max-width: 800px;
   margin: 0 auto;
-  margin-top:20px;
+  margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
   background-color: #303232;
@@ -1213,7 +1206,7 @@ dialog {
   cursor: pointer;
   border-radius: 4px;
   width: 100%;
-  margin-top:20px;
+  margin-top: 20px;
   margin-bottom: 10px;
 }
 #infoForm button[type="submit"]:hover {
@@ -1236,72 +1229,72 @@ dialog {
 /*
 --------------------------------------------------------------------------------
 */
-#invoiceDialog{
-  margin-left:20px;
-  margin-top:20px;
-  background:#303232;
-  width:100vw;
+#invoiceDialog {
+  margin-left: 20px;
+  margin-top: 20px;
+  background: #303232;
+  width: 100vw;
   justify-content: center;
 }
 #invoiceForm {
   display: flex;
   flex-wrap: wrap;
-  gap:20px;
-  width:100%;
+  gap: 20px;
+  width: 100%;
 }
-.left-invoice input[type="number"]{
+.left-invoice input[type="number"] {
   text-align: center;
 }
 .left-invoice {
-  width:48%;
+  width: 48%;
   display: flex;
   flex-direction: column;
   gap: 15px;
   max-height: 100vh;
   overflow-y: auto;
 }
-.right-invoice{
+.right-invoice {
   width: 50%;
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
   max-height: 100vh;
   overflow-y: auto;
 }
-.tiny-image{
-  width:40px;
+.tiny-image {
+  width: 40px;
   height: auto;
 }
-.lagre-image{
+.lagre-image {
   width: 200px;
-  height:auto;
+  height: auto;
 }
-.tooltip{
-  display:none;
+.tooltip {
+  display: none;
   position: absolute;
   transform: translateX(-50%);
   top: 100%;
-  left:150%;
-  z-index:10;
+  left: 150%;
+  z-index: 10;
   background-color: #323232;
   border: 1px solid #fff;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding:5px;
+  padding: 5px;
 }
-#invoiceDialog button{
+#invoiceDialog button {
   background-color: transparent;
-  border:1px solid #ccc;
+  border: 1px solid #ccc;
   width: 40px;
-  height:auto;
+  height: auto;
   justify-content: center;
   align-items: center;
   display: flex;
 }
-.buttonForm{
+.buttonForm {
   display: flex;
   justify-content: flex-end;
-  width:100%;
+  width: 100%;
 }
 /*
 --------------------------------------------------------------------------------
