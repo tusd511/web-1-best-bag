@@ -9,7 +9,7 @@ function hienTrangChiTiet(id) {
   localStorage.setItem("chiTietSanPham", JSON.stringify(sanPham));
 
   // Chuyển hướng đến trang chi tiết sản phẩm
-  window.location.href = `pa.html?id=${id}`;
+  window.location.href = `./ChiTietSanPham.html?id=${id}`;
 }
 
 // Thêm sự kiện load để hiển thị chi tiết sản phẩm
@@ -57,6 +57,7 @@ function loadProductDetails() {
     return;
   }
 
+
   taiSanPham(() => {
     currentProduct = timSanPham(productId);
     console.log("Sản phẩm tìm thấy:", currentProduct);
@@ -71,10 +72,10 @@ function loadProductDetails() {
     // Cập nhật UI với thông tin sản phẩm
     document.getElementById(
       "productImage"
-    ).src = `./images/${currentProduct["image-file"]}`;
+    ).src = `${currentProduct["image-src"]}`;
     document.getElementById(
       "productImage2"
-    ).src = `./images/${currentProduct["image2-file"]}`;
+    ).src = `../../images/${currentProduct["image2-file"]}`;
     showImage(0); // Hiển thị ảnh đầu tiên
     document.getElementById("productName").textContent = currentProduct.name;
     document.getElementById(

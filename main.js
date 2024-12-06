@@ -56,7 +56,7 @@ async function taiDuLieu(datakey, datafile, dataobj) {
   if (dataObj) return dataObj;
   // chua co du lieu key nay trong local storage (lan dau mo web)
   // thi can phai tai du lieu ban dau tu file
-  const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
+  const response = await fetch(`${mainJsScriptDirectory}/Data/${datafile}`);
   const json = await response.json();
   console.debug("taiDuLieu", { response, datakey, datafile, json });
   return json;
@@ -303,10 +303,12 @@ function tinhHoaDonHienThi(wrapperSelector = ".order-list") {
 }
 
 function hienTrangChiTiet(id) {
-  alert("Chua cai dat chuc nang hien trang chi tier");
+  // alert("Chua cai dat chuc nang hien trang chi tier");
   const sanPham = timSanPham(id);
-  // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
+
+  // TODO: mo trang chi tiet san pham
+  window.location.href = `Product/ChiTietSanPham/ChiTietSanPham.html?id=${id}`;
 }
 function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
   // TODO: hien thi danh sach san Pham sau khi load, trang 1
