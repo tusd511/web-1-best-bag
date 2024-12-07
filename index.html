@@ -104,6 +104,8 @@
     <div class="product-list"></div>
     <div class="pagination"></div>
 </div>
+
+<!-- Dialog login -->
 <dialog id="loginDialog">
     <div class="login-container" id="login-container">
         <div class="form-container sign-up-container">
@@ -143,9 +145,7 @@
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
                     <h1>Welcome Back!</h1>
-                    <p>
-                        To keep connected with us please login with your personal info
-                    </p>
+                    <p>To keep connected with us please login with your personal info</p>
                     <button class="ghost" id="signInSlide">Sign In</button>
                 </div>
                 <div class="overlay-panel overlay-right">
@@ -156,106 +156,73 @@
             </div>
         </div>
     </div>
-
-    <div class="container" id="login-container">
-        <div class="form-container sign-up-container">
-            <form action="#" id="signUpForm">
-                <h1>Create Account</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your email for registration</span>
-                <input type="text" id="username" placeholder="Username"/>
-                <input type="text" id="name" placeholder="Name"/>
-                <input type="email" id="email" placeholder="Email"/>
-                <input type="password" id="password_signup" placeholder="Password"/>
-                <input type="checkbox" id="showPasswordCheckboxSignUp"/> Show Password
-                <button type="submit">Sign Up</button>
-            </form>
-        </div>
-        <div class="form-container sign-in-container">
-            <form id="signInForm">
-                <h1>Sign in</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                    <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-                <span>or use your account</span>
-                <input type="text" id="emailOrUsernameField" placeholder="Email"/>
-                <input type="password" id="password_signin" placeholder="Password"/>
-                <input type="checkbox" id="showPasswordCheckboxSignIn" checked/> Show Password
-                <a href="#">Forgot your password?</a>
-                <button type="submit">Sign In</button>
-            </form>
-        </div>
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h1>Welcome Back!</h1>
-                    <p>
-                        To keep connected with us please login with your personal info
-                    </p>
-                    <button class="ghost" id="signInSlide">Sign In</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h1>Hello, Friend!</h1>
-                    <p>Enter your personal details and start journey with us</p>
-                    <button class="ghost" id="signUpSlide">Sign Up</button>
-                </div>
-            </div>
-        </div>
-        <script>
-          const signUpButton = document.getElementById("signUpSlide");
-          const signInButton = document.getElementById("signInSlide");
-          const container = document.getElementById("container");
-
-          signUpButton.addEventListener("click", () => {
-            container.classList.add("right-panel-active");
-          });
-
-          signInButton.addEventListener("click", () => {
-            container.classList.remove("right-panel-active");
-          });
-
-          const showPasswordCheckboxSignIn = document.getElementById("showPasswordCheckboxSignIn");
-          const showPasswordCheckboxSignUp = document.getElementById("showPasswordCheckboxSignUp");
-          const passwordFieldSignIn = document.getElementById("password_signin");
-          const passwordFieldSignUp = document.getElementById("password_signup");
-
-
-          showPasswordCheckboxSignIn.addEventListener("change", () => {
-            if (showPasswordCheckboxSignIn.checked) {
-              passwordFieldSignIn.type = "text";
-            } else {
-              passwordFieldSignIn.type = "password";
-            }
-          });
-          showPasswordCheckboxSignUp.addEventListener("change", () => {
-            if (showPasswordCheckboxSignUp.checked) {
-              passwordFieldSignUp.type = "text";
-            } else {
-              passwordFieldSignUp.type = "password";
-            }
-          });
-        </script>
-        <script>
-          window.addEventListener("load", function () {
-            document.body.style.backgroundSize = "20%"; // Set the final size
-          });
-          document.querySelector(".container").style.marginBottom = "0";
-          const urlParams = new URLSearchParams(window.location.search);
-          const status = urlParams.get('status');
-          if (status === "signup") {
-            document.querySelector(".container").classList.add("right-panel-active");
-          }
-        </script>
-    </div>
-
-
-
 </dialog>
+
+
+
+<script>
+  // Sliding panel script
+  const signUpButton = document.getElementById("signUpSlide");
+  const signInButton = document.getElementById("signInSlide");
+  const container = document.getElementById("login-container");
+
+  signUpButton.addEventListener("click", () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener("click", () => {
+    container.classList.remove("right-panel-active");
+  });
+
+  // Show/Hide password script
+  const showPasswordCheckboxSignIn = document.getElementById("showPasswordCheckboxSignIn");
+  const showPasswordCheckboxSignUp = document.getElementById("showPasswordCheckboxSignUp");
+  const passwordFieldSignIn = document.getElementById("password_signin");
+  const passwordFieldSignUp = document.getElementById("password_signup");
+
+  showPasswordCheckboxSignIn.addEventListener("change", () => {
+    passwordFieldSignIn.type = showPasswordCheckboxSignIn.checked ? "text" : "password";
+  });
+
+  showPasswordCheckboxSignUp.addEventListener("change", () => {
+    passwordFieldSignUp.type = showPasswordCheckboxSignUp.checked ? "text" : "password";
+  });
+
+  // URL parameter handling
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get('status');
+  if (status === "signup") {
+    container.classList.add("right-panel-active");
+  }
+
+  // Optional: Function to open dialog
+  function openLoginDialog() {
+    const loginDialog = document.getElementById('loginDialog');
+    loginDialog.showModal();
+  }
+
+  // Form submission handlers
+  const signUpForm = document.getElementById('signUpForm');
+  const signInForm = document.getElementById('signInForm');
+
+  signUpForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password_signup').value;
+    console.log('Sign Up:', {username, name, email, password});
+    // Add your sign-up logic here
+  });
+
+  signInForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const emailOrUsername = document.getElementById('emailOrUsernameField').value;
+    const password = document.getElementById('password_signin').value;
+    console.log('Sign In:', {emailOrUsername, password});
+    // Add your sign-in logic here
+  });
+</script>
+
 </body>
 </html>
