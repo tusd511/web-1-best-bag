@@ -137,3 +137,80 @@ if (window.location.pathname.includes("ThemSuaXoaSP.html")) {
     });
   });
 }
+function onPageLoad() {
+  const params = layParamUrl();
+  const tab = params["tab"] || "thongke";
+  switch (tab) {
+    case "thongke":
+      loadTabContent("thongke", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocTop();
+            tinhTopHienThi();
+            themChuyenTrangVaoThongKe();
+            themDuLieuVaoTheThongKe();
+          })
+        )
+      );
+      if (tabthongke) {
+        tabthongke.classList.add("isActive");
+      }
+      break;
+    case "nguoidung":
+      loadTabContent("nguoidung", () =>
+        taiDuLieuTongMainJs(() =>
+          taiNguoiDung(() => {
+            taoBoLocNguoiDung();
+          })
+        )
+      );
+
+      tabnguoidung.classList.add("isActive");
+      break;
+    case "sanpham":
+      loadTabContent("sanpham", () =>
+        taiDuLieuTongMainJs(() => {
+          taiSanPham(() => {
+            // Thêm event listener cho nút thêm mới
+            const addButton = document.getElementById("addproduct-button");
+            if (addButton) {
+              addButton.addEventListener("click", () => {
+                window.location.href = "pra.html";
+              });
+            }
+          });
+        })
+      );
+      tabsanpham.classList.add("isActive");
+      break;
+    case "hoadon":
+      loadTabContent("hoadon", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocHoaDon();
+          })
+        )
+      );
+
+      tabhoadon.classList.add("isActive");
+      break;
+    case "bieudo-test":
+      loadTabContent("bieudo-test", () =>
+        taiDuLieuTongMainJs(() => taiHoaDon(() => {}))
+      );
+      doiMauBackGround();
+      break;
+    default:
+      loadTabContent("thongke", () =>
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => {
+            taoBoLocTop();
+            tinhTopHienThi();
+            themChuyenTrangVaoThongKe();
+            themDuLieuVaoTheThongKe();
+          })
+        )
+      );
+      tabnguoidung.classList.add("isActive");
+  }
+}

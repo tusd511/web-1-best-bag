@@ -72,7 +72,7 @@ function loadProductDetails() {
     // Cập nhật UI với thông tin sản phẩm
     document.getElementById(
       "productImage"
-    ).src = `${currentProduct["image-src"]}`;
+    ).src = `../../images/${currentProduct["image-file"]}`;
     document.getElementById(
       "productImage2"
     ).src = `../../images/${currentProduct["image2-file"]}`;

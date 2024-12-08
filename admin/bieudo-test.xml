@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style.css" />
+    <!-- <link rel="stylesheet" href="./admin.css" /> -->
+    <link
+      rel="shortcut icon"
+      href="../images/icons8-bag-96.png"
+      type="image/png"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/apexcharts@4.1.0/dist/apexcharts.min.js"
+      integrity="sha256-mOrdWYHx0STnKlAY+X1swccOXZHDGZgN+rQ7rewTfO4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../main.js"></script>
+    <script src="./thongke-test.js"></script>
+    <script src="./thongke.js"></script>
+    <script src="./bieudo-test.js"></script>
+    <title>Web 1 Best Bag</title>
+  </head>
+  <body>
+    <h1>Bieu do doanh thu</h1>
+
+    <!-- <div class="debug-table"></div> -->
+
+    <!-- <h2 id="graph-time"></h2> -->
+    <!-- <div class="debug-table"></div> -->
+
+    <!-- <div class="chart"> -->
+    <form id="chartForm" style="border: 1px solid green">
+      <select id="chartType" name="chart">
+        <option value="doanhthu" selected>Doanh thu</option>
+        <option value="khachsop">Khach sop</option>
+        <option value="banchay">Ban chay</option>
+      </select>
+      <button type="submit">Go</button>
+    </form>
+    <div id="chart-wrapper">
+      <div
+        id="chart-navback"
+        style="display: flex; padding: 0 36px; gap: 12px; align-items: center"
+      ></div>
+      <div id="chart"></div>
+      <!-- <canvas id="hierarchicalChart" width="3000" height="2000"></canvas> -->
+    </div>
+  </body>
+</html>

@@ -18,7 +18,7 @@ const hoaDonFile = "hoa-don.json";
 const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
-const dataVersion = 28;
+const dataVersion = 27;
 
 const soSanPhamMoiTrang = 12;
 
@@ -210,9 +210,10 @@ function layParamUrl() {
     categories: params.getAll("categories[]") || [],
     tab: params.get("tab") || "thongke",
     disabled: parseInt(params.get("disabled"), 2) || 0,
-    handle: params.get("handle"),
+    handle: params.get("handle") || "",
     topsp: params.get("topsp") || "",
     topnd: params.get("topnd") || "",
+    chart: params.get("chart"),
   };
 }
 
@@ -230,6 +231,7 @@ function caiParamUrl(
     handle,
     topsp,
     topnd,
+    chart,
   },
   resetParam = false,
   reload = true
@@ -256,6 +258,7 @@ function caiParamUrl(
   setParam(handle, "handle");
   setParam(topsp, "topsp");
   setParam(topnd, "topnd");
+  setParam(chart, "chart");
   if (reload) window.location = url.toString();
   else window.history.replaceState({}, "", url.toString());
 }

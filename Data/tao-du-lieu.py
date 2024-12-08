@@ -48,7 +48,7 @@ def generate_fake_users(n) -> list[dict]:
                 upper_case=True,
                 lower_case=True,
             )}",
-            "ngay-tao": f.date_time_this_year(before_now=True, tzinfo=tz).isoformat(),
+            "ngay-tao": f.date_time_this_decade(before_now=True, tzinfo=tz).isoformat(),
             "disabled": f.boolean(chance_of_getting_true=5),
         }
         for _ in range(n)
@@ -73,7 +73,7 @@ def generate_fake_receipt(n) -> list[dict]:
         {
             "id": f.uuid4(),
             "nguoi-dung": r.choice(nds),
-            "ngay-tao": f.date_time_this_year(before_now=True, tzinfo=tz).isoformat(),
+            "ngay-tao": f.date_time_this_decade(before_now=True, tzinfo=tz).isoformat(),
             "chi-tiet": [
                 {"san-pham": sp, "so-luong": r.randint(1, sp_n_per_detail)}
                 for sp in r.sample(sps, k=r.randint(1, sp_per_receipt))
