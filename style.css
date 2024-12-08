@@ -1,4 +1,4 @@
-/* style.css */
+/* style.css - Merged Stylesheet */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -6,6 +6,7 @@ body {
   padding: 0;
 }
 
+/* Existing main styles */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -101,8 +102,7 @@ button:hover {
   background-color: darkgreen;
 }
 
-/* phan hien thi san pham va phan trang */
-
+/* Grid and Pagination Styles (existing) */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -130,10 +130,6 @@ button:hover {
   max-height: 300px;
   width: 100%;
   height: auto;
-}
-
-ul.pagination-list {
-  list-style-type: none;
 }
 
 .pagination-list {
@@ -207,7 +203,7 @@ ul.pagination-list {
   color: #fff;
 }
 
-/* debug */
+/* Debug Styles (existing) */
 table,
 th,
 td {
@@ -219,15 +215,18 @@ td {
 dialog#debugDialog {
   transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
   animation: dialog-slide-hide 0.5s ease-out normal;
-  &::backdrop {
-    animation: dialog-backdrop-hide 0.5s ease-out normal;
-  }
-  &[open] {
-    animation: dialog-slide-show 0.5s ease-out normal;
-    &::backdrop {
-      animation: dialog-backdrop-show 0.5s ease-out normal;
-    }
-  }
+}
+
+dialog#debugDialog::backdrop {
+  animation: dialog-backdrop-hide 0.5s ease-out normal;
+}
+
+dialog#debugDialog[open] {
+  animation: dialog-slide-show 0.5s ease-out normal;
+}
+
+dialog#debugDialog[open]::backdrop {
+  animation: dialog-backdrop-show 0.5s ease-out normal;
 }
 
 @keyframes dialog-slide-show {
@@ -248,9 +247,10 @@ dialog#debugDialog {
 div#debugMessage {
   transition: display 0.5s allow-discrete;
   animation: popover-slide-hide 0.5s ease-out normal;
-  &:popover-open {
-    animation: popover-slide-show 0.5s ease-out normal;
-  }
+}
+
+div#debugMessage:popover-open {
+  animation: popover-slide-show 0.5s ease-out normal;
 }
 
 @keyframes popover-slide-show {
@@ -258,7 +258,7 @@ div#debugMessage {
     transform: translateY(calc(-50vh - 60%));
   }
   to {
-    transform: translateY(0%);
+    transform: translateY(0%));
   }
 }
 
@@ -266,4 +266,396 @@ div#debugMessage {
   to {
     transform: translateY(calc(-50vh - 60%));
   }
+}
+
+/* New Cart-Related Styles */
+.cart-button-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+#cartButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+#cartButton:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#cartButton i {
+  font-size: 1rem;
+}
+
+#cartItemCount {
+  background-color: white;
+  color: #4caf50;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#cartItemCount.highlight {
+  transform: scale(1.2);
+  background-color: #ffeb3b;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1001;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 800px;
+  border-radius: 5px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+}
+
+/* Cart Modal Specific Styles */
+#cartModal .modal-content {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#cartModal .modal-body {
+  max-height: calc(80vh - 150px);
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+#cartModal .cart-summary {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  margin-top: 15px;
+}
+
+#cartModal .modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+#cartModal .modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+#cartModal .modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+#cartModal .modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+#cartModal .cart-item {
+  font-size: 16px;
+}
+
+#cartModal .cart-item-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+#cartModal .cart-item-price {
+  font-size: 17px;
+  color: #e53935;
+  font-weight: 500;
+}
+
+#cartModal .final-total-cost {
+  font-size: 20px;
+  font-weight: bold;
+  color: #e53935;
+}
+
+#cartModal .modal-header h2 {
+  font-size: 24px;
+  margin: 0;
+  color: #e53935;
+  font-weight: bold;
+}
+
+/* Delete Button Styles */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e53935;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #ffebee;
+  transform: scale(1.1);
+}
+
+.delete-btn i {
+  font-size: 18px;
+}
+
+/* Product Detail Modal Styles */
+#productDetailModal .modal-content {
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+}
+
+#productDetailModal .product-detail {
+  display: flex;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+#productDetailModal .product-image {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  padding: 0 30px;
+}
+
+#productDetailModal .image-slider {
+  position: relative;
+  width: 100%;
+}
+
+#productDetailModal .image-slider img {
+  display: none;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#productDetailModal .image-slider img.active {
+  display: block;
+}
+
+#productDetailModal .product-info {
+  flex: 1;
+  padding: 20px;
+}
+
+#productDetailModal .product-info h1 {
+  font-size: 32px;
+  margin-bottom: 15px;
+  color: #333;
+  font-weight: bold;
+  line-height: 1.3;
+}
+
+#productDetailModal .product-info h3 {
+  font-size: 20px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+#productDetailModal .product-info p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+#productDetailModal .price-info {
+  margin: 25px 0;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 2px solid #eee;
+}
+
+#productDetailModal .original-price {
+  font-size: 36px;
+  color: #666;
+  text-decoration: line-through;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#productDetailModal .sale-price {
+  font-size: 48px;
+  color: #e53935;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#productDetailModal .price-label {
+  font-size: 20px;
+  color: #333;
+  font-weight: normal;
+}
+
+#productDetailModal .quantity-selector {
+  margin: 20px 0;
+}
+
+#productDetailModal .quantity-selector label {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+#productDetailModal .quantity-controls input {
+  font-size: 16px;
+  padding: 8px;
+  width: 80px;
+}
+
+#productDetailModal .total-price {
+  margin: 25px 0;
+  padding: 15px;
+  background-color: #fff8f8;
+  border-radius: 8px;
+  border: 2px solid #ffebee;
+}
+
+#productDetailModal .total-price p {
+  font-size: 22px;
+  margin: 0;
+  color: #333;
+}
+
+#productDetailModal #productDetailTotalPrice {
+  font-size: 28px;
+  font-weight: bold;
+  color: #e53935;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+#productDetailModal .add-to-cart-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 18px;
+  padding: 12px 24px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+#productDetailModal .add-to-cart-btn:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#productDetailModal .add-to-cart-btn i {
+  font-size: 20px;
+}
+
+/* Styles cho nút chuyển ảnh */
+#productDetailModal .slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+#productDetailModal .slider-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#productDetailModal .slider-btn.prev {
+  left: -20px;
+}
+
+#productDetailModal .slider-btn.next {
+  right: -20px;
+}
+
+/* Styles cho responsive */
+@media (max-width: 768px) {
+  #productDetailModal .product-detail {
+    flex-direction: column;
+  }
+
+  #productDetailModal .product-image {
+    max-width: 100%;
+  }
+
+  #productDetailModal .product-info {
+    padding: 20px 0;
+  }
+}
+
+/* Styles cho body khi modal mở */
+body.modal-open {
+  overflow: hidden;
+  padding-right: 17px;
 }

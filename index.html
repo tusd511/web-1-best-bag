@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="shortcut icon"
-      href="images/icons8-bag-96.png"
-      type="image/png"
-    />
-    <script type="module">
-      import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.3.5/+esm";
-      window.transliterate = transliterate;
-    </script>
-    <script type="module">
-      import {
-        InvalidFormatError,
-        InvalidNumberError,
-        NotEnoughUnitError,
-        ReadingConfig,
-        doReadNumber,
-      } from " https://cdn.jsdelivr.net/npm/read-vietnamese-number@2.1.4/+esm";
-      // Config reading options
-      const config = new ReadingConfig();
-      config.unit = ["đồng"];
-      window.number2TextVietnamese = function (number) {
-        try {
-          return doReadNumber(config, number);
-        } catch (err) {
-          // Handle errors
-          if (err instanceof InvalidFormatError)
-            return "Định dạng input không hợp lệ";
-          else if (err instanceof InvalidNumberError) return "Số không hợp lệ";
-          else if (err instanceof NotEnoughUnitError)
-            return "Không đủ đơn vị đọc số";
-        }
-      };
-    </script>
-    <script type="text/javascript">
-      window.dayLaTrangIndex = true;
-    </script>
-    <script src="main.js"></script>
-    <title>Web 1 Best Bag</title>
-  </head>
-  <body>
-    <div
-      style="
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  />
+  <link
+          rel="shortcut icon"
+          href="images/icons8-bag-96.png"
+          type="image/png"
+  />
+  <script type="module">
+    import { transliterate } from "https://cdn.jsdelivr.net/npm/transliteration@2.3.5/+esm";
+    window.transliterate = transliterate;
+  </script>
+  <script type="module">
+    import {
+      InvalidFormatError,
+      InvalidNumberError,
+      NotEnoughUnitError,
+      ReadingConfig,
+      doReadNumber,
+    } from " https://cdn.jsdelivr.net/npm/read-vietnamese-number@2.1.4/+esm";
+    // Config reading options
+    const config = new ReadingConfig();
+    config.unit = ["đồng"];
+    window.number2TextVietnamese = function (number) {
+      try {
+        return doReadNumber(config, number);
+      } catch (err) {
+        // Handle errors
+        if (err instanceof InvalidFormatError)
+          return "Định dạng input không hợp lệ";
+        else if (err instanceof InvalidNumberError) return "Số không hợp lệ";
+        else if (err instanceof NotEnoughUnitError)
+          return "Không đủ đơn vị đọc số";
+      }
+    };
+  </script>
+  <script type="text/javascript">
+    window.dayLaTrangIndex = true;
+  </script>
+  <script src="main.js"></script>
+  <script src="Product/ChiTietSanPham/ChiTietSanPham.js"></script>
+  <title>Web 1 Best Bag</title>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand">Best Bag</div>
+  <div id="navCartContainer"></div>
+</nav>
+
+<div
+        style="
         display: flex;
         flex-direction: column;
         gap: 10px;
         justify-content: center;
         width: 100%;
       "
-    >
-      <div
-        id="search-container"
-        style="
+>
+  <div
+          id="search-container"
+          style="
           display: flex;
           flex-direction: row;
           justify-content: center;
           width: 100%;
         "
-      >
-        <form id="productForm" style="border: 1px solid green">
-          <label for="search">Name:</label>
-          <input
-            type="text"
-            id="search"
-            name="search"
-            placeholder="Product Name"
-          />
+  >
+    <form id="productForm" style="border: 1px solid green">
+      <label for="search">Name:</label>
+      <input
+              type="text"
+              id="search"
+              name="search"
+              placeholder="Product Name"
+      />
 
-          <label for="priceRange">Price Range:</label>
-          <input
-            type="number"
-            id="minPrice"
-            name="min"
-            placeholder="Min Price"
-          />
-          <input
-            type="number"
-            id="maxPrice"
-            name="max"
-            placeholder="Max Price"
-          />
+      <label for="priceRange">Price Range:</label>
+      <input
+              type="number"
+              id="minPrice"
+              name="min"
+              placeholder="Min Price"
+      />
+      <input
+              type="number"
+              id="maxPrice"
+              name="max"
+              placeholder="Max Price"
+      />
 
-          <label for="categories">Categories:</label>
-          <div id="categories"></div>
+      <label for="categories">Categories:</label>
+      <div id="categories"></div>
 
-          <label for="sortBy">Sort By:</label>
-          <select id="sortBy" name="sort">
-            <option value selected>(Chua chon)</option>
-            <option value="asc">Price Ascending</option>
-            <option value="desc">Price Descending</option>
-            <option value="best">Best Match</option>
-          </select>
+      <label for="sortBy">Sort By:</label>
+      <select id="sortBy" name="sort">
+        <option value selected>(Chua chon)</option>
+        <option value="asc">Price Ascending</option>
+        <option value="desc">Price Descending</option>
+        <option value="best">Best Match</option>
+      </select>
 
-          <button type="submit">Search</button>
-        </form>
-      </div>
-      <div class="debug-table"></div>
-      <div class="product-list"></div>
-      <div class="pagination"></div>
-    </div>
-  </body>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div class="debug-table"></div>
+  <div class="product-list"></div>
+  <div class="pagination"></div>
+</div>
+</body>
 </html>
