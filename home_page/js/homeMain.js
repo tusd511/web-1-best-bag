@@ -304,10 +304,11 @@ function tinhHoaDonHienThi(wrapperSelector = ".order-list") {
 }
 
 function hienTrangChiTiet(id) {
-  alert("Chua cai dat chuc nang hien trang chi tier");
+  // alert("Chua cai dat chuc nang hien trang chi tiet");
   const sanPham = timSanPham(id);
+  const origin = window.location.origin;
   // TODO: mo trang chi tiet san pham
-  console.info(id, sanPham);
+  window.location.href = `${origin}/Product/ChiTietSanPham/ChiTietSanPham.html?id=${id}`;
 }
 function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
   // TODO: hien thi danh sach san Pham sau khi load, trang 1
@@ -331,44 +332,46 @@ function renderItemSanPham(sanPham) {
 
     item.appendChild(matchScore);
   }
-  
   const img = document.createElement("img");
-  img.src = `../../images/${sanPham["image-file"]}`;
-  img.classList.add("grid-img");
+  img.src = `../images/${sanPham["image-file"]}`;
+  img.className = "grid-img";
   item.appendChild(img);
 
-  const id = document.createElement("h4");
-  id.innerText = sanPham["web-scraper-order"];
-  item.appendChild(id);
+  const content = document.createElement("div");
+  item.appendChild(content);
+  content.style = "flex:auto";
 
-  const name = document.createElement("h1");
+  const id = document.createElement("h10");
+  id.innerText = sanPham["web-scraper-order"];
+  content.appendChild(id);
+
+  const name = document.createElement("h2");
   name.innerText = sanPham["name"];
-  item.appendChild(name);
+  content.appendChild(name);
 
   const spacer = document.createElement("div");
   spacer.classList.add("grid-spacer");
   item.appendChild(spacer);
 
-  const price = document.createElement("p");
-  price.style.setProperty("text-decoration", "line-through");
-  price.style.setProperty("color", "gray");
+  const checkPrice = document.createElement("div");
+  item.appendChild(checkPrice);
+  checkPrice.className = "checkPrice";
+
+  const price = document.createElement("h5");
+  price.style = "text-decoration: line-through; color: gray;";
   price.innerText = sanPham["price"];
-  item.appendChild(price);
+  checkPrice.appendChild(price);
 
-  const sale = document.createElement("h3");
-  sale.style.setProperty("color", "red");
-  sale.innerText = sanPham["price-sale-n"];
-  item.appendChild(sale);
+  const sale = document.createElement("p");
+  sale.style = "font-weight:700;color: red";
 
-  const priceAsText = document.createElement("p");
-  priceAsText.textContent = number2TextVietnamese(
-    sanPham["price-sale-n"].toString()
-  );
-  item.appendChild(priceAsText);
+  const priceSale = convertNumberToPrice(sanPham["price-sale-n"]);
+  sale.innerText = priceSale;
+  checkPrice.appendChild(sale);
 
   const category = document.createElement("h4");
-  category.style.setProperty("color", "cyan");
-  category.innerText = `Túi ${sanPham["category"]}`;
+  category.style.setProperty("color", "Green");
+  category.innerText = `-Túi ${sanPham["category"]}-`;
   item.appendChild(category);
 
   const btn = document.createElement("button");
@@ -377,11 +380,6 @@ function renderItemSanPham(sanPham) {
   );
   btn.textContent = "Xem Chi Tiết";
   item.appendChild(btn);
-
-  // const img = document.createElement("img");
-  // img.src = `../../images/${sanPham["image-file"]}`;
-  // img.classList.add("grid-img");
-  // item.appendChild(img);
   return item;
 }
 
@@ -445,8 +443,8 @@ function hienThiPagination(
       window.scrollTo(
         0,
         document.documentElement.scrollHeight -
-          window.innerHeight -
-          distanceFromBottom
+        window.innerHeight -
+        distanceFromBottom
       );
     }, 0);
     khiBamTrang(goToPage);
@@ -635,13 +633,13 @@ function timTheoTen(name, sanPhamsDaLoc) {
             (keyword === nameword
               ? Math.max(100, 25 * keyword.length)
               : nameword.startsWith(keyword)
-              ? Math.max(50, 10 * keyword.length)
-              : nameword.includes(keyword)
-              ? Math.max(
-                  10,
-                  3 * keyword.length * (nameword.split(keyword).length - 1)
-                )
-              : 0),
+                ? Math.max(50, 10 * keyword.length)
+                : nameword.includes(keyword)
+                  ? Math.max(
+                    10,
+                    3 * keyword.length * (nameword.split(keyword).length - 1)
+                  )
+                  : 0),
           0
         ),
       0
@@ -1197,7 +1195,7 @@ async function taiDuLieuTongMainJs(sauKhiTai) {
   taiNguoiDung(() => {
     tinhNguoiDungHienThi();
   });
-  taiGioHang(() => {});
+  taiGioHang(() => { });
   taiHoaDon(() => {
     tinhHoaDonHienThi();
   });
@@ -1209,3 +1207,11 @@ if (window.dayLaTrangIndex)
   window.addEventListener("load", () => {
     taiDuLieuTongMainJs(() => console.info("Tai du lieu tong o mainjs"));
   });
+
+function convertNumberToPrice(number) {
+  const result = number.toLocaleString('vi', {
+    style: 'currency',
+    currency: 'VND',
+  });
+  return result;
+}
