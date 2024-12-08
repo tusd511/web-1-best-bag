@@ -229,7 +229,18 @@ function addToCartFromDetail() {
   alert(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`);
   closeProductDetailModal();
 }
+// Cập nhật event listener cho window.onclick
+window.onclick = function (event) {
+  const cartModal = document.getElementById("cartModal");
+  const productDetailModal = document.getElementById("productDetailModal");
 
+  if (event.target === cartModal) {
+    closeCartModal();
+  }
+  if (event.target === productDetailModal) {
+    closeProductDetailModal();
+  }
+};
 // Lưu giỏ hàng vào localStorage
 function saveCartToLocalStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -384,4 +395,101 @@ function createProductDetailModal() {
   `;
 
   return modal;
+}
+function renderGioHang(cart, hamRenderItem, wrapperSelector = "#cartItems") {
+  const wrapper = document.querySelector(wrapperSelector);
+  if (!wrapper) {
+    console.error("Không tìm thấy wrapper của giỏ hàng:", wrapperSelector);
+    return;
+  }
+  wrapper.innerHTML = "";
+
+  // Ẩn nút mua ngay nếu giỏ hàng trống
+  const btnMuaNgay = document.getElementById("btn-s");
+  if (btnMuaNgay) {
+    btnMuaNgay.style.display = !cart || cart.length === 0 ? "none" : "block";
+  }
+
+  if (!cart || cart.length === 0) {
+    const noProductImg = document.createElement("img");
+    noProductImg.src = "images/no-product-cart.jpg"; // Sửa đường dẫn và thêm phần mở rộng
+    noProductImg.style.width = "60%";
+    wrapper.appendChild(noProductImg);
+    return;
+  }
+  const gioHang = document.createElement("div");
+  const muc = document.createElement("div");
+  muc.style.display = "flex";
+  muc.style.alignItems = "center";
+  muc.style.gap = "1rem";
+  muc.style.marginBottom = "1rem";
+  muc.style.fontWeight = "bold";
+
+  const anh = document.createElement("div");
+  anh.style.width = "100px";
+  anh.textContent = "Hình ảnh";
+  muc.appendChild(anh);
+  const ten = document.createElement("div");
+  ten.style.flex = "1";
+  ten.textContent = "Tên sản phẩm";
+  muc.appendChild(ten);
+  const gia = document.createElement("div");
+  gia.style.width = "120px";
+  gia.textContent = "Giá";
+  muc.appendChild(gia);
+  const soLuong = document.createElement("div");
+  soLuong.style.width = "100px";
+  soLuong.textContent = "Số lượng";
+  muc.appendChild(soLuong);
+  const tong = document.createElement("div");
+  tong.style.width = "150px";
+  tong.textContent = "Tổng";
+  muc.appendChild(tong);
+  const xoa = document.createElement("div");
+  xoa.style.width = "50px";
+  muc.appendChild(xoa);
+  gioHang.appendChild(muc);
+  const danhSach = document.createElement("div");
+  for (const item of cart) {
+    const renderedItem = hamRenderItem(item, cart);
+    if (renderedItem) {
+      danhSach.appendChild(renderedItem);
+    }
+  }
+  const tongKetRow = document.createElement("div");
+  tongKetRow.style.display = "flex";
+  tongKetRow.style.alignItems = "center";
+  tongKetRow.style.gap = "1rem";
+  tongKetRow.style.marginTop = "1rem";
+  tongKetRow.style.borderTop = "1px solid #ccc";
+  tongKetRow.style.paddingTop = "1rem";
+  tongKetRow.innerHTML = `
+    <div style="width: 100px"></div>
+    <div style="flex: 1"></div>
+    <div style="width: 120px"></div>
+    <div style="width: 100px"><strong>Tổng tiền:</strong></div>
+    <div class="final-total-cost" style="width: 150px"></div>
+    <div style="width: 50px"></div>
+  `;
+  danhSach.appendChild(tongKetRow);
+  gioHang.appendChild(danhSach);
+  wrapper.appendChild(gioHang);
+  capNhatFinalTotalCost(cart);
+}
+function capNhatFinalTotalCost(cart) {
+  const finalTotal = document.querySelector(".final-total-cost");
+  if (!finalTotal) return;
+
+  const total = cart.reduce((sum, item) => {
+    const sanpham = timSanPham(item["san-pham"]);
+    if (sanpham) {
+      return sum + sanpham["price-sale-n"] * item["so-luong"];
+    }
+    return sum;
+  }, 0);
+
+  finalTotal.textContent = total.toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
 }
