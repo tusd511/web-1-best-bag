@@ -15,7 +15,7 @@ function ThuSide() {
   document.querySelector(".sideMenu").style.width = "80px";
 }
 
-function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
+function tinhSanPhamHienThiAdmin(wrapperSelector = ".product-list") {
   if (!document.querySelector(wrapperSelector)) {
     console.info("tinhSanPhamHienThi khong tim thay wrapper!");
     return;
@@ -44,10 +44,10 @@ function tinhSanPhamHienThi(wrapperSelector = ".product-list") {
 
   duLieuDaTinh = { duLieuDaLoc: sanPhamsDaLoc, soPageToiDa, pageHienTai: page };
 
-  hienThiSanPham(duLieuDaTinh, wrapperSelector);
+  hienThiSanPhamAdmin(duLieuDaTinh, wrapperSelector);
 }
 
-function hienThiDanhSach(duLieuDaTinh, hamRenderItem, wrapperSelector) {
+function hienThiDanhSachAdmin(duLieuDaTinh, hamRenderItem, wrapperSelector) {
   const wrapper = document.querySelector(wrapperSelector);
   if (!wrapper) {
     console.error(`Không tìm thấy phần tử với selector: ${wrapperSelector}`);
@@ -79,7 +79,7 @@ function hienThiDanhSach(duLieuDaTinh, hamRenderItem, wrapperSelector) {
   }
   wrapper.appendChild(container);
 }
-function renderItemSanPham(sanPham) {
+function renderItemSanPhamAdmin(sanPham) {
   const wrapCart = document.createElement("div");
   wrapCart.classList.add("wrap-cart");
   const card = document.createElement("div");
@@ -133,9 +133,9 @@ function renderItemSanPham(sanPham) {
   wrapCart.appendChild(card);
   return wrapCart;
 }
-function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
+function hienThiSanPhamAdmin(duLieuDaTinh, wrapperSelector) {
   const khiBamTrang = () =>
-    hienThiDanhSach(duLieuDaTinh, renderItemSanPham, wrapperSelector);
+    hienThiDanhSachAdmin(duLieuDaTinh, renderItemSanPhamAdmin, wrapperSelector);
   khiBamTrang();
   hienThiPagination(duLieuDaTinh, () => khiBamTrang());
 }
@@ -301,13 +301,17 @@ function renderItemNguoiDung(nguoiDung) {
     if (
       nguoiDung["disabled"] ||
       confirm("Bạn có chắc chắn muốn khoá tài khoản này?")
-    )
+    ){
       suaNguoiDung(nguoiDung["id"], {
         ...nguoiDung,
         disabled: !nguoiDung["disabled"],
       });
-    if (nguoiDung["disabled"]) {
+      nguoiDung["disabled"]=!nguoiDung["disabled"];
+    }
+    if (!nguoiDung["disabled"]) {
       active.classList.add("fas", "fa-check-circle", "color-green");
+      rowNguoiDung.style.backgroundColor = "transparent";
+      rowNguoiDung.style.textDecoration = "none";
     } else {
       active.classList.add("fas", "fa-check-circle");
       active.classList.remove("color-green");
@@ -1167,7 +1171,9 @@ function adminXoaHoaDon() {
 }
 
 window.addEventListener("load", function () {
-  onPageLoad();
+  if(window.daylaTrangAdmin)
+    onPageAdminLoad();
+  
 });
 
 // function timNguoiDung(id) {
@@ -1414,7 +1420,8 @@ if (tabhoadon) {
   });
 }
 
-function onPageLoad() {
+function onPageAdminLoad() {
+  
   const params = layParamUrl();
   const tab = params["tab"] || "thongke";
   switch (tab) {
@@ -1472,6 +1479,7 @@ function onPageLoad() {
       );
       tabthongke.classList.add("isActive");
   }
+
 }
 
 function taoBoLocNguoiDung() {
@@ -1627,7 +1635,7 @@ function themDuLieuVaoTheThongKe() {
   var soLieuSanPham = document.querySelector(".bg-mattRed .inner h3");
   soLieuSanPham.textContent = soLieuSp["totalProductCount"];
   var tenSoLieuSanPham = document.querySelector(".bg-mattRed .inner p");
-  tenSoLieuSanPham.textContent = soLieuSp["uniqueProductCount"] + " mặt hàng";
+  tenSoLieuSanPham.textContent ="Sản phẩm, " + soLieuSp["uniqueProductCount"] + " mặt hàng";
   const soLieuHd = thongKeDonHang();
   var soLieuHoaDon = document.querySelector(".bg-green .inner h3");
   soLieuHoaDon.textContent = soLieuHd["orderCount"];

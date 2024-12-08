@@ -1,80 +1,10 @@
-/*admin dashboard*/
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 1020;
-  background-color: #343a40;
-  padding: 0.5rem 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-}
 
-.topbar-toggler {
-  border: 1px solid #fff;
-  background-color: #343a40;
-  padding: 5px 10px;
-  margin: 10px;
-  border-radius: 5px;
-}
-
-.topbar-content {
-  list-style: none;
-}
-
-.topbar-dropmenu {
-  padding: 5px;
-  border: 1px solid #f1f1f1;
-  background-color: #fff;
-  border-radius: 5px;
-  margin: 10px;
-}
-
-.topbar-dropitem {
-  text-decoration: none;
-}
-
-.topbar-link {
-  color: #fff;
-  text-decoration: none;
-}
-/*---------------------------------------------------------------*/
-/* Ẩn phần tử mặc định */
-.topbar-collapse,
-.topbar-dropmenu {
-  display: none;
-}
-
-/* Hiển thị phần tử khi có class .show */
-.topbar-collapse.show,
-.topbar-dropmenu.show {
-  display: block;
-}
-
-/*---------------------------------------------------------------*/
-
-.bar-container {
-  color: #000;
-  padding: 5px;
-  width: 100%;
-}
-
-.avatar-img {
-  width: 30px;
-  border-radius: 15px;
-  border: 1px solid #fff;
-}
-img {
-  vertical-align: middle;
-  border-style: none;
-}
 .d-flex {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
 }
-.sideMenu {
+.admin-sideMenu {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -82,11 +12,11 @@ img {
   z-index: 1000;
   width: 80px;
   transition: all ease 0.3s;
-  background-color: #303232 !important;
+  background-color: #323232 !important;
   overflow: hidden;
 }
 
-.menu-list {
+.admin-menu-list {
   display: flex; /* Sử dụng flexbox để sắp xếp các mục trong menu */
   flex-direction: column; /* Đặt hướng của các mục trong menu là dọc */
   padding-left: 0; /* Loại bỏ padding bên trái mặc định */
@@ -94,27 +24,22 @@ img {
   list-style: none; /* Loại bỏ dấu chấm của danh sách (bullet points) */
 }
 
-.menu-link {
+.admin-menu-link {
   display: block;
 }
 
-.menu-item a {
+.admin-menu-item a {
   text-decoration: none;
 }
 
-dl,
-ol,
-ul {
-  margin-top: 0;
-  margin-bottom: 1rem;
-}
-li {
+
+.admin-menu-list li {
   display: list-item;
   text-align: -webkit-match-parent;
   unicode-bidi: isolate;
 }
 
-.sidebar .menu-link {
+.admin-sidebar .admin-menu-link {
   max-height: 60px;
   min-height: 60px;
   transition: all 0.3s ease-in;
@@ -122,20 +47,22 @@ li {
   position: relative;
 }
 
-.sidebar .menu-link:hover {
+.admin-sidebar .admin-menu-link:hover {
   background-color: #505050;
 }
 
-.sidebar .isActive {
+.admin-sidebar .isActive {
   border-left: 3px solid var(--mattRed);
   background-color: #505050;
 }
 
-.isActive i {
+.isActive i,
+.admin-sidebar .admin-menu-list .admin-menu-item .admin-menu-link span {
   color: #fff !important;
 }
 
-.sidebar .menu-link i {
+.admin-sidebar .admin-menu-link i,
+.admin-sidebar .admin-menu-list .admin-menu-item .admin-menu-link span {
   min-height: 60px;
   color: var(--mattGray);
   font-size: 1.2rem;
@@ -143,11 +70,12 @@ li {
   padding: 8px;
 }
 
-.menu-link:hover i {
+.admin-menu-link:hover i,
+.admin-sidebar .admin-menu-list .admin-menu-item .admin-menu-link span {
   color: #fff;
 }
 
-.sidebar .menu-link i {
+.admin-sidebar .admin-menu-link i {
   width: 40px;
   height: 40px;
   font-size: 28px;
@@ -157,7 +85,7 @@ li {
   margin: 0 20px;
 }
 
-.sidebar .menu-link span {
+.admin-sidebar .admin-menu-link span {
   min-width: 180px;
   display: block;
   justify-content: flex-start;
@@ -165,28 +93,9 @@ li {
   margin-left: 80px;
 }
 
-.content {
-  width: 100%;
-  margin-left: 80px;
-  margin-top: 10px;
-  transition: all ease 0.3s;
-}
 
-/*
-a {
-  color: #007bff;
-  text-decoration: none;
-  background-color: transparent;
-  -webkit-text-decoration-skip: objects;
-}
-*/
 /*thống kê*/
-.content {
-  width: 100%;
-  margin-left: 80px;
-  margin-top: 10px;
-  transition: all ease 0.3s;
-}
+
 .container2 {
   width: 100%;
   padding-right: 15px;
@@ -253,7 +162,7 @@ a {
 }
 
 .inner h3,
-p {
+.inner p {
   cursor: default;
   color: #fff;
   font-size: 15px;
@@ -327,39 +236,6 @@ p {
 #quanlythongke {
   animation: fadeIn linear 0.3s;
 }
-
-.rank-of-product {
-  margin-top: 20px;
-  padding: 10px;
-  text-align: center;
-  background-color: var(--blackLight);
-}
-
-.rank-of-product h3 {
-  padding: 0;
-  color: #fff;
-}
-
-#top-selling {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #212529;
-}
-
-th,
-td {
-  border: 1px solid #343a40;
-  color: #fff;
-  padding: 5px 5px;
-}
-
-#top-selling tr:hover {
-  background-color: var(--blackLight);
-}
-
-/**/
-
-/**/
 
 /*QUAN LY SAN PHAM*/
 
@@ -478,11 +354,6 @@ td {
   margin: 0px 0px 80px;
 }
 
-/*
-.hidden {
-  opacity: 0;
-}*/
-
 .card-text {
   font-size: 0.7rem;
   color: #fff;
@@ -501,10 +372,11 @@ td {
   bottom: 30px;
   width: 100%;
   left: 0;
+  margin-bottom: 20px;
 }
 
 .card-old-price {
-  color: var(--text-color);
+  color: #fff;
   text-decoration: line-through;
   font-size: 1rem;
 }
@@ -560,87 +432,12 @@ td {
 }
 
 /*-------------------------------------------------------*/
-/*QUAN LY PHAN TRANG TAI KHOAN*/
-.pagination-user {
-  display: flex;
-  justify-content: center;
-  padding: 15px;
-  margin: 15px;
-}
-
-.pagination-user-item {
-  display: inline-block;
-  list-style: none;
-  padding: 10px;
-}
-
-/*#product-list{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 4px 8px;
-  margin: 0 22px;
-  padding: 12px 10px;
-}*/
-
-/*.btn-page {
-  background-color: transparent;
-  color: var(--mattGray);
-  border: 1px solid #ccc;
-}
-
-.pagination-button {
-  color: var(--mattGray);
-}
-
-/*.product-list {
-  animation: fadeIn 0.5s linear;
-}
-
-.btn-page:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.btn-page:hover {
-  background-color: var(--mattRed);
-  color: #fff;
-}*/
-
-.selected-page {
-  background-color: var(--mattRed);
-  color: #fff;
-}
-
-/*.modal-body label {
-  color: red;
-}*/
-
-.pagination-user-item button {
-  background-color: #343a40;
-  border: solid 1px #fff;
-  border-radius: 5px;
-  padding: 12px 15px;
-  color: #fff;
-}
-.pagination-user-item button:hover {
-  background: var(--mattRed);
-}
-.pagination-user-item button .isActive {
-  background: var(--mattRed);
-}
-.pagination-user-item button i {
-  color: #fff;
-}
 
 /*-------------------------------------------------------*/
 /*QUAN LY NGUOI DUNG*/
 #quanlynguoidung {
   animation: fadeIn linear 0.3s;
   text-align: center;
-}
-
-#quanlynguoidung h1 {
-  color: #fff;
 }
 
 .kichhoat i {
@@ -653,16 +450,22 @@ td {
   color: #00a65a !important;
 }
 
-table {
+.container-nguoidung table,
+.container-topnguoidung table,
+.container-topsanpham table
+{
   animation: fadeIn linear 0.2s;
   width: 100%;
   border-collapse: collapse;
 }
 
-tr {
+#container-nguoidung tr,
+#container-hoadon tr,
+#container-topnguoidung tr,
+#container-topsanpham tr {
   transition: all 0.5s ease-in;
 }
-h1 {
+#content-wrapper h1 {
   color: #fff;
   text-align: center;
 }
@@ -675,10 +478,6 @@ h1 {
   justify-content: center;
 }
 
-#quanlydonhang h1 {
-  color: #fff;
-}
-
 #order-list {
   width: 100%;
   border-collapse: collapse;
@@ -686,9 +485,16 @@ h1 {
   margin: 15px;
 }
 
-#order-list th,
-td {
+#order-list th {
   padding: 15px;
+}
+
+.user-table td,
+.topnguoidung-table td,
+.topsanpham-table td,
+.menuCuaHang td,
+.menuGioHang td{
+  padding:15px;
 }
 
 #order-list tr:hover {
@@ -698,8 +504,7 @@ td {
 .container-hoadon {
   overflow-y: auto;
 }
-.order-table td,
-th {
+.order-table td {
   padding: 0;
 }
 .order-table > tbody > tr > td:nth-child(3) td:nth-child(1),
@@ -714,8 +519,8 @@ th {
   display: table-row;
   height: auto;
 }
-th,
-td {
+.order-table th,
+.order-table td {
   text-align: center;
 }
 
@@ -741,7 +546,6 @@ td {
 .order-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: #212529;
 }
 
 #filterTop {
@@ -753,11 +557,6 @@ td {
   font-size: 15px;
 }
 
-.best-seller {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-}
 
 #content-wrapper {
   margin-left: 80px;
@@ -765,20 +564,21 @@ td {
 }
 
 .tieu-de h1 {
-  text-align: center;
   padding: 15px 15px;
-  color: #fff;
 }
 
-table th {
+.user-table th,
+.order-table th,
+.topnguoidung-table th,
+.topsanpham-table th {
   background-color: #303232;
 }
 
-table tr:hover {
-  background-color: #6c757d;
-}
-form {
-  color: #fff;
+.user-table tr:hover,
+.order-table tr:hover,
+.topnguoidung-table tr:hover,
+.topsanpham-table tr:hover {
+  background-color: #444;
 }
 
 .change-background {
@@ -792,14 +592,6 @@ form {
   --mattRed: #ec6271;
 }
 
-body {
-  background-color: var(--blackDark);
-}
-
-body {
-  display: block;
-  margin: 8px;
-}
 
 body {
   margin: 0;
@@ -811,6 +603,8 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
+  display: block;
+  background-color: var(--blackDark);
 }
 
 :root {
@@ -888,27 +682,65 @@ html {
   font-family: "Signika";
 }
 
-.topbar {
-  background-color: #333;
-  padding: 10px 20px;
+.container-hoadon th,
+.container-nguoidung th,
+.container-topnguoidung th,
+.container-topsanpham th,
+.container-hoadon td,
+.container-nguoidung td,
+.container-topnguoidung td,
+.container-topsanpham td,
+.right-invoice th,
+.right-invoice td,
+.left-invoice th,
+.left-invoice td{
+  color:#fff;
+  text-align: center;
+  border:1px solid #333;
+}
+
+#editForm,
+#infoForm,
+#invoiceForm,
+#filterHoaDon,
+#filter,
+#productForm{
   color: #fff;
+}
+.topbar {
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background-color: #323232;
+  padding: 0.5rem 1rem;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
 }
 .bar-container {
   display: flex;
   align-items: center;
   width: 100%;
+  color: #000;
+  padding: 5px;
+}
+.topbar-toggler {
+  color: white;
+  border: 1px solid #fff;
+  background-color: transparent;
+  padding: 5px 10px;
+  margin: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 24px;
+}
+.topbar-content {
+  list-style: none;
+  margin: 0;
 }
 
-.topbar-toggler {
-  background: none;
-  border: 1px solid #fff;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-}
 .topbar-collapse {
   display: none;
   flex-direction: column;
@@ -917,11 +749,7 @@ html {
   padding: 10px;
   border-radius: 5px;
 }
-.topbar-content {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+
 .topbar-item {
   margin: 5px 0;
 }
@@ -936,6 +764,7 @@ html {
   height: 30px;
   border-radius: 50%;
   margin-right: 10px;
+  border: 1px solid #fff;
 }
 .topbar-dropmenu {
   display: none;
@@ -1091,12 +920,16 @@ html {
   background-color: #e53935;
 }
 
-dialog::backdrop {
+#invoiceDialog::backdrop,
+#infoFormDialog::backdrop,
+#editFormDialog::backdrop {
   background: rgba(0, 0, 0, 0.5);
 }
 
-dialog {
-  width: 500px;
+#invoiceDialog,
+#infoFormDialog,
+#editFormDialog {
+  width:500px;
   border: none;
   border-radius: 8px;
   padding: 20px;
@@ -1177,6 +1010,7 @@ dialog {
 #infoForm {
   display: block;
   margin-top: 20px;
+  color: #fff;
 }
 #editForm label {
   display: block;
