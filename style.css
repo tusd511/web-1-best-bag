@@ -215,3 +215,55 @@ td {
   border-collapse: collapse;
   padding: 4px;
 }
+
+dialog#debugDialog {
+  transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
+  animation: dialog-slide-hide 0.5s ease-out normal;
+  &::backdrop {
+    animation: dialog-backdrop-hide 0.5s ease-out normal;
+  }
+  &[open] {
+    animation: dialog-slide-show 0.5s ease-out normal;
+    &::backdrop {
+      animation: dialog-backdrop-show 0.5s ease-out normal;
+    }
+  }
+}
+
+@keyframes dialog-slide-show {
+  from {
+    transform: translateY(calc(-50vh - 60%));
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes dialog-slide-hide {
+  to {
+    transform: translateY(calc(-50vh - 60%));
+  }
+}
+
+div#debugMessage {
+  transition: display 0.5s allow-discrete;
+  animation: popover-slide-hide 0.5s ease-out normal;
+  &:popover-open {
+    animation: popover-slide-show 0.5s ease-out normal;
+  }
+}
+
+@keyframes popover-slide-show {
+  from {
+    transform: translateY(calc(-50vh - 60%));
+  }
+  to {
+    transform: translateY(0%);
+  }
+}
+
+@keyframes popover-slide-hide {
+  to {
+    transform: translateY(calc(-50vh - 60%));
+  }
+}

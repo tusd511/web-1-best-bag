@@ -311,3 +311,22 @@ function thongKeThoiGian() {
 async function thongKeThoiGian2() {
   return await (await fetch("./tktgv18.json")).json();
 }
+
+function thongKeDanhMuc() {
+  {
+    const result = {};
+    g_hoaDon.forEach((hoaDon) => {
+      hoaDon["chi-tiet"].forEach((chiTiet) => {
+        const sanPham = timSanPham(chiTiet["san-pham"]);
+        const category = sanPham.category;
+        const soLuong = chiTiet["so-luong"];
+        if (result[category]) {
+          result[category] += soLuong;
+        } else {
+          result[category] = soLuong;
+        }
+      });
+    });
+    return result;
+  }
+}

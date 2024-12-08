@@ -18,7 +18,7 @@ const hoaDonFile = "hoa-don.json";
 const theLoaiSanPhamFile = "the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
-const dataVersion = 26;
+const dataVersion = 27;
 
 const soSanPhamMoiTrang = 12;
 
@@ -56,7 +56,7 @@ async function taiDuLieu(datakey, datafile, dataobj) {
   if (dataObj) return dataObj;
   // chua co du lieu key nay trong local storage (lan dau mo web)
   // thi can phai tai du lieu ban dau tu file
-  const response = await fetch(`${mainJsScriptDirectory}/${datafile}`);
+  const response = await fetch(`${mainJsScriptDirectory}/Data/${datafile}`);
   const json = await response.json();
   console.debug("taiDuLieu", { response, datakey, datafile, json });
   return json;
@@ -205,9 +205,10 @@ function layParamUrl() {
     categories: params.getAll("categories[]") || [],
     tab: params.get("tab") || "thongke",
     disabled: parseInt(params.get("disabled"), 2) || 0,
-    handle: params.get("handle"),
+    handle: params.get("handle") || "",
     topsp: params.get("topsp") || "",
     topnd: params.get("topnd") || "",
+    chart: params.get("chart"),
   };
 }
 
@@ -225,6 +226,7 @@ function caiParamUrl(
     handle,
     topsp,
     topnd,
+    chart,
   },
   resetParam = false,
   reload = true
@@ -251,6 +253,7 @@ function caiParamUrl(
   setParam(handle, "handle");
   setParam(topsp, "topsp");
   setParam(topnd, "topnd");
+  setParam(chart, "chart");
   if (reload) window.location = url.toString();
   else window.history.replaceState({}, "", url.toString());
 }
@@ -303,10 +306,12 @@ function tinhHoaDonHienThi(wrapperSelector = ".order-list") {
 }
 
 function hienTrangChiTiet(id) {
-  alert("Chua cai dat chuc nang hien trang chi tier");
+  // alert("Chua cai dat chuc nang hien trang chi tier");
   const sanPham = timSanPham(id);
-  // TODO: mo trang chi tiet san pham
   console.info(id, sanPham);
+
+  // TODO: mo trang chi tiet san pham
+  window.location.href = `Product/ChiTietSanPham/ChiTietSanPham.html?id=${id}`;
 }
 function hienThiSanPham(duLieuDaTinh, wrapperSelector) {
   // TODO: hien thi danh sach san Pham sau khi load, trang 1
@@ -1196,6 +1201,223 @@ async function taiDuLieuTongMainJs(sauKhiTai) {
     tinhHoaDonHienThi();
   });
   sauKhiTai();
+}
+
+// multiSort Function: Accepts an array to sort and an array of comparator functions
+// Cloning the Array: toSorted
+// Sorting Logic: Uses the built-in sort method with a custom compare function
+// Loop Through Comparators: Iterates over the comparators
+// If a comparator returns a non-zero value, it is used for sorting
+// If it returns zero, the next comparator is checked
+function multiSort(array, comparators) {
+  return array.toSorted((a, b) => {
+    for (let comparator of comparators) {
+      const result = comparator(a, b);
+      if (result !== 0) return result;
+    }
+    return 0;
+  });
+}
+
+function formatDateLocaleVn(dateString) {
+  return new Date(dateString).toLocaleString("vi-VN", {
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    day: "numeric",
+    month: "numeric",
+    year: "2-digit",
+  });
+}
+
+function showDebugMenu() {
+  const existingDialog = document.getElementById("debugDialog");
+  if (existingDialog) {
+    existingDialog.showModal();
+    return;
+  }
+
+  // Helper function to convert to camel case
+  function toCamelCase(str) {
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function (match, index) {
+        return index === 0 ? match.toLowerCase() : match.toUpperCase();
+      })
+      .replace(/\s+/g, "");
+  }
+
+  // Helper function to create a button
+  function createButton(text, onClick) {
+    const button = document.createElement("button");
+    button.textContent = text;
+    button.style.display = "inline";
+    button.onclick = onClick;
+    return button;
+  }
+
+  // Helper function to copy text to clipboard using Clipboard API
+  function copyToClipboard(text) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log("Text copied to clipboard");
+      })
+      .catch((err) => {
+        console.error("Could not copy text: ", err);
+      });
+  }
+
+  // Helper function to download a file
+  function downloadFile(filename, content) {
+    const blob = new Blob([content], { type: "application/json" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  }
+
+  // Create the dialog element
+  const dialog = document.createElement("dialog");
+  dialog.id = "debugDialog";
+  dialog.style.width = "calc(100% - 200px)";
+  dialog.style.height = "calc(100% - 100px)";
+  dialog.style.padding = "20px";
+  document.body.appendChild(dialog);
+
+  const popover = document.createElement("div");
+  popover.id = "debugMessage";
+  popover.classList.add("popover");
+  popover.setAttribute("popover", "auto");
+  dialog.appendChild(popover);
+
+  // Show popover message
+  function showPopover(message) {
+    popover.textContent = message;
+    popover.showPopover();
+  }
+
+  const closeButton = document.createElement("button");
+  closeButton.textContent = "Close";
+  closeButton.style.float = "right";
+  closeButton.onclick = () => dialog.close();
+  dialog.appendChild(closeButton);
+
+  const title = document.createElement("h2");
+  title.textContent = "Debug menu for Web 1 Best Bag";
+  dialog.appendChild(title);
+
+  const localStorageLabel = document.createElement("label");
+  localStorageLabel.textContent = "Actions for Local Storage:";
+  localStorageLabel.style.display = "block";
+  dialog.appendChild(localStorageLabel);
+
+  const clearLocalStorageButton = createButton("Clear Local Storage", () => {
+    localStorage.clear();
+    showPopover("Local Storage: Cleared Local Storage");
+  });
+  dialog.appendChild(clearLocalStorageButton);
+
+  const copyLocalStorageButton = createButton("Copy Local Storage", () => {
+    copyToClipboard(JSON.stringify(localStorage));
+    showPopover("Local Storage: Copied Local Storage");
+  });
+  dialog.appendChild(copyLocalStorageButton);
+
+  const downloadLocalStorageButton = createButton(
+    "Download Local Storage",
+    () => {
+      downloadFile("localstorage.json", JSON.stringify(localStorage));
+      showPopover("Local Storage: Downloaded Local Storage");
+    }
+  );
+  dialog.appendChild(downloadLocalStorageButton);
+
+  const entities = ["san pham", "nguoi dung", "hoa don", "gio hang"];
+
+  entities.forEach((entity) => {
+    const entityNameCamel = toCamelCase(entity);
+    const entityNameHyphen = entity.replace(/ /g, "-");
+
+    // Create a label for the entity
+    const label = document.createElement("label");
+    label.textContent = `Actions for ${entity}:`;
+    label.style.display = "block";
+    dialog.appendChild(label);
+
+    // Create action buttons for the entity
+    dialog.appendChild(
+      createButton(`Copy Data`, () => {
+        copyToClipboard(JSON.stringify(window[`g_${entityNameCamel}`]));
+        showPopover(`${entity}: Copied Data`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Copy Mapping`, () => {
+        copyToClipboard(JSON.stringify(window[`i_${entityNameCamel}`]));
+        showPopover(`${entity}: Copied Mapping`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Download Data`, () => {
+        downloadFile(
+          `${entityNameHyphen}-loaded.json`,
+          JSON.stringify(window[`g_${entityNameCamel}`])
+        );
+        showPopover(`${entity}: Downloaded Data`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Download Mapping`, () => {
+        downloadFile(
+          `${entityNameHyphen}-im-loaded.json`,
+          JSON.stringify(window[`i_${entityNameCamel}`])
+        );
+        showPopover(`${entity}: Downloaded Mapping`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Copy Data from Local Storage`, () => {
+        copyToClipboard(localStorage.getItem(window[`${entityNameCamel}Key`]));
+        showPopover(`${entity}: Copied Data from Local Storage`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Copy Mapping from Local Storage`, () => {
+        copyToClipboard(
+          localStorage.getItem(window[`${entityNameCamel}ImKey`])
+        );
+        showPopover(`${entity}: Copied Mapping from Local Storage`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Download Data from Local Storage`, () => {
+        downloadFile(
+          `${entityNameHyphen}-localstorage.json`,
+          localStorage.getItem(window[`${entityNameCamel}Key`])
+        );
+        showPopover(`${entity}: Downloaded Data from Local Storage`);
+      })
+    );
+
+    dialog.appendChild(
+      createButton(`Download Mapping from Local Storage`, () => {
+        downloadFile(
+          `${entityNameHyphen}-im-localstorage.json`,
+          localStorage.getItem(window[`${entityNameCamel}ImKey`])
+        );
+        showPopover(`${entity}: Downloaded Mapping from Local Storage`);
+      })
+    );
+  });
+
+  dialog.showModal();
 }
 
 if (window.dayLaTrangIndex)

@@ -40,6 +40,39 @@
 
   <button type="submit">Search</button>
 </form>
+<dialog id="infoFormDialog">
+  <h2>Thông tin sản phẩm</h2>
+  <form id="infoForm">
+    <label for="tenSanPham">Tên sản phẩm:</label>
+    <input type="text" id="tenSanPham" name="tenSanPham" placeholder="Nhập tên" required/><br><br>
+
+    <label for="giaSanPham">Giá sản phẩm:</label>
+    <input id="giaSanPham" type="number" name="giaSanPham" placeholder="Nhập giá sản phẩm" required/><br><br>
+
+    <label for="loaiSanPham">Loại sản phẩm:</label>
+    <select name="loaiSanPham" id="loaiSanPham">
+      <option value="" disabled selected>--Chọn loại--</option>
+      <option value="tote">Tote</option>
+      <option value="standard">Standard</option>
+      <option value="sling">Sling</option>
+      <option value="messsenger">Messenger</option>
+      <option value="laptop">Laptop</option>
+      <option value="duffle">Duffle</option>
+    </select>
+
+    <label for="moTaSanPham">Mô tả sản phẩm</label>
+    <textarea name="moTaSanPham" id="moTaSanPham" placeholder="Nhập mô tả sản phẩm"></textarea>
+
+    <label for="hinhAnhSanPham">Hình ảnh sản phẩm</label>
+    <input type="file" id="hinhAnhSanPham" name="hinhAnhSanPham" accept="image/*"/><br>
+
+    <label for="linkHinhAnh">Đường dẫn hình ảnh</label>
+    <input type="text" id="linkHinhAnh" name="linkHinhAnh" placeholder="Nhập đường dẫn hình ảnh"/>
+
+    <button type="submit">Lưu</button>
+    <button type="button" id="cancel-button">Thoát</button>
+  </form>
+</dialog>
 <div style="justify-content: center; text-align: center">
   <button type="button" id="addproduct-button">Thêm mới</button>
 </div>
