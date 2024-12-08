@@ -1,8 +1,9 @@
-// Các biến toàn cục
-let currentProduct; // Lưu sản phẩm đang xem chi tiết
-let currentDetailImageIndex = 0; // Chỉ số ảnh đang hiển thị trong slider
-const currentUserId = "ID_NGUOI_DUNG"; // ID người dùng tạm thời (hard-code)
-let cart = JSON.parse(localStorage.getItem("cart")) || []; // Lấy giỏ hàng từ localStorage hoặc tạo mới
+// Thêm biến để lưu trạng thái hiện tại của modal chi tiết
+let modalState = {
+  currentProduct: null,
+  currentDetailImageIndex: 0,
+  currentUserId: "ID_NGUOI_DUNG", // TODO: Thay thế bằng ID người dùng thực từ hệ thống đăng nhập
+};
 
 // Các hàm xử lý Modal giỏ hàng
 function openCartModal() {
@@ -12,8 +13,14 @@ function openCartModal() {
     return;
   }
   modal.style.display = "block";
-  document.body.classList.add("modal-open"); // Thêm class để khóa cuộn trang
-  renderGioHang(cart, renderItemGioHang, "#cartItems");
+  document.body.classList.add("product-detail-modal-open");
+
+  // Lấy giỏ hàng của người dùng hiện tại
+  const gioHang = timGioHang(modalState.currentUserId);
+  if (gioHang) {
+    renderGioHang(gioHang["chi-tiet"], renderItemGioHang, "#cartItems");
+    capNhatCart();
+  }
 }
 
 function closeCartModal() {
@@ -23,7 +30,7 @@ function closeCartModal() {
     return;
   }
   modal.style.display = "none";
-  document.body.classList.remove("modal-open"); // Xóa class để mở lại cuộn trang
+  document.body.classList.remove("product-detail-modal-open");
 }
 
 // Các hàm xử lý Modal chi tiết sản phẩm
@@ -34,8 +41,8 @@ function hienTrangChiTiet(id) {
     return;
   }
 
-  currentProduct = sanPham;
-  currentDetailImageIndex = 0;
+  modalState.currentProduct = sanPham;
+  modalState.currentDetailImageIndex = 0;
 
   // Cập nhật thông tin sản phẩm vào modal
   document.getElementById(
@@ -68,37 +75,37 @@ function hienTrangChiTiet(id) {
   // Hiển thị modal
   const modal = document.getElementById("productDetailModal");
   modal.style.display = "block";
-  document.body.classList.add("modal-open");
+  document.body.classList.add("product-detail-modal-open");
 }
 
 function closeProductDetailModal() {
   const modal = document.getElementById("productDetailModal");
   modal.style.display = "none";
-  document.body.classList.remove("modal-open");
+  document.body.classList.remove("product-detail-modal-open");
 }
 
 // Các hàm xử lý slider ảnh
 function showDetailImage(index) {
   const images = document.querySelectorAll(
-    "#productDetailModal .image-slider img"
+    "#productDetailModal .product-detail-image-slider img"
   );
   images.forEach((img) => img.classList.remove("active"));
   images[index].classList.add("active");
-  currentDetailImageIndex = index;
+  modalState.currentDetailImageIndex = index;
 }
 
 function nextDetailImage() {
-  const nextIndex = (currentDetailImageIndex + 1) % 2;
+  const nextIndex = (modalState.currentDetailImageIndex + 1) % 2;
   showDetailImage(nextIndex);
 }
 
 function prevDetailImage() {
-  const prevIndex = currentDetailImageIndex === 0 ? 1 : 0;
+  const prevIndex = modalState.currentDetailImageIndex === 0 ? 1 : 0;
   showDetailImage(prevIndex);
 }
 
 // Hiển thị sản phẩm trong giỏ hàng
-function renderItemGioHang(item, cart) {
+function renderItemGioHang(item, chiTietGioHang) {
   const sanpham = timSanPham(item["san-pham"]);
   if (!sanpham) {
     console.log("Không tìm thấy sản phẩm trong giỏ hàng");
@@ -106,6 +113,7 @@ function renderItemGioHang(item, cart) {
   }
 
   const rowCart = document.createElement("div");
+  rowCart.className = "product-detail-cart-item";
   rowCart.style.display = "flex";
   rowCart.style.alignItems = "center";
   rowCart.style.gap = "1rem";
@@ -151,8 +159,13 @@ function renderItemGioHang(item, cart) {
     tong.textContent = (
       sanpham["price-sale-n"] * soLuongChiTiet.value
     ).toLocaleString("vi-VN", { style: "currency", currency: "VND" });
-    capNhatCart(cart);
-    saveCartToLocalStorage();
+
+    // Cập nhật giỏ hàng trong database
+    const gioHang = timGioHang(modalState.currentUserId);
+    if (gioHang) {
+      suaChiTietGioHang(modalState.currentUserId, gioHang["chi-tiet"]);
+      capNhatCart();
+    }
   });
   soLuong.appendChild(soLuongChiTiet);
   rowCart.appendChild(soLuong);
@@ -172,13 +185,16 @@ function renderItemGioHang(item, cart) {
   const xoaKhoiCart = document.createElement("button");
   xoaKhoiCart.type = "button";
   xoaKhoiCart.innerHTML = '<i class="fas fa-trash"></i>';
-  xoaKhoiCart.className = "delete-btn";
+  xoaKhoiCart.className = "product-detail-delete-btn";
   xoaKhoiCart.addEventListener("click", () => {
-    const index = cart.findIndex((i) => i["san-pham"] === item["san-pham"]);
-    if (index !== -1) {
-      cart.splice(index, 1);
-      capNhatCart(cart);
-      saveCartToLocalStorage();
+    const gioHang = timGioHang(modalState.currentUserId);
+    if (gioHang) {
+      const newChiTiet = gioHang["chi-tiet"].filter(
+        (i) => i["san-pham"] !== item["san-pham"]
+      );
+      suaChiTietGioHang(modalState.currentUserId, newChiTiet);
+      renderGioHang(newChiTiet, renderItemGioHang, "#cartItems");
+      capNhatCart();
     }
   });
   xoa.appendChild(xoaKhoiCart);
@@ -189,12 +205,12 @@ function renderItemGioHang(item, cart) {
 
 // Các hàm quản lý giỏ hàng
 function updateDetailTotal() {
-  if (!currentProduct) return;
+  if (!modalState.currentProduct) return;
 
   const quantity = parseInt(
     document.getElementById("productDetailQuantity").value
   );
-  const price = parseFloat(currentProduct["price-sale-n"]);
+  const price = parseFloat(modalState.currentProduct["price-sale-n"]);
   const total = quantity * price;
 
   document.getElementById("productDetailTotalPrice").textContent =
@@ -205,27 +221,38 @@ function updateDetailTotal() {
 }
 
 function addToCartFromDetail() {
-  if (!currentProduct) {
+  if (!modalState.currentProduct) {
     console.error("Không tìm thấy thông tin sản phẩm");
     return;
   }
 
-  const productId = currentProduct["web-scraper-order"];
+  const productId = modalState.currentProduct["web-scraper-order"];
   const quantity =
     parseInt(document.getElementById("productDetailQuantity").value) || 1;
 
-  const existingItem = cart.find((item) => item["san-pham"] === productId);
+  // Lấy giỏ hàng hiện tại của người dùng
+  const gioHang = timGioHang(modalState.currentUserId);
+  if (!gioHang) {
+    console.error("Không tìm thấy giỏ hàng của người dùng");
+    return;
+  }
+
+  // Tìm sản phẩm trong giỏ hàng
+  const existingItem = gioHang["chi-tiet"].find(
+    (item) => item["san-pham"] === productId
+  );
   if (existingItem) {
     existingItem["so-luong"] += quantity;
   } else {
-    cart.push({
+    gioHang["chi-tiet"].push({
       "san-pham": productId,
       "so-luong": quantity,
     });
   }
 
-  saveCartToLocalStorage();
-  capNhatCart(cart);
+  // Cập nhật giỏ hàng
+  suaChiTietGioHang(modalState.currentUserId, gioHang["chi-tiet"]);
+  capNhatCart();
   alert(`Đã thêm ${quantity} sản phẩm vào giỏ hàng!`);
   closeProductDetailModal();
 }
@@ -247,12 +274,13 @@ function saveCartToLocalStorage() {
 }
 
 // Cập nhật hiển thị giỏ hàng
-function capNhatCart(cart) {
-  renderGioHang(cart, renderItemGioHang, "#cartItems");
+function capNhatCart() {
+  const gioHang = timGioHang(modalState.currentUserId);
+  if (!gioHang) return;
 
   const cartCount = document.getElementById("cartItemCount");
   if (cartCount) {
-    const totalItems = cart.reduce(
+    const totalItems = gioHang["chi-tiet"].reduce(
       (total, item) => total + item["so-luong"],
       0
     );
@@ -283,7 +311,7 @@ window.addEventListener("load", () => {
   document.body.appendChild(createCartModal());
   document.body.appendChild(createProductDetailModal());
 
-  capNhatCart(cart);
+  capNhatCart();
 });
 
 // Các hàm tạo giao diện
@@ -298,9 +326,9 @@ function createCartButton() {
     <i class="fas fa-shopping-cart"></i>
     <span>Giỏ hàng</span>
     <span id="cartItemCount">${cart.reduce(
-    (total, item) => total + item["so-luong"],
-    0
-  )}</span>
+      (total, item) => total + item["so-luong"],
+      0
+    )}</span>
   `;
 
   container.appendChild(button);
@@ -311,20 +339,20 @@ function createCartButton() {
 function createCartModal() {
   const modal = document.createElement("div");
   modal.id = "cartModal";
-  modal.className = "modal";
+  modal.className = "product-detail-modal";
 
   modal.innerHTML = `
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="product-detail-modal-content">
+      <div class="product-detail-modal-header">
         <h2>Giỏ hàng của bạn</h2>
-        <span class="close" onclick="closeCartModal()">&times;</span>
+        <span class="product-detail-close" onclick="closeCartModal()">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="product-detail-modal-body">
         <div id="cartItems"></div>
-        <div class="cart-summary">
-          <div class="cart-buttons">
-            <button onclick="closeCartModal()" class="btn-secondary">Đóng</button>
-            <button onclick="checkout()" class="btn-primary" id="btn-s">Mua ngay</button>
+        <div class="product-detail-cart-summary">
+          <div class="product-detail-cart-buttons">
+            <button onclick="closeCartModal()" class="product-detail-btn-secondary">Đóng</button>
+            <button onclick="checkout()" class="product-detail-btn-primary" id="btn-s">Mua ngay</button>
           </div>
         </div>
       </div>
@@ -338,53 +366,61 @@ function createCartModal() {
 function createProductDetailModal() {
   const modal = document.createElement("div");
   modal.id = "productDetailModal";
-  modal.className = "modal";
+  modal.className = "product-detail-modal";
 
   modal.innerHTML = `
-    <div class="modal-content">
-      <div class="modal-header">
+    <div class="product-detail-modal-content">
+      <div class="product-detail-modal-header">
         <h2>Chi tiết sản phẩm</h2>
-        <span class="close" onclick="closeProductDetailModal()">&times;</span>
+        <span class="product-detail-close" onclick="closeProductDetailModal()">&times;</span>
       </div>
-      <div class="modal-body">
+      <div class="product-detail-modal-body">
         <div class="product-detail">
-          <div class="product-image">
-            <div class="image-slider">
+          <div class="product-detail-image">
+            <div class="product-detail-image-slider">
               <img id="productDetailImage" class="active" src="" alt="Hình ảnh sản phẩm 1" />
               <img id="productDetailImage2" src="" alt="Hình ảnh sản phẩm 2" />
-              <button class="slider-btn prev" onclick="prevDetailImage()">&#10094;</button>
-              <button class="slider-btn next" onclick="nextDetailImage()">&#10095;</button>
+              <button class="product-detail-slider-btn prev" onclick="prevDetailImage()">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <button class="product-detail-slider-btn next" onclick="nextDetailImage()">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+              <div class="product-detail-slider-dots">
+                <span class="product-detail-slider-dot active" onclick="showDetailImage(0)"></span>
+                <span class="product-detail-slider-dot" onclick="showDetailImage(1)"></span>
+              </div>
             </div>
           </div>
 
-          <div class="product-info">
+          <div class="product-detail-info">
             <h1 id="productDetailName"></h1>
             <h3 id="productDetailCategory"></h3>
             <p id="productDetailDescription"></p>
 
-            <div class="price-info">
-              <p class="original-price">
-                <span class="price-label">Giá gốc:</span>
+            <div class="product-detail-price-info">
+              <p class="product-detail-original-price">
+                <span class="product-detail-price-label">Giá gốc:</span>
                 <span id="productDetailOriginalPrice"></span>
               </p>
-              <p class="sale-price">
-                <span class="price-label">Giá khuyến mãi:</span>
+              <p class="product-detail-sale-price">
+                <span class="product-detail-price-label">Giá khuyến mãi:</span>
                 <span id="productDetailSalePrice"></span>
               </p>
             </div>
 
-            <div class="quantity-selector">
+            <div class="product-detail-quantity-selector">
               <label for="productDetailQuantity">Số lượng:</label>
-              <div class="quantity-controls">
+              <div class="product-detail-quantity-controls">
                 <input type="number" id="productDetailQuantity" value="1" min="1" onchange="updateDetailTotal()" />
               </div>
             </div>
 
-            <div class="total-price">
+            <div class="product-detail-total-price">
               <p>Thành tiền: <span id="productDetailTotalPrice"></span></p>
             </div>
 
-            <button id="addToCartDetailBtn" class="add-to-cart-btn" onclick="addToCartFromDetail()">
+            <button id="addToCartDetailBtn" class="product-detail-add-to-cart-btn" onclick="addToCartFromDetail()">
               <i class="fas fa-shopping-cart"></i>
               <span>Thêm vào giỏ hàng</span>
             </button>
