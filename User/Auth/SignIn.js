@@ -12,7 +12,8 @@ function SignIn() {
     if (userEntity.password === passwordValue) {
       alert("Login success");
       localStorage.setItem("currentUserId", userEntity.id);
-      window.location = "../../index.html";
+      const loginDialog = document.getElementById("loginDialog");
+      loginDialog.close();
     }
   } else {
     alert("Login failed: Username or password is incorrect");
@@ -38,7 +39,7 @@ function kiemTraInputSignIn() {
 }
 
 window.addEventListener("load", () => {
-  taiDuLieuTongMainJs(() => taiNguoiDung(() => {
+  taiNguoiDung(() => {
 
     const signInForm = document.getElementById("signInForm");
     signInForm.addEventListener("submit", (event) => {
@@ -48,6 +49,5 @@ window.addEventListener("load", () => {
       }
       SignIn();
     });
-  }))
+  })
 })
-
