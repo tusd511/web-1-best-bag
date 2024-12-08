@@ -7,13 +7,42 @@
 
 ## Lưu ý cho các bạn ko đọc tin nhắn zalo của nhóm
 
+- **Update: Sun Dec 08 2024 22:05:09 GMT+0700 (Indochina Time)**
+
+<details>
+
+<summary>an noi dung da dc hien len</summary>
+
+- à quên thầy còn bắt 1 file js nữa
+- bạn làm admin với trang chủ để ý
+- vì có render ds sản phẩm khả năng là tên sẽ trùng
+- cho nên làm render item trong file của mình xem như là cái hàm hiển thị sp là ko toonf tại trong mainjs
+- nên vô sửa lại tên các hàm hiển thị thành tên ...Admin hoặc ...Home để tránh trùng
+- những cái lệnh trong event load thì viết ra 1 hàm vd như onLoadAdminPage, onLoadHomePage
+- rồi trong file html của mình, tạo thẻ script đặt 1 cái biến toàn cục giống như trong index.html set dayLaTrangIndex rồi trong hàm onLoad đó check biến đó có ko để biết xem đang ở trang k phải của mình thì k làm gì
+- do vẫn còn file riêng chưa gộp nên giữ nguyên mấy cái gọi tải dữ liệu, cái này lúc gộp cuối cùng vô 1 file sẽ sửa lại
+- @All mấy cái yêu cầu này chưa phải làm ngay vì hiện tại vẫn là làm riêng file nhé tối t3 mới gộp tổng
+  cho nên làm xong chức năng của mình để ghi đánh giá
+- gộp của hôm nay là gộp vô nhánh main để xem thành quả còn gộp tối t3 là gộp vo 1 file
+- k push đc thì gửi Hưng nguyên file Hưng copy vào chứ cũng k sửa đâu
+- css thì vẫn phải viết vô css của mình để bị conflict còn xóa hết style.css gộp lại từ đầu đc
+- **ko có đc** code thêm biến gì toàn cục hết nhé de tranh loi ghi gop vo 1 file
+
+```js
+// Các biến toàn cục
+let currentProduct; // Lưu sản phẩm đang xem chi tiết
+let currentDetailImageIndex = 0; // Chỉ số ảnh đang hiển thị trong slider
+const currentUserId = "ID_NGUOI_DUNG"; // ID người dùng tạm thời (hard-code)
+let cart = JSON.parse(localStorage.getItem("cart")) || []; // Lấy giỏ hàng từ localStorage hoặc tạo mới
+```
+
 - **Update: Mon Dec 02 2024 11:31:53 GMT+0700 (Indochina Time)**: Trên tinh thần mỗi người làm rồi tự cố gắng ghép vào chứ đừng chờ.
 
 - **Update: Fri Nov 29 2024 21:21:43 GMT+0700 (Indochina Time)**
 
-<details open>
+<details>
 
-<summary>an noi dung da dc hien len</summary>
+<summary>hien noi dung da dc an di</summary>
 
 - nhắc lại, code liên quan đến tải, đọc, lọc, sắp xếp, phân trang, thêm sửa xoá dữ liệu, sản phẩm, người dùng, hoá đơn, giỏ hàng và nhiều loại thống kê đều đã viết trong `main.js/index mẫu/thư mục admin`. Vui lòng link script src file `main.js/admin.js/*.js` vào, KHÔNG copy code ra file riêng vì fix bug sẽ ko update đc
 
