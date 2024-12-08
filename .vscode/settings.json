@@ -1,5 +1,5 @@
 {
-    "prettier.tabWidth": 2,
-    "liveServer.settings.port": 5501,
-    "python.analysis.autoImportCompletions": true
+  "prettier.tabWidth": 2,
+  "liveServer.settings.port": 5501,
+  "python.analysis.autoImportCompletions": true
 }

@@ -11,11 +11,11 @@ const nguoiDungImKey = "nguoiDungIm";
 const gioHangImKey = "gioHangIm";
 const hoaDonImKey = "hoaDonIm";
 const theLoaiSanPhamKey = "theLoaiSanPham";
-const sanPhamFile = "san-pham.json";
-const nguoiDungFile = "nguoi-dung.json";
-const gioHangFile = "gio-hang.json";
-const hoaDonFile = "hoa-don.json";
-const theLoaiSanPhamFile = "the-loai.json";
+const sanPhamFile = "../../Data/san-pham.json";
+const nguoiDungFile = "../../Data/nguoi-dung.json";
+const gioHangFile = "../../Data/gio-hang.json";
+const hoaDonFile = "../../Data/hoa-don.json";
+const theLoaiSanPhamFile = "../../Data/the-loai.json";
 
 // tang bien nay khi muon reset localStorage hoac update du lieu moi tu file
 const dataVersion = 26;
@@ -69,6 +69,7 @@ function taoIndexMapping(g_duLieu, entityImKey, entityIdKey, i_duLieu) {
   );
 }
 async function taiSanPham(sauKhiTai) {
+
   g_theLoaiSanPham = await taiDuLieu(
     theLoaiSanPhamKey,
     theLoaiSanPhamFile,
@@ -330,6 +331,11 @@ function renderItemSanPham(sanPham) {
 
     item.appendChild(matchScore);
   }
+  
+  const img = document.createElement("img");
+  img.src = `../../images/${sanPham["image-file"]}`;
+  img.classList.add("grid-img");
+  item.appendChild(img);
 
   const id = document.createElement("h4");
   id.innerText = sanPham["web-scraper-order"];
@@ -369,13 +375,13 @@ function renderItemSanPham(sanPham) {
   btn.addEventListener("click", () =>
     hienTrangChiTiet(sanPham["web-scraper-order"])
   );
-  btn.textContent = "Xem chi tiet";
+  btn.textContent = "Xem Chi Tiết";
   item.appendChild(btn);
 
-  const img = document.createElement("img");
-  img.src = `./images/${sanPham["image-file"]}`;
-  img.classList.add("grid-img");
-  item.appendChild(img);
+  // const img = document.createElement("img");
+  // img.src = `../../images/${sanPham["image-file"]}`;
+  // img.classList.add("grid-img");
+  // item.appendChild(img);
   return item;
 }
 

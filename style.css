@@ -219,11 +219,14 @@ td {
 dialog#debugDialog {
   transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
   animation: dialog-slide-hide 0.5s ease-out normal;
+
   &::backdrop {
     animation: dialog-backdrop-hide 0.5s ease-out normal;
   }
+
   &[open] {
     animation: dialog-slide-show 0.5s ease-out normal;
+
     &::backdrop {
       animation: dialog-backdrop-show 0.5s ease-out normal;
     }
@@ -234,6 +237,7 @@ dialog#debugDialog {
   from {
     transform: translateY(calc(-50vh - 60%));
   }
+
   to {
     transform: translateY(0%);
   }
@@ -248,6 +252,7 @@ dialog#debugDialog {
 div#debugMessage {
   transition: display 0.5s allow-discrete;
   animation: popover-slide-hide 0.5s ease-out normal;
+
   &:popover-open {
     animation: popover-slide-show 0.5s ease-out normal;
   }
@@ -257,6 +262,7 @@ div#debugMessage {
   from {
     transform: translateY(calc(-50vh - 60%));
   }
+
   to {
     transform: translateY(0%);
   }
@@ -266,4 +272,262 @@ div#debugMessage {
   to {
     transform: translateY(calc(-50vh - 60%));
   }
+}
+
+:root {
+  --primary-color: #005a2a;
+  --secondary-color: #005a2a;
+  --hover-color: #00803c;
+  --text-color: #333;
+}
+
+* {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  box-sizing: border-box;
+  color: var(--text-color);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+body.homepage .container {
+  max-width: 1000px;
+  margin: auto;
+  display: flex;
+  padding: 0%;
+}
+
+body.homepage .navbar {
+  background-color: var(--primary-color);
+  font-size: 1.4rem;
+  height: 70px;
+}
+
+body.homepage .navbar-brand-img {
+  height: 60px;
+  width: auto;
+}
+
+body.homepage .nav-link {
+  color: #fff;
+  display: block;
+  padding: .5rem 1rem;
+  text-decoration: none;
+}
+
+body.homepage .nav-link:hover {
+  color: #fff;
+}
+
+body.homepage .nav-item {
+  width: 160px;
+  text-align: center;
+  border-radius: 20px;
+  transition: .3s ease-in;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.homepage .nav-item:hover {
+  background-color: var(--secondary-color);
+}
+
+body.homepage .dropdown:hover > .dropdown-menu {
+  display: block;
+}
+
+body.homepage .nav-user {
+  font-size: 1rem;
+}
+
+body.homepage .user-setting {
+  position: absolute;
+  display: flex;
+  top: -6px;
+  right: 70px;
+}
+
+body.homepage .nav-user-link {
+  font-size: 12px;
+  font-weight: 300px;
+}
+
+/* SEARCH */
+body.homepage .nav-user {
+  align-items: center;
+}
+
+body.homepage .navbar-search {
+  background-color: #fff;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-top: 17px;
+  margin-left: 300px;
+}
+
+body.homepage .navbar-search-input {
+  padding-left: 12px;
+  border: none;
+  outline: none;
+}
+
+body.homepage .navbar-search-input:focus {
+  border: none;
+  outline: none;
+}
+
+body.homepage .navbar-search-btn {
+  line-height: 30px;
+  padding: 0 8px;
+  border: none;
+  border-left: 1px solid #ccc;
+  color: var(--secondary-color);
+  background-color: #fff;
+  cursor: pointer;
+}
+
+body.homepage .navbar-search-btn:focus {
+  outline: none;
+}
+
+body.homepage .navbar-search-btn:hover {
+  color: var(--hover-color);
+  background-color: #ccc;
+}
+
+/* CART */
+body.homepage .nav-cart {
+  position: relative;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 17px;
+  margin-left: 20px;
+}
+
+/* ==============================
+          CAROUSEL 
+============================== */
+body.homepage .carousel-inner img {
+  width: 100%;
+  aspect-ratio: 4;
+  object-fit: fill;
+}
+
+/* ================================
+          FOOTER
+=============================== */
+body.homepage .footer-content {
+  background-color: var(--primary-color);
+  margin-top: 16px;
+  padding-top: 24px;
+  color: white;
+  height: 300px;
+}
+
+body.homepage .footer-img {
+  width: 150px;
+}
+
+body.homepage .footer-address,
+body.homepage .footer-logo {
+  text-align: center;
+  font-size: 1.2rem;
+  margin: auto;
+}
+
+body.homepage .footer-lincense {
+  font-size: 0.8rem;
+  margin: 60px;
+  text-align: center;
+}
+
+body.homepage button {
+  background-color: darkgreen;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  border-radius: 20px;
+  margin: 0 10px;
+}
+
+body.homepage button:hover {
+  background-color: darkgreen;
+}
+
+/* Product Display and Pagination */
+body.homepage .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2px 4px;
+  margin: 0 22px;
+  padding: 12px 10px;
+}
+
+body.homepage .grid {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  justify-content: none;
+}
+
+body.homepage .grid-img {
+  position: relative;
+  max-width: 300px;
+  max-height: 300px;
+  width: 100%;
+  height: auto;
+  align-self: center;
+}
+
+body.homepage .checkPrice {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+}
+
+body.homepage ul.pagination-list {
+  list-style-type: none;
+  display: flex;
+  justify-content: center;
+}
+
+body.homepage .pagination-list {
+  display: flex;
+  margin: auto;
+}
+
+body.homepage .pagination-list button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+body.homepage .pagination-list button.active {
+  background-color: yellowgreen;
+}
+
+body.homepage table,
+body.homepage th,
+body.homepage td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 4px;
 }

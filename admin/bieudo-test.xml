@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../style.css" />
-    <!-- <link rel="stylesheet" href="./admin.css" /> -->
+    <link rel="stylesheet" href="./admin.css" />
     <link
       rel="shortcut icon"
       href="../images/icons8-bag-96.png"
@@ -19,13 +19,37 @@
       integrity="sha256-mOrdWYHx0STnKlAY+X1swccOXZHDGZgN+rQ7rewTfO4="
       crossorigin="anonymous"
     ></script>
+    <script type="module">
+      import {
+        InvalidFormatError,
+        InvalidNumberError,
+        NotEnoughUnitError,
+        ReadingConfig,
+        doReadNumber,
+      } from " https://cdn.jsdelivr.net/npm/read-vietnamese-number@2.1.4/+esm";
+      // Config reading options
+      const config = new ReadingConfig();
+      config.unit = ["đồng"];
+      window.number2TextVietnamese = function (number) {
+        try {
+          return doReadNumber(config, number);
+        } catch (err) {
+          // Handle errors
+          if (err instanceof InvalidFormatError)
+            return "Định dạng input không hợp lệ";
+          else if (err instanceof InvalidNumberError) return "Số không hợp lệ";
+          else if (err instanceof NotEnoughUnitError)
+            return "Không đủ đơn vị đọc số";
+        }
+      };
+    </script>
     <script src="../main.js"></script>
     <script src="./thongke-test.js"></script>
     <script src="./thongke.js"></script>
     <script src="./bieudo-test.js"></script>
     <title>Web 1 Best Bag</title>
-  </head>
-  <body>
+  </head> -->
+  <!-- <body> -->
     <h1>Bieu do doanh thu</h1>
 
     <!-- <div class="debug-table"></div> -->
@@ -50,5 +74,5 @@
       <div id="chart"></div>
       <!-- <canvas id="hierarchicalChart" width="3000" height="2000"></canvas> -->
     </div>
-  </body>
-</html>
+  <!-- </body>
+</html> -->

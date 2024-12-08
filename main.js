@@ -1230,6 +1230,19 @@ function formatDateLocaleVn(dateString) {
   });
 }
 
+function loadScriptModule(urlScript, urlTextInScript, callback) {
+  const script = document.createElement("script");
+  script.type = "module";
+  script.onload = callback;
+  script.src = urlScript;
+  fetch(urlTextInScript)
+    .then((res) => res.text())
+    .then((text) => {
+      script.append(text);
+      document.head.appendChild(script);
+    });
+}
+
 function showDebugMenu() {
   const existingDialog = document.getElementById("debugDialog");
   if (existingDialog) {

@@ -169,7 +169,7 @@ function adminThemSanPham() {
         style: "currency",
         currency: "VND",
       }),
-      ["image-src"]:document.getElementById("linkHinhAnh").value,
+      ["image-src"]: document.getElementById("linkHinhAnh").value,
       ["images-file"]: document.getElementById("hinhAnhSanPham").files[0],
       ["price-n"]: document.getElementById("giaSanPham"),
       category: document.getElementById("loaiSanPham").value,
@@ -189,8 +189,8 @@ function adminSuaSanPham(id) {
   const infoFormDialog = document.querySelector("#infoFormDialog");
   const infoForm = document.querySelector("#infoForm");
   infoFormDialog.showModal();
-  document.getElementById("linkHinhAnh").value=sanPham["image-src"],
-  document.getElementById("tenSanPham").value = sanPham["name"];
+  (document.getElementById("linkHinhAnh").value = sanPham["image-src"]),
+    (document.getElementById("tenSanPham").value = sanPham["name"]);
   document.getElementById("giaSanPham").value = sanPham["price-n"];
   document.getElementById("loaiSanPham").value = sanPham["category"];
   document.getElementById("moTaSanPham").value = sanPham["description"];
@@ -204,7 +204,7 @@ function adminSuaSanPham(id) {
         style: "currency",
         currency: "VND",
       }),
-      "image-src":document.getElementById("linkHinhAnh").value,
+      "image-src": document.getElementById("linkHinhAnh").value,
       "price-n": document.getElementById("giaSanPham"),
       category: document.getElementById("loaiSanPham").value,
       description: document.getElementById("moTaSanPham").value,
@@ -1358,15 +1358,32 @@ function hienThiTopNguoiDung(topNguoiDung, hamRenderItem, wrapperSelector) {
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
 function loadTabContent(tabName, sauKhiTai) {
-  fetch(`${tabName}.xml`)
-    .then((response) => response.text())
-    .then((data) => {
-      const content_area = document.getElementById("content-wrapper");
-      if (content_area) {
-        content_area.innerHTML = data;
-      }
-      sauKhiTai();
+  function fetchContent(url, onSuccess, onFailure) {
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`loadTabContent Failed to fetch ${url}`);
+        }
+        return response.text();
+      })
+      .then(onSuccess)
+      .catch(onFailure);
+  }
+  const content_area = document.getElementById("content-wrapper");
+  if (!content_area) return;
+  const onFetchSuccess = (data) => {
+    content_area.innerHTML = data;
+    sauKhiTai();
+  };
+  const onFetchFailure = () => {
+    fetchContent(`${tabName}.html`, onFetchSuccess, (error) => {
+      console.error("loadTabContent Error loading HTML content:", error);
     });
+  };
+  fetchContent(`${tabName}.xml`, onFetchSuccess, (error) => {
+    console.error("loadTabContent Error loading XML content:", error);
+    onFetchFailure();
+  });
 }
 
 var tabthongke = document.getElementById("thongke");
@@ -1434,7 +1451,9 @@ function onPageLoad() {
       break;
     case "bieudo-test":
       loadTabContent("bieudo-test", () =>
-        taiDuLieuTongMainJs(() => taiHoaDon(() => {}))
+        taiDuLieuTongMainJs(() =>
+          taiHoaDon(() => taiNguoiDung(() => taiSanPham(() => taoBieuDo())))
+        )
       );
       doiMauBackGround();
       break;
