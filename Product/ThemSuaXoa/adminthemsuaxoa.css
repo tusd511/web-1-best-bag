@@ -1,0 +1,376 @@
+/* Base modal styles */
+.modal,
+.admintsx-modal {
+  display: none;
+  position: fixed !important;
+  z-index: 9999 !important;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  backdrop-filter: blur(15px);
+}
+
+.modal-content,
+.admintsx-modal-content {
+  background: linear-gradient(165deg, #2c2f33, #1a1c1f) !important;
+  margin: 2vh auto;
+  padding: 40px;
+  border-radius: 25px;
+  width: 80%;
+  max-width: 800px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  color: #fff !important;
+  animation: admintsxModalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 96vh;
+  overflow-y: auto;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Form title */
+.form-title,
+.admintsx-form-title {
+  color: #fff !important;
+  text-align: center;
+  margin-bottom: 35px;
+  font-size: 42px;
+  font-weight: 800;
+  padding-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  position: relative;
+  background: linear-gradient(45deg, #fff 30%, #ec6271 70%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.form-title::after,
+.admintsx-form-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #ec6271, transparent);
+  border-radius: 2px;
+}
+
+/* Form groups */
+.form-group,
+.admintsx-form-group {
+  margin-bottom: 35px;
+  background: rgba(37, 39, 41, 0.6);
+  padding: 25px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.form-group::before,
+.admintsx-form-group::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, #ec6271, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.form-group:hover::before,
+.admintsx-form-group:hover::before {
+  opacity: 1;
+}
+
+.form-group:hover,
+.admintsx-form-group:hover {
+  transform: translateY(-3px) translateX(5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+  border-color: rgba(236, 98, 113, 0.4);
+  background: rgba(37, 39, 41, 0.8);
+}
+
+/* Labels */
+.form-label,
+.admintsx-form-label {
+  display: block;
+  margin-bottom: 12px;
+  color: #ec6271 !important;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding-left: 15px;
+  border-left: 4px solid #ec6271;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Inputs */
+.form-input,
+.form-select,
+.form-textarea,
+.admintsx-form-input,
+.admintsx-form-select,
+.admintsx-form-textarea {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid rgba(74, 74, 74, 0.8);
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background-color: rgba(28, 30, 32, 0.9) !important;
+  color: #fff !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.admintsx-form-input:focus,
+.admintsx-form-select:focus,
+.admintsx-form-textarea:focus {
+  border-color: #ec6271;
+  box-shadow: 0 0 0 5px rgba(236, 98, 113, 0.25);
+  transform: translateY(-3px);
+  background-color: rgba(28, 30, 32, 0.95) !important;
+}
+
+/* Image upload area */
+.image-input,
+.admintsx-image-input {
+  width: 100%;
+  padding: 30px;
+  border: 3px dashed rgba(236, 98, 113, 0.5);
+  border-radius: 15px;
+  background: rgba(28, 30, 32, 0.7) !important;
+  position: relative;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.image-input::before,
+.admintsx-image-input::before {
+  content: "📸 Chọn ảnh sản phẩm";
+  font-size: 26px;
+  font-weight: 600;
+  color: #ec6271;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Image preview */
+.image-preview,
+.admintsx-image-preview {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(28, 30, 32, 0.8) !important;
+  border-radius: 15px;
+  border: 2px solid rgba(74, 74, 74, 0.8);
+  text-align: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.image-preview img,
+.admintsx-image-preview img {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
+}
+
+/* Buttons */
+.submit-btn,
+.cancel-btn,
+.admintsx-submit-btn,
+.admintsx-cancel-btn {
+  padding: 15px 30px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border-radius: 12px;
+  min-width: 160px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+
+/* Submit button */
+.submit-btn,
+.admintsx-submit-btn {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+}
+
+.submit-btn:hover,
+.admintsx-submit-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(46, 204, 113, 0.6);
+}
+
+/* Cancel button */
+.cancel-btn,
+.admintsx-cancel-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+.cancel-btn:hover,
+.admintsx-cancel-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(231, 76, 60, 0.6);
+}
+
+/* Required field indicator */
+.form-label.required::after,
+.admintsx-form-label.required::after {
+  content: "*";
+  color: #ec6271;
+  margin-left: 8px;
+  font-size: 24px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Animation */
+@keyframes admintsxModalFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .modal-content,
+  .admintsx-modal-content {
+    padding: 30px;
+    margin: 2vh 10px;
+  }
+
+  .form-title,
+  .admintsx-form-title {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .form-group,
+  .admintsx-form-group {
+    padding: 20px;
+    margin-bottom: 25px;
+  }
+
+  .form-label,
+  .admintsx-form-label {
+    font-size: 16px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea,
+  .admintsx-form-input,
+  .admintsx-form-select,
+  .admintsx-form-textarea {
+    padding: 15px 20px;
+    font-size: 14px;
+  }
+
+  .image-preview img,
+  .admintsx-image-preview img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .submit-btn,
+  .cancel-btn,
+  .admintsx-submit-btn,
+  .admintsx-cancel-btn {
+    padding: 15px 25px;
+    font-size: 14px;
+    min-width: 120px;
+  }
+}
+
+/* Body styles when modal is open */
+body.modal-open,
+body.admintsx-modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100%;
+  height: 100%;
+  padding-right: 17px; /* Bù đắp cho scrollbar */
+}
+
+/* Modal styles */
+.modal,
+.admintsx-modal {
+  display: none;
+  position: fixed !important;
+  z-index: 9999 !important;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  backdrop-filter: blur(15px);
+}
+
+/* Modal content scrollbar */
+.modal-content,
+.admintsx-modal-content {
+  /* ... các styles khác giữ nguyên ... */
+  overflow-y: auto;
+  max-height: calc(100vh - 40px); /* Giới hạn chiều cao */
+  margin: 20px auto; /* Căn giữa và tạo khoảng cách với top/bottom */
+}
+
+/* Custom scrollbar cho modal content */
+.modal-content::-webkit-scrollbar,
+.admintsx-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.admintsx-modal-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.admintsx-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(236, 98, 113, 0.5);
+  border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover,
+.admintsx-modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 98, 113, 0.7);
+}
