@@ -44,67 +44,71 @@
     <script src="main.js"></script>
     <script src="User/Auth/SignIn.js"></script>
     <script src="User/Auth/SignUp.js"></script>
+    <script defer src="NavBar/link-navbar.js"></script>
     <title>Web 1 Best Bag</title>
 </head>
 <body>
-<div
-        style="
+<!-- Navbar -->
+<div id="navbar-sidebar-inject">
+    <div
+            style="
         display: flex;
         flex-direction: column;
         gap: 10px;
         justify-content: center;
         width: 100%;
       "
->
-    <div
-            id="search-container"
-            style="
+    >
+        <div
+                id="search-container"
+                style="
           display: flex;
           flex-direction: row;
           justify-content: center;
           width: 100%;
         "
-    >
-        <form id="productForm" style="border: 1px solid green">
-            <label for="search">Name:</label>
-            <input
-                    type="text"
-                    id="search"
-                    name="search"
-                    placeholder="Product Name"
-            />
+        >
+            <form id="productForm" style="border: 1px solid green">
+                <label for="search">Name:</label>
+                <input
+                        type="text"
+                        id="search"
+                        name="search"
+                        placeholder="Product Name"
+                />
 
-            <label for="priceRange">Price Range:</label>
-            <input
-                    type="number"
-                    id="minPrice"
-                    name="min"
-                    placeholder="Min Price"
-            />
-            <input
-                    type="number"
-                    id="maxPrice"
-                    name="max"
-                    placeholder="Max Price"
-            />
+                <label for="priceRange">Price Range:</label>
+                <input
+                        type="number"
+                        id="minPrice"
+                        name="min"
+                        placeholder="Min Price"
+                />
+                <input
+                        type="number"
+                        id="maxPrice"
+                        name="max"
+                        placeholder="Max Price"
+                />
 
-            <label for="categories">Categories:</label>
-            <div id="categories"></div>
+                <label for="categories">Categories:</label>
+                <div id="categories"></div>
 
-            <label for="sortBy">Sort By:</label>
-            <select id="sortBy" name="sort">
-                <option value selected>(Chua chon)</option>
-                <option value="asc">Price Ascending</option>
-                <option value="desc">Price Descending</option>
-                <option value="best">Best Match</option>
-            </select>
+                <label for="sortBy">Sort By:</label>
+                <select id="sortBy" name="sort">
+                    <option value selected>(Chua chon)</option>
+                    <option value="asc">Price Ascending</option>
+                    <option value="desc">Price Descending</option>
+                    <option value="best">Best Match</option>
+                </select>
 
-            <button type="submit">Search</button>
-        </form>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="debug-table"></div>
+        <div class="product-list"></div>
+        <div class="pagination"></div>
     </div>
-    <div class="debug-table"></div>
-    <div class="product-list"></div>
-    <div class="pagination"></div>
 </div>
 
 <!-- Dialog login -->
@@ -224,6 +228,8 @@
     console.log('Sign In:', {emailOrUsername, password});
     // Add your sign-in logic here
   });
+
+
 </script>
 </body>
 </html>
