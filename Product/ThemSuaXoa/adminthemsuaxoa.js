@@ -1,33 +1,33 @@
-// Các hàm xử lý thêm/sửa/xóa sản phẩm
+// Các hàm xử lý thêm/sửa/xóa sản phẩm/đã test và chạy được
 function adminSuaSanPham(id) {
-    const products = JSON.parse(localStorage.getItem("sanPham") || "[]");
-    const sanPham = products.find((p) => p["web-scraper-order"] === id);
-  
-    if (!sanPham) {
-      alert("Không tìm thấy sản phẩm!");
-      return;
-    }
-  
-    localStorage.setItem("editing-product", JSON.stringify(sanPham));
-    openProductModal(true); // Mở modal ở chế độ sửa
+  const products = JSON.parse(localStorage.getItem("sanPham") || "[]");
+  const sanPham = products.find((p) => p["web-scraper-order"] === id);
+
+  if (!sanPham) {
+    alert("Không tìm thấy sản phẩm!");
+    return;
   }
-  
-  function adminXoaSanPham(id) {
-    if (confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) {
-      let products = JSON.parse(localStorage.getItem("sanPham") || "[]");
-      const index = products.findIndex((p) => p["web-scraper-order"] === id);
-      if (index !== -1) {
-        products.splice(index, 1);
-        localStorage.setItem("sanPham", JSON.stringify(products));
-        alert("Đã xóa sản phẩm thành công!");
-        window.location.reload();
-      }
+
+  localStorage.setItem("editing-product", JSON.stringify(sanPham));
+  openProductModal(true); // Mở modal ở chế độ sửa
+}
+
+function adminXoaSanPham(id) {
+  if (confirm("Bạn chắc chắn muốn xóa sản phẩm này?")) {
+    let products = JSON.parse(localStorage.getItem("sanPham") || "[]");
+    const index = products.findIndex((p) => p["web-scraper-order"] === id);
+    if (index !== -1) {
+      products.splice(index, 1);
+      localStorage.setItem("sanPham", JSON.stringify(products));
+      alert("Đã xóa sản phẩm thành công!");
+      window.location.reload();
     }
   }
-  
-  // Các hàm xử lý modal
-  function createProductModal() {
-    const modalHTML = `
+}
+
+// Các hàm xử lý modal
+function createProductModal() {
+  const modalHTML = `
       <div id="productModal" class="admintsx-modal">
         <div class="admintsx-modal-content">
           <div class="admintsx-form-container">
@@ -118,161 +118,160 @@ function adminSuaSanPham(id) {
         </div>
       </div>
     `;
-  
-    document.body.insertAdjacentHTML("beforeend", modalHTML);
-  
-    const modal = document.getElementById("productModal");
-    if (!modal) {
-      console.error("Modal không được tạo thành công");
-    }
+
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  const modal = document.getElementById("productModal");
+  if (!modal) {
+    console.error("Modal không được tạo thành công");
   }
-  
-  function openProductModal(isEdit = false) {
-    document.body.classList.add("admintsx-modal-open");
-  
-    let modal = document.getElementById("productModal");
-    if (!modal) {
-      createProductModal();
-      modal = document.getElementById("productModal");
-      setupModalEventListeners();
-    }
-  
-    const form = document.getElementById("productAddEditForm");
-    const formTitle = document.getElementById("formTitle");
-    const imagePreview = document.getElementById("imagePreview");
-    const imageInput = document.getElementById("productImage");
-  
-    form.reset();
-    imagePreview.innerHTML = "";
-  
-    const newImageInput = imageInput.cloneNode(true);
-    imageInput.parentNode.replaceChild(newImageInput, imageInput);
-    newImageInput.addEventListener("change", handleImagePreview);
-  
-    if (isEdit) {
-      const editingProduct = JSON.parse(localStorage.getItem("editing-product"));
-      if (editingProduct) {
-        formTitle.textContent = "Chỉnh Sửa Sản Phẩm";
-  
-        form.elements["name"].value = editingProduct.name;
-        form.elements["category"].value = editingProduct.category;
-        form.elements["description"].value = editingProduct.description;
-        form.elements["price-n"].value = editingProduct["price-n"];
-        form.elements["price-sale-n"].value = editingProduct["price-sale-n"];
-  
-        imagePreview.innerHTML = `
+}
+
+function openProductModal(isEdit = false) {
+  document.body.classList.add("admintsx-modal-open");
+
+  let modal = document.getElementById("productModal");
+  if (!modal) {
+    createProductModal();
+    modal = document.getElementById("productModal");
+    setupModalEventListeners();
+  }
+
+  const form = document.getElementById("productAddEditForm");
+  const formTitle = document.getElementById("formTitle");
+  const imagePreview = document.getElementById("imagePreview");
+  const imageInput = document.getElementById("productImage");
+
+  form.reset();
+  imagePreview.innerHTML = "";
+
+  const newImageInput = imageInput.cloneNode(true);
+  imageInput.parentNode.replaceChild(newImageInput, imageInput);
+  newImageInput.addEventListener("change", handleImagePreview);
+
+  if (isEdit) {
+    const editingProduct = JSON.parse(localStorage.getItem("editing-product"));
+    if (editingProduct) {
+      formTitle.textContent = "Chỉnh Sửa Sản Phẩm";
+
+      form.elements["name"].value = editingProduct.name;
+      form.elements["category"].value = editingProduct.category;
+      form.elements["description"].value = editingProduct.description;
+      form.elements["price-n"].value = editingProduct["price-n"];
+      form.elements["price-sale-n"].value = editingProduct["price-sale-n"];
+
+      imagePreview.innerHTML = `
           <img src="../images/${editingProduct["image-file"]}" 
                alt="Current product image"
                style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);">
         `;
-      }
-    } else {
-      formTitle.textContent = "Thêm Sản Phẩm Mới";
     }
-  
-    modal.style.display = "block";
+  } else {
+    formTitle.textContent = "Thêm Sản Phẩm Mới";
   }
-  
-  function setupModalEventListeners() {
-    const modal = document.getElementById("productModal");
-    const form = document.getElementById("productAddEditForm");
-    const cancelBtn = document.getElementById("cancelBtn");
-  
-    form.addEventListener("submit", handleProductFormSubmit);
-    cancelBtn.addEventListener("click", handleCancelClick);
-    modal.addEventListener("click", handleOutsideClick);
-  }
-  
-  function handleImagePreview(e) {
-    const file = e.target.files[0];
-    const imagePreview = document.getElementById("imagePreview");
-  
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imagePreview.innerHTML = `
+
+  modal.style.display = "block";
+}
+
+function setupModalEventListeners() {
+  const modal = document.getElementById("productModal");
+  const form = document.getElementById("productAddEditForm");
+  const cancelBtn = document.getElementById("cancelBtn");
+
+  form.addEventListener("submit", handleProductFormSubmit);
+  cancelBtn.addEventListener("click", handleCancelClick);
+  modal.addEventListener("click", handleOutsideClick);
+}
+
+function handleImagePreview(e) {
+  const file = e.target.files[0];
+  const imagePreview = document.getElementById("imagePreview");
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      imagePreview.innerHTML = `
           <img src="${e.target.result}" 
                alt="Preview" 
                style="max-width: 300px; max-height: 300px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);">
         `;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      imagePreview.innerHTML = "";
-    }
-  }
-  
-  function handleCancelClick() {
-    if (confirm("Bạn có chắc muốn hủy không? Mọi thay đổi sẽ không được lưu.")) {
-      closeProductModal();
-    }
-  }
-  
-  function handleOutsideClick(e) {
-    if (e.target === e.currentTarget) {
-      closeProductModal();
-    }
-  }
-  
-  function closeProductModal() {
-    const modal = document.getElementById("productModal");
-    if (modal) {
-      modal.style.display = "none";
-      localStorage.removeItem("editing-product");
-      document.body.classList.remove("admintsx-modal-open");
-    }
-  }
-  
-  function handleProductFormSubmit(e) {
-    e.preventDefault();
-  
-    const form = e.target;
-    const formData = {
-      name: form.elements["name"].value,
-      category: form.elements["category"].value,
-      description: form.elements["description"].value,
-      "price-n": parseInt(form.elements["price-n"].value),
-      "price-sale-n": parseInt(form.elements["price-sale-n"].value),
     };
-  
-    let products = JSON.parse(localStorage.getItem("sanPham") || "[]");
-    const editingProduct = JSON.parse(localStorage.getItem("editing-product"));
-  
-    if (editingProduct) {
-      formData["web-scraper-order"] = editingProduct["web-scraper-order"];
-  
-      if (form.elements["image"].files[0]) {
-        formData["image-file"] = form.elements["image"].files[0].name;
-      } else {
-        formData["image-file"] = editingProduct["image-file"];
-      }
-  
-      const index = products.findIndex(
-        (p) => p["web-scraper-order"] === editingProduct["web-scraper-order"]
-      );
-      if (index !== -1) {
-        products[index] = formData;
-        localStorage.setItem("sanPham", JSON.stringify(products));
-        alert("Cập nhật sản phẩm thành công!");
-      }
-    } else {
-      if (!form.elements["image"].files[0]) {
-        alert("Vui lòng chọn ảnh cho sản phẩm mới!");
-        return;
-      }
-      formData["image-file"] = form.elements["image"].files[0].name;
-  
-      const maxId = Math.max(
-        ...products.map((p) => parseInt(p["web-scraper-order"]) || 0),
-        0
-      );
-      formData["web-scraper-order"] = (maxId + 1).toString();
-      products.push(formData);
-      localStorage.setItem("sanPham", JSON.stringify(products));
-      alert("Thêm sản phẩm thành công!");
-    }
-  
-    closeProductModal();
-    window.location.reload();
+    reader.readAsDataURL(file);
+  } else {
+    imagePreview.innerHTML = "";
   }
-  
+}
+
+function handleCancelClick() {
+  if (confirm("Bạn có chắc muốn hủy không? Mọi thay đổi sẽ không được lưu.")) {
+    closeProductModal();
+  }
+}
+
+function handleOutsideClick(e) {
+  if (e.target === e.currentTarget) {
+    closeProductModal();
+  }
+}
+
+function closeProductModal() {
+  const modal = document.getElementById("productModal");
+  if (modal) {
+    modal.style.display = "none";
+    localStorage.removeItem("editing-product");
+    document.body.classList.remove("admintsx-modal-open");
+  }
+}
+
+function handleProductFormSubmit(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = {
+    name: form.elements["name"].value,
+    category: form.elements["category"].value,
+    description: form.elements["description"].value,
+    "price-n": parseInt(form.elements["price-n"].value),
+    "price-sale-n": parseInt(form.elements["price-sale-n"].value),
+  };
+
+  let products = JSON.parse(localStorage.getItem("sanPham") || "[]");
+  const editingProduct = JSON.parse(localStorage.getItem("editing-product"));
+
+  if (editingProduct) {
+    formData["web-scraper-order"] = editingProduct["web-scraper-order"];
+
+    if (form.elements["image"].files[0]) {
+      formData["image-file"] = form.elements["image"].files[0].name;
+    } else {
+      formData["image-file"] = editingProduct["image-file"];
+    }
+
+    const index = products.findIndex(
+      (p) => p["web-scraper-order"] === editingProduct["web-scraper-order"]
+    );
+    if (index !== -1) {
+      products[index] = formData;
+      localStorage.setItem("sanPham", JSON.stringify(products));
+      alert("Cập nhật sản phẩm thành công!");
+    }
+  } else {
+    if (!form.elements["image"].files[0]) {
+      alert("Vui lòng chọn ảnh cho sản phẩm mới!");
+      return;
+    }
+    formData["image-file"] = form.elements["image"].files[0].name;
+
+    const maxId = Math.max(
+      ...products.map((p) => parseInt(p["web-scraper-order"]) || 0),
+      0
+    );
+    formData["web-scraper-order"] = (maxId + 1).toString();
+    products.push(formData);
+    localStorage.setItem("sanPham", JSON.stringify(products));
+    alert("Thêm sản phẩm thành công!");
+  }
+
+  closeProductModal();
+  window.location.reload();
+}

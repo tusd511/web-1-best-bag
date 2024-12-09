@@ -2,7 +2,7 @@
 let modalState = {
   currentProduct: null,
   currentDetailImageIndex: 0,
-  currentUserId: "ID_NGUOI_DUNG", // TODO: Thay thế bằng ID người dùng thực từ hệ thống đăng nhập
+  currentUserId: "ID_NGUOI_DUNG", // TODO: Thay thế bằng ID người dùng từ json thử thì lấy ra đươc giỏ hàng
 };
 
 // Các hàm xử lý Modal giỏ hàng
